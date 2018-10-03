@@ -16,11 +16,10 @@ injectGlobal`
     margin: 0;
   }
 `;
-
+// max-width: 62em;
+// padding: 1em;
+// margin: 0 auto;
 const Main = styled.main`
-  max-width: 62em;
-  padding: 1em;
-  margin: 0 auto;
   font-family: sans-serif;
   display: flex;
   flex-flow: column nowrap;

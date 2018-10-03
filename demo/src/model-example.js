@@ -9,109 +9,318 @@ import type { EntityState } from '../../src/entity/reducer';
 
 const model: EntityState = [
   {
-    id: 'ja1lnjvx',
+    id: 'dataentry',
     type: 'Task',
     width: 125,
     height: 75,
-    x: 50,
+    x: 100,
     y: 75,
-    name: 'Gorilla',
+    name: 'Data Entry',
     linksTo: [
       {
-        target: 'ja1lnkqu',
+        target: 'dataentryinprogress',
         edited: false,
-        label: 'Is friends with',
+        label: 'In progress',
         points: [
           {
-            x: 112.5,
+            x: 210.5,
             y: 112.5,
           },
           {
-            x: 475,
+            x: 425,
             y: 112.5,
-          },
-          {
-            x: 475,
-            y: 150,
-          },
-        ],
-      },
-      {
-        target: 'ja1lnq90',
-        edited: true,
-        label: 'Eats',
-        points: [
-          {
-            x: 112.5,
-            y: 150,
-          },
-          {
-            x: 112.5,
-            y: 234.5,
-          },
-          {
-            x: 212.5,
-            y: 234.5,
-          },
-          {
-            x: 212.5,
-            y: 325,
-          },
-        ],
-      },
-    ],
+          }
+        ]
+      }
+    ]
   },
   {
-    id: 'ja1lnkqu',
-    type: 'Event',
-    width: 50,
-    height: 50,
-    x: 450,
+    id: 'dataentryinprogress',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 425,
+    y: 75,
+    name: 'Data Entry In Progress',
+    linksTo: [
+      {
+        target: 'dataentryreview',
+        edited: false,
+        label: 'Done',
+        points: [
+          {
+            x: 487.5,
+            y: 112.5,
+          },
+          {
+            x: 687.5,
+            y: 112.5,
+          },
+          {
+            x: 687.5,
+            y: 150,
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'dataentryreview',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 650,
     y: 150,
-    name: 'Toucan',
+    name: 'Data Entry Review',
     linksTo: [
       {
-        target: 'ja1lnx2u',
+        target: 'dataentry',
         edited: false,
+        label: 'Review',
         points: [
           {
-            x: 475,
-            y: 175,
+            x: 662.5,
+            y: 187.5,
           },
           {
-            x: 393.75,
-            y: 175,
+            x: 162.5,
+            y: 187.5,
           },
           {
-            x: 393.75,
-            y: 212.5,
-          },
-          {
-            x: 375,
-            y: 212.5,
-          },
-        ],
+            x: 162.5,
+            y: 150
+          }
+        ]
       },
-    ],
+      {
+        target: 'dataentered',
+        edited: false,
+        label: 'Approve',
+        points: [
+          {
+            x: 762.5,
+            y: 187.5,
+          },
+          {
+            x: 1012.5,
+            y: 187.5,
+          },
+          {
+            x: 1012.5,
+            y: 150
+          }
+        ]
+      }
+    ]
   },
   {
-    id: 'ja1lnq90',
+    id: 'dataentered',
     type: 'Task',
     width: 125,
     height: 75,
-    x: 150,
-    y: 325,
-    name: 'Zebra',
+    x: 950,
+    y: 75,
+    name: 'Data Entered',
+    linksTo: [
+      {
+        target: 'published',
+        edited: false,
+        label: 'Publish',
+        points: [
+          {
+            x: 1012.5,
+            y: 112.5,
+          },
+          {
+            x: 1337.5,
+            y: 112.5,
+          },
+          {
+            x: 1337.5,
+            y: 200,
+          }
+        ]
+      }
+    ]
   },
   {
-    id: 'ja1lnx2u',
+    id: 'index',
     type: 'Task',
     width: 125,
     height: 75,
-    x: 250,
-    y: 175,
-    name: 'Jiraffe',
+    x: 100,
+    y: 250,
+    name: 'Index',
+    linksTo: [
+      {
+        target: 'indexinprogress',
+        edited: false,
+        label: 'In Progress',
+        points: [
+          {
+            x: 220.5,
+            y: 287.5,
+          },
+          {
+            x: 320,
+            y: 287.5,
+          },
+          {
+            x: 375.5,
+            y: 287.5,
+          }
+        ]
+      }
+    ]
   },
+  {
+    id: 'indexinprogress',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 375,
+    y: 250,
+    name: 'Index In Progress',
+    linksTo: [
+      {
+        target: 'indexreview',
+        edited: false,
+        label: 'Done',
+        points: [
+          {
+            x: 437.5,
+            y: 287.5,
+          },
+          {
+            x: 587.5,
+            y: 287.5,
+          },
+          {
+            x: 675,
+            y: 287.5,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'indexreview',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 675,
+    y: 250,
+    name: 'Index Review',
+    linksTo: [
+      {
+        target: 'indexdone',
+        edited: false,
+        label: 'Approve',
+        points: [
+          {
+            x: 737.5,
+            y: 287.5,
+          },
+          {
+            x: 875,
+            y: 287.5,
+          },
+          {
+            x: 950,
+            y: 287.5,
+          }
+        ]
+      },
+      {
+        target: 'index',
+        edited: false,
+        label: 'Reject',
+        points: [
+          {
+            x: 742.5,
+            y: 323.5,
+          },
+          {
+            x: 742.5,
+            y: 362.5,
+          },
+          {
+            x: 162.5,
+            y: 362.5,
+          },
+          {
+            x: 162.5,
+            y: 325,
+          }
+        ]
+      }
+    ]
+    
+  },
+  {
+    id: 'indexdone',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 950,
+    y: 250,
+    name: 'Index Done',
+    linksTo: [
+      {
+        target: 'published',
+        edited: false,
+        label: 'Publish',
+        points: [
+          {
+            x: 1012.5,
+            y: 287.5,
+          },
+          {
+            x: 1175,
+            y: 287.5,
+          },
+          {
+            x: 1175,
+            y: 237.5,
+          },
+          {
+            x: 1275,
+            y: 237.5,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'published',
+    type: 'Task',
+    width: 125,
+    height: 75,
+    x: 1275,
+    y: 200,
+    name: 'Published',
+    linksTo: [
+      {
+        target: 'dataentry',
+        edited: false,
+        label: 'Re-Enter',
+        points: [
+          {
+            x: 1337.5,
+            y: 237.5,
+          },
+          {
+            x: 162.5,
+            y: 237.5,
+          },
+          {
+            x: 162.5,
+            y: 150,
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 export default model;
