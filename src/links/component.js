@@ -29,23 +29,53 @@ type ArrowBodyProps = {
   id: EntityId,
   label: ?string,
 };
-const ArrowBody = ({ points, id, label }: ArrowBodyProps) => (
-  <g>
-    <Line d={points} id={`line${id}`} />
-    <InteractionLine d={points} />
-    {label && (
-      <text dy="-.25rem">
-        <textPath
-          xlinkHref={`#line${id}`}
-          startOffset="33%"
-          style={{ fontSize: '.8rem' }}
-        >
-          {label}
-        </textPath>
-      </text>
-    )}
-  </g>
-);
+// const ArrowBody = ({ points, id, label }: ArrowBodyProps) => (
+//   <g>
+//     <Line d={points} id={`line${id}`} />
+//     <InteractionLine d={points} />
+//     {label && (
+//       <text dy="-.25rem">
+//         <textPath
+//           xlinkHref={`#line${id}`}
+//           startOffset="33%"
+//           style={{ fontSize: '.8rem' }}
+//         >
+//           {label}
+//         </textPath>
+//       </text>
+//     )}
+//   </g>
+// );
+class ArrowBody extends React.PureComponent<
+  ArrowBodyProps
+  > {
+  render() {
+    return (
+      <g>
+        <Line d={this.props.points} id={`line${this.props.id}`} />
+        <InteractionLine 
+        d={this.props.points} 
+        onClick={()=>{this.onLineClick(this.props.label)}}/>
+        {this.props.label && (
+          <text dy="-.25rem">
+            <textPath
+              xlinkHref={`#line${this.props.id}`}
+              startOffset="33%"
+              style={{ fontSize: '.8rem' }}
+            >
+              {this.props.label}
+            </textPath>
+          </text>
+        )}
+      </g>
+    )
+  }
+  onLineClick(label) {
+    
+    console.log("The label", label)
+  }
+
+}
 
 /*
  * Container

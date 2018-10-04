@@ -148,7 +148,7 @@ type CanvasContainerState = {
 class CanvasContainer extends React.PureComponent<
   CanvasContainerProps,
   CanvasContainerState
-> {
+  > {
   canvasDOM: ?HTMLElement;
   zoomSteps: Array<number> = [0.25, 0.5, 0.75, 1, 1.5, 2, 4];
 
@@ -213,7 +213,7 @@ class CanvasContainer extends React.PureComponent<
   };
 
   onMouseDown = () => {
-    this.props.anchorCanvas(true);
+    this.props.anchorCanvas(false);
   };
 
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
