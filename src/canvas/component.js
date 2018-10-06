@@ -11,17 +11,18 @@ import EntityHOC from '../entity/component';
 import Panel from '../panel/component';
 import Links from '../links/component';
 import ArrowMarker from '../arrowMarker/component';
+import EditSidebar from '../sidebar/component';
 import Debug, { Fairy } from '../debug/component';
 import calcLinkPoints from '../links/calcLinkPoints';
 import elemLayout from './elemLayout';
-
+import { Button, Popup } from 'semantic-ui-react'
 import type { ComponentType } from 'React';
 import type { Coords, CanvasAction } from './reducer';
 import type { EntityState, Point, Links as LinksType } from '../entity/reducer';
 import type { CustomEntities } from '../diagram/component';
 import type { State } from '../diagram/reducer';
 import type { HistoryAction } from '../history/reducer';
-
+const Context = React.createContext()
 /*
  * Presentational
  * ==================================== */
@@ -87,42 +88,103 @@ type CanvasProps = {
   onMouseDown: () => void,
   onMouseMove: (SyntheticMouseEvent<HTMLElement>) => void,
   onMouseUp: () => void,
+  handleSidebarChange: () => void
 };
-const Canvas = (props: CanvasProps) => (
-  <CanvasViewport
-    onMouseMove={props.onMouseMove}
-    innerRef={div => props.handleRef(div)}
-  >
-    <CanvasArtboard
-      onMouseDown={props.onMouseDown}
-      onMouseUp={props.onMouseUp}
-      gridSize={props.gridSize}
-      artboard={props.artboard}
-      zoomLevel={props.zoomLevel}
-    >
-      <SvgLand width="100%" height="100%">
-        {props.entities
-          .filter(entity => 'linksTo' in entity)
-          // $FlowFixMe
-          .map(entity => <Links key={entity.id} links={entity.linksTo} />)}
-        {/* https://github.com/facebook/flow/issues/1414 */}
-        {props.isConnecting && <Links links={props.connectingLink} />}
-        <ArrowMarker />
-      </SvgLand>
+class Canvas extends React.PureComponent<
+  CanvasProps,
+  > {
 
-      {props.entities
-        .map(entity => ({
-          entity,
-          CustomEntity: props.wrappedCustomEntities[entity.type],
-        }))
-        .map(Combo => (
-          <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
-        ))}
-    </CanvasArtboard>
-    <Panel zoomIn={props.zoomIn} zoomOut={props.zoomOut} />
-  </CanvasViewport>
-);
+  state = { sidebarOpened: false, selectedLinkId: '', selectedLabel: '', editedLabel: '' };
+  constructor(props) {
+    super(props);
+    this.handleSidebarChange = this.handleSidebarChange.bind(this);
+    this.onSaveLabel = this.onSaveLabel.bind(this);
+    this.onRemoveLabel = this.onRemoveLabel.bind(this);
+    this.onSelectedLinkLabel = this.onSelectedLinkLabel.bind(this);
+  }
+  render() {
+    return (
+      <CanvasViewport
+        onMouseMove={this.props.onMouseMove}
+        innerRef={div => this.props.handleRef(div)}
+      >
 
+        <CanvasArtboard
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
+          gridSize={this.props.gridSize}
+          artboard={this.props.artboard}
+          zoomLevel={this.props.zoomLevel}
+        >
+
+          <SvgLand width="100%" height="100%">
+
+            {this.props.entities
+              .filter(entity => 'linksTo' in entity)
+              // $FlowFixMe
+              .map(entity => <Links key={entity.id} links={entity.linksTo} handleSidebarChange={this.handleSidebarChange} />)}
+            {/* https://github.com/facebook/flow/issues/1414 */}
+            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
+
+            <ArrowMarker />
+          </SvgLand>
+
+          {this.props.entities
+            .map(entity => ({
+              entity,
+              CustomEntity: this.props.wrappedCustomEntities[entity.type],
+            }))
+            .map(Combo => (
+              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
+            ))}
+        </CanvasArtboard>
+
+        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
+        <EditSidebar
+          handleSidebarChange={this.handleSidebarChange}
+          opened={this.state.sidebarOpened}
+          selectedLabel={this.state.selectedLabel}
+          selectedLinkId={this.state.selectedLinkId}
+          onSelectedLinkLabel={this.onSelectedLinkLabel}
+          onSaveLabel={this.onSaveLabel} />
+      </CanvasViewport>
+    )
+  }
+  handleSidebarChange(sidebarOpened, selectedLink) {
+    console.log('the sel', selectedLink)
+    // Sidebar can be opened by selecting a link entity
+    // Sidebar can be closed by cancel button from the sidebar component 
+    this.setState({
+      selectedLabel: selectedLink.label ? selectedLink.label : '',
+      selectedLinkId: selectedLink.id ? selectedLink.id : '',
+      sidebarOpened
+    });
+
+  }
+  onSelectedLinkLabel(e) {
+    console.log('event', e.target.value)
+    this.setState({ editedLabel: e.target.value });
+  }
+  onSaveLabel(id, label) {
+    console.log('the id', id)
+    console.log('the label', label)
+    console.log('connecting link', this.props.entities)
+    let clonedEntities = this.props.entities.slice(0);
+    let foundObj = clonedEntities.reduce(status => {
+      if (status.linksTo) {
+        let foundEntity = status.linksTo.find(x => x.target == id && x.label == label);
+        if (foundEntity) {
+          console.log('found entity', foundEntity);
+          return status;
+        }
+      }
+    })
+    console.log('found obj', foundObj);
+  }
+  onRemoveLabel() {
+
+  }
+}
 /*
  * Container
  * ==================================== */
