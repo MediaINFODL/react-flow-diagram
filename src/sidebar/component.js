@@ -2,7 +2,21 @@ import React from 'react';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
 class EditSidebar extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            selectedLabel: this.props.selectedLabel,
+            initLabel: this.props.selectedLabel,
+            selectedLinkId: this.props.selectedLinkId
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props != nextProps) {
+            this.setState({
+                initLabel: nextProps.selectedLabel,
+                selectedLabel: nextProps.selectedLabel,
+                selectedLinkId: nextProps.selectedLinkId
+            });
+        }
     }
     render() {
         return (
@@ -21,18 +35,21 @@ class EditSidebar extends React.Component {
                             <label>Selected link label:</label>
                         </Form.Field>
                         <Form.Group inline>
-                            <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} defaultValue={this.props.selectedLabel} onChange={(e) => { this.props.onSelectedLinkLabel(e) }} />
+                            <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
                         </Form.Group>
                     </React.Fragment>
                 }
                 <Form>
                     <Form.Field>
                         <Button type="button" onClick={(e => { this.props.handleSidebarChange(false, '') })} negative>Cancel</Button>
-                        <Button type="button" onClick={(e => { this.props.onSaveLabel(this.props.selectedLinkId, this.props.selectedLabel) })} positive>Save</Button>
+                        <Button type="button" onClick={(e => { this.props.onSaveLabel(this.state.selectedLinkId, this.state.initLabel, this.state.selectedLabel) })} positive>Save</Button>
                     </Form.Field>
                 </Form>
             </Sidebar>
         )
+    }
+    onSelectedLinkLabel(e) {
+        this.setState({ selectedLabel: e.target.value })
     }
 }
 

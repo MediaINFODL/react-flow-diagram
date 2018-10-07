@@ -55,6 +55,8 @@ const diagramOn = (
   store.subscribe(() => {
     const state = store.getState();
     if (lastActionMatchesAction(state.lastAction, action)) {
+    console.log('the store', action);
+
       fn(state.entity);
     }
   });

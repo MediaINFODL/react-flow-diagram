@@ -104,50 +104,55 @@ class Canvas extends React.PureComponent<
   }
   render() {
     return (
-      <CanvasViewport
-        onMouseMove={this.props.onMouseMove}
-        innerRef={div => this.props.handleRef(div)}
-      >
-
-        <CanvasArtboard
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-          gridSize={this.props.gridSize}
-          artboard={this.props.artboard}
-          zoomLevel={this.props.zoomLevel}
+      <React.Fragment>
+        <CanvasViewport
+          onMouseMove={this.props.onMouseMove}
+          innerRef={div => this.props.handleRef(div)}
         >
 
-          <SvgLand width="100%" height="100%">
+          <CanvasArtboard
+            onMouseDown={this.props.onMouseDown}
+            onMouseUp={this.props.onMouseUp}
+            gridSize={this.props.gridSize}
+            artboard={this.props.artboard}
+            zoomLevel={this.props.zoomLevel}
+          >
+
+            <SvgLand width="100%" height="100%">
+
+              {this.props.entities
+                .filter(entity => 'linksTo' in entity)
+                // $FlowFixMe
+                .map(entity => <Links key={entity.id} links={entity.linksTo} handleSidebarChange={this.handleSidebarChange} />)}
+              {/* https://github.com/facebook/flow/issues/1414 */}
+              {this.props.isConnecting && <Links links={this.props.connectingLink} />}
+
+              <ArrowMarker />
+            </SvgLand>
 
             {this.props.entities
-              .filter(entity => 'linksTo' in entity)
-              // $FlowFixMe
-              .map(entity => <Links key={entity.id} links={entity.linksTo} handleSidebarChange={this.handleSidebarChange} />)}
-            {/* https://github.com/facebook/flow/issues/1414 */}
-            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
+              .map(entity => ({
+                entity,
+                CustomEntity: this.props.wrappedCustomEntities[entity.type],
+              }))
+              .map(Combo => (
+                <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
+              ))}
+          </CanvasArtboard>
 
-            <ArrowMarker />
-          </SvgLand>
+          <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
 
-          {this.props.entities
-            .map(entity => ({
-              entity,
-              CustomEntity: this.props.wrappedCustomEntities[entity.type],
-            }))
-            .map(Combo => (
-              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
-            ))}
-        </CanvasArtboard>
-
-        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
-        <EditSidebar
-          handleSidebarChange={this.handleSidebarChange}
-          opened={this.state.sidebarOpened}
-          selectedLabel={this.state.selectedLabel}
-          selectedLinkId={this.state.selectedLinkId}
-          onSelectedLinkLabel={this.onSelectedLinkLabel}
-          onSaveLabel={this.onSaveLabel} />
-      </CanvasViewport>
+        </CanvasViewport>
+        {this.state.sidebarOpened &&
+          <EditSidebar
+            handleSidebarChange={this.handleSidebarChange}
+            opened={this.state.sidebarOpened}
+            selectedLabel={this.state.selectedLabel}
+            selectedLinkId={this.state.selectedLinkId}
+            onSelectedLinkLabel={this.onSelectedLinkLabel}
+            onSaveLabel={this.onSaveLabel} />
+        }
+      </React.Fragment>
     )
   }
   handleSidebarChange(sidebarOpened, selectedLink) {
@@ -162,24 +167,31 @@ class Canvas extends React.PureComponent<
 
   }
   onSelectedLinkLabel(e) {
-    console.log('event', e.target.value)
     this.setState({ editedLabel: e.target.value });
   }
-  onSaveLabel(id, label) {
+  onSaveLabel(id, initLabel, newLabel) {
     console.log('the id', id)
-    console.log('the label', label)
+    console.log('the init label', initLabel)
+    console.log('the new label', newLabel)
     console.log('connecting link', this.props.entities)
-    let clonedEntities = this.props.entities.slice(0);
-    let foundObj = clonedEntities.reduce(status => {
+    // The initLabel is the starting value of the label
+    // The newLabel is the changed value of the label that should be updated
+    // The id is the linksTo statusId
+    // Find the link from statuses that contains the label and update the model entity
+    this.props.entities.map(status => {
       if (status.linksTo) {
-        let foundEntity = status.linksTo.find(x => x.target == id && x.label == label);
+        let foundEntity = status.linksTo.find(x => x.target == id && x.label == initLabel);
+
         if (foundEntity) {
+          foundEntity.label = newLabel;
           console.log('found entity', foundEntity);
-          return status;
         }
       }
     })
-    console.log('found obj', foundObj);
+    this.setState({sidebarOpened: false})
+    // foundObj[0].linksTo[0].label = newLabel;
+    // this.forceUpdate();
+    // console.log('found obj', foundObj[0].linksTo[0].label);
   }
   onRemoveLabel() {
 
@@ -279,6 +291,7 @@ class CanvasContainer extends React.PureComponent<
   };
 
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
+    ev.preventDefault();
     this.props.trackMovement({
       x: ev.pageX,
       y: ev.pageY,

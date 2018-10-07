@@ -34,7 +34,6 @@ class ArrowBody extends React.PureComponent<
   > {
   constructor(props) {
     super(props);
-    // console.log('the props', props);
   }
   render() {
 
@@ -84,7 +83,6 @@ class ArrowBodyContainer extends React.PureComponent<
   >
 {
   render() {
-    console.log('the props', this.props)
     return (
       <g>
         {this.props.links.map(
