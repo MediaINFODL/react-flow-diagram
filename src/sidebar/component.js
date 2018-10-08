@@ -30,14 +30,14 @@ class EditSidebar extends React.Component {
                 style={{ width: 412 }}
             >
                 {this.props.selectedLabel &&
-                    <React.Fragment>
+                    <div>
                         <Form.Field>
                             <label>Selected link label:</label>
                         </Form.Field>
                         <Form.Group inline>
                             <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
                         </Form.Group>
-                    </React.Fragment>
+                    </div>
                 }
                 <Form>
                     <Form.Field>

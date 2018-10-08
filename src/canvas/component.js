@@ -22,7 +22,6 @@ import type { EntityState, Point, Links as LinksType } from '../entity/reducer';
 import type { CustomEntities } from '../diagram/component';
 import type { State } from '../diagram/reducer';
 import type { HistoryAction } from '../history/reducer';
-const Context = React.createContext()
 /*
  * Presentational
  * ==================================== */
@@ -104,45 +103,42 @@ class Canvas extends React.PureComponent<
   }
   render() {
     return (
-      <React.Fragment>
-        <CanvasViewport
-          onMouseMove={this.props.onMouseMove}
-          innerRef={div => this.props.handleRef(div)}
+      <CanvasViewport
+        onMouseMove={this.props.onMouseMove}
+        innerRef={div => this.props.handleRef(div)}
+      >
+
+        <CanvasArtboard
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
+          gridSize={this.props.gridSize}
+          artboard={this.props.artboard}
+          zoomLevel={this.props.zoomLevel}
         >
 
-          <CanvasArtboard
-            onMouseDown={this.props.onMouseDown}
-            onMouseUp={this.props.onMouseUp}
-            gridSize={this.props.gridSize}
-            artboard={this.props.artboard}
-            zoomLevel={this.props.zoomLevel}
-          >
-
-            <SvgLand width="100%" height="100%">
-
-              {this.props.entities
-                .filter(entity => 'linksTo' in entity)
-                // $FlowFixMe
-                .map(entity => <Links key={entity.id} links={entity.linksTo} handleSidebarChange={this.handleSidebarChange} />)}
-              {/* https://github.com/facebook/flow/issues/1414 */}
-              {this.props.isConnecting && <Links links={this.props.connectingLink} />}
-
-              <ArrowMarker />
-            </SvgLand>
+          <SvgLand width="100%" height="100%">
 
             {this.props.entities
-              .map(entity => ({
-                entity,
-                CustomEntity: this.props.wrappedCustomEntities[entity.type],
-              }))
-              .map(Combo => (
-                <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
-              ))}
-          </CanvasArtboard>
+              .filter(entity => 'linksTo' in entity)
+              // $FlowFixMe
+              .map(entity => <Links key={entity.id} links={entity.linksTo} handleSidebarChange={this.handleSidebarChange} />)}
+            {/* https://github.com/facebook/flow/issues/1414 */}
+            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
 
-          <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
+            <ArrowMarker />
+          </SvgLand>
 
-        </CanvasViewport>
+          {this.props.entities
+            .map(entity => ({
+              entity,
+              CustomEntity: this.props.wrappedCustomEntities[entity.type],
+            }))
+            .map(Combo => (
+              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
+            ))}
+        </CanvasArtboard>
+
+        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
         {this.state.sidebarOpened &&
           <EditSidebar
             handleSidebarChange={this.handleSidebarChange}
@@ -152,7 +148,8 @@ class Canvas extends React.PureComponent<
             onSelectedLinkLabel={this.onSelectedLinkLabel}
             onSaveLabel={this.onSaveLabel} />
         }
-      </React.Fragment>
+      </CanvasViewport>
+
     )
   }
   handleSidebarChange(sidebarOpened, selectedLink) {
@@ -188,7 +185,7 @@ class Canvas extends React.PureComponent<
         }
       }
     })
-    this.setState({sidebarOpened: false})
+    this.setState({ sidebarOpened: false })
     // foundObj[0].linksTo[0].label = newLabel;
     // this.forceUpdate();
     // console.log('found obj', foundObj[0].linksTo[0].label);
