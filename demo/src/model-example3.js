@@ -7,15 +7,15 @@ import type { EntityState } from '../../src/entity/reducer';
 // of `points` when SETting the diagram. In this way I'd had a mix of
 // declarative in the inital model and then switch to explicit after load.
 
-const model: EntityState = [
+const model3: EntityState = [
   {
-    id: 'dataentry',
+    id: 'dataentry2',
     type: 'Task',
     width: 125,
     height: 75,
     x: 100,
     y: 75,
-    name: 'Data Entry on nubmer one',
+    name: 'Data Entry on number three',
     linksTo: [
       {
         target: 'dataentryinprogress',
@@ -323,4 +323,4 @@ const model: EntityState = [
   }
 ];
 
-export default model;
+export default model3;
