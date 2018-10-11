@@ -113,7 +113,7 @@ class Canvas extends React.PureComponent<CanvasProps,
     this.onSaveLabel = this.onSaveLabel.bind(this);
     this.onRemoveLabel = this.onRemoveLabel.bind(this);
     this.onSelectedLinkLabel = this.onSelectedLinkLabel.bind(this);
-    this.handleEmitSidebarChange = this.handleEmitSidebarChange(this);
+    // this.handleEmitSidebarChange = this.handleEmitSidebarChange(this);
   }
 
   render() {
@@ -161,8 +161,9 @@ class Canvas extends React.PureComponent<CanvasProps,
           open={this.state.statusSidebarOpen}
           currentStatus={this.state.currentStatus}
           statusId={this.state.statusId}
-          emitSidebarChange={this.handleEmitSidebarChange}
-          emitStatusSave={this.handleEmitStatusSave}
+          handleEmitSidebarChange={this.handleEmitSidebarChange}
+          handleEmitStatusSave={this.handleEmitStatusSave}
+          handleEmitStatusDelete={this.handleEmitStatusDelete}
         />
         }
         {this.state.sidebarOpened &&
@@ -179,15 +180,25 @@ class Canvas extends React.PureComponent<CanvasProps,
     );
   }
 
-  handleEmitSidebarChange() {
-    console.log('open sidebar');
-    // this.setState({
-    //   open: open
-    // });
+  handleEmitSidebarChange = () => {
+    console.log('close sidebar', this.state);
+    this.setState({ statusSidebarOpen: false });
   };
 
   handleEmitStatusSave = data => {
-    console.log('on emit save', data);
+    console.log('catch data', data);
+    console.log(this.props.entities, data.statusId, data.currentStatus);
+    this.props.entities.map(i => {
+      if (i.id === data.statusId) {
+        i.name = data.currentStatus;
+      }
+    });
+    this.setState({ statusSidebarOpen: false });
+  };
+
+  handleEmitStatusDelete = data => {
+    console.log('catch delete status', data);
+    this.setState({ statusSidebarOpen: false });
   };
 
   handleSidebarChange(sidebarOpened, selectedLink) {
