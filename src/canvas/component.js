@@ -4,6 +4,7 @@ import React from 'react';
 import style from 'styled-components';
 import { connect } from 'react-redux';
 import { configViewport, trackMovement, anchorCanvas, zoom } from './reducer';
+import { store, setEntities } from '../../src';
 import { undo, redo } from '../history/reducer';
 import { setName } from '../entity/reducer';
 import { icons } from '../icon/component';
@@ -99,6 +100,7 @@ class Canvas extends React.PureComponent<CanvasProps,
     selectedLinkId: '',
     selectedLabel: '',
     editedLabel: '',
+    model: {},
     statusSidebarOpen: true,
     statusId: '',
     currentStatus: 'my',
@@ -218,6 +220,7 @@ class Canvas extends React.PureComponent<CanvasProps,
         let foundEntity = status.linksTo.find(x => x.target == id && x.label == initLabel);
 
         if (foundEntity) {
+          store.dispatch(setEntities(this.props.entities));
           foundEntity.label = newLabel;
           console.log('found entity', foundEntity);
         }
