@@ -119,7 +119,6 @@ class Canvas extends React.PureComponent<CanvasProps,
   render() {
     return (
       <CanvasViewport
-        onMouseMove={this.props.onMouseMove}
         innerRef={div => this.props.handleRef(div)}
       >
 
@@ -131,7 +130,9 @@ class Canvas extends React.PureComponent<CanvasProps,
           zoomLevel={this.props.zoomLevel}
         >
 
-          <SvgLand width="100%" height="100%">
+          <SvgLand width="100%" height="100%"
+          onMouseMove={this.props.onMouseMove}
+          >
 
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
@@ -156,7 +157,7 @@ class Canvas extends React.PureComponent<CanvasProps,
         </CanvasArtboard>
 
         <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
-        {this.state.statusSidebarOpen &&
+        {/* {this.state.statusSidebarOpen &&
         <StatusSidebar
           open={this.state.statusSidebarOpen}
           currentStatus={this.state.currentStatus}
@@ -165,7 +166,7 @@ class Canvas extends React.PureComponent<CanvasProps,
           handleEmitStatusSave={this.handleEmitStatusSave}
           handleEmitStatusDelete={this.handleEmitStatusDelete}
         />
-        }
+        } */}
         {this.state.sidebarOpened &&
         <EditSidebar
           handleSidebarChange={this.handleSidebarChange}
