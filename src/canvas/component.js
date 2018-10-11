@@ -111,7 +111,6 @@ class Canvas extends React.PureComponent<
   render() {
     return (
       <CanvasViewport
-        onMouseMove={this.props.onMouseMove}
         innerRef={div => this.props.handleRef(div)}
       >
 
@@ -123,7 +122,9 @@ class Canvas extends React.PureComponent<
           zoomLevel={this.props.zoomLevel}
         >
 
-          <SvgLand width="100%" height="100%">
+          <SvgLand width="100%" height="100%"
+          onMouseMove={this.props.onMouseMove}
+          >
 
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
