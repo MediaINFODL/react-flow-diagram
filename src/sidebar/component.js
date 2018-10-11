@@ -1,4 +1,5 @@
 import React from 'react';
+import { Diagram, store, setEntities, setConfig, diagramOn } from '../../src';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
 class EditSidebar extends React.Component {
     constructor(props) {
@@ -6,9 +7,9 @@ class EditSidebar extends React.Component {
         this.state = {
             selectedLabel: this.props.selectedLabel,
             initLabel: this.props.selectedLabel,
-            selectedLinkId: this.props.selectedLinkId
+            selectedLinkId: this.props.selectedLinkId,
+            model:{}
         }
-        this.handleChange = this.handleChange.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         if (this.props != nextProps) {
@@ -19,6 +20,12 @@ class EditSidebar extends React.Component {
             });
         }
     }
+    componentWillMount() {
+        this.setState({
+            model: store.getState()
+        });
+        console.log(this.state.model)
+      }
     render() {
         return (
             <Sidebar
@@ -36,9 +43,7 @@ class EditSidebar extends React.Component {
                             <label>Selected link label:</label>
                         </Form.Field>
                         <Form.Group inline>
-                        <input type='text' name='title' value={this.state.selectedLabel} 
-                                onChange={this.handleChange}/>
-                            <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
+                            <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel() } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
                         </Form.Group>
                     </div>
                 }
@@ -51,11 +56,13 @@ class EditSidebar extends React.Component {
             </Sidebar>
         )
     }
-    handleChange(event) {
-        this.setState({selectedLabel: event.target.value})
-      }
     onSelectedLinkLabel(e) {
         this.setState({ selectedLabel: e.target.value })
+    }
+    onRemoveLabel(e){
+        this.setState({ selectedLabel: '' })
+        const state = store.getState();
+        console.log(state)
     }
 }
 
