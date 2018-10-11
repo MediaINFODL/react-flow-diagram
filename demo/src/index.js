@@ -60,7 +60,6 @@ class Demo extends React.PureComponent<{}> {
       <Main>
         <h1>react-flow-diagram Demo</h1>
         <MenuNav />
-        
         <Button onClick={this.saveChanges}>Save Changes</Button>
         <Diagram customEntities={customEntities} />
       </Main>
