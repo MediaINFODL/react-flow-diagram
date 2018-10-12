@@ -156,18 +156,6 @@ class Canvas extends React.PureComponent<CanvasProps,
             ))}
         </CanvasArtboard>
 
-<<<<<<< HEAD
-        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
-        {/* {this.state.statusSidebarOpen &&
-            <StatusSidebar
-              open={this.state.statusSidebarOpen}
-              currentStatus={this.state.currentStatus}
-              statusId={this.state.statusId}
-              emitSidebarChange={this.handleEmitSidebarChange}
-              emitStatusSave={this.handleEmitStatusSave}
-            />
-          } */}
-=======
         <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
         {/* {this.state.statusSidebarOpen &&
         <StatusSidebar
@@ -179,7 +167,6 @@ class Canvas extends React.PureComponent<CanvasProps,
           handleEmitStatusDelete={this.handleEmitStatusDelete}
         />
         } */}
->>>>>>> f6df141ff892ec4305429daaa47d76b6331f6cb5
         {this.state.sidebarOpened &&
           <EditSidebar
             handleSidebarChange={this.handleSidebarChange}

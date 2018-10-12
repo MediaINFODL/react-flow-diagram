@@ -52,13 +52,9 @@ class EditSidebar extends React.Component {
                             <label>Selected link label:</label>
                         </Form.Field>
                         <Form.Group inline>
-<<<<<<< HEAD
                             {/* <input type='text' name='title' value={this.state.selectedLabel} 
                                 onChange={this.handleChange}/> */}
                             <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
-=======
-                            <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel() } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
->>>>>>> f6df141ff892ec4305429daaa47d76b6331f6cb5
                         </Form.Group>
                     </div>
                 }
@@ -71,12 +67,6 @@ class EditSidebar extends React.Component {
             </Sidebar>
         )
     }
-<<<<<<< HEAD
-    handleChange(event) {
-        this.setState({ selectedLabel: event.target.value })
-    }
-=======
->>>>>>> f6df141ff892ec4305429daaa47d76b6331f6cb5
     onSelectedLinkLabel(e) {
         e.preventDefault();
         e.stopPropagation();
