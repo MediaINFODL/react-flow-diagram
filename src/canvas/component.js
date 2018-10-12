@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { configViewport, trackMovement, anchorCanvas, zoom } from './reducer';
 import { store, setEntities } from '../../src';
 import { undo, redo } from '../history/reducer';
-import { setName } from '../entity/reducer';
+import { setName, setLabel } from '../entity/reducer';
 import { icons } from '../icon/component';
 import EntityHOC from '../entity/component';
 import Panel from '../panel/component';
@@ -137,12 +137,12 @@ class Canvas extends React.PureComponent<CanvasProps,
               .filter(entity => 'linksTo' in entity)
               // $FlowFixMe
               .map(entity => <Links key={entity.id}
-                                    links={entity.linksTo}
-                                    handleSidebarChange={this.handleSidebarChange}/>)}
+                links={entity.linksTo}
+                handleSidebarChange={this.handleSidebarChange} />)}
             {/* https://github.com/facebook/flow/issues/1414 */}
-            {this.props.isConnecting && <Links links={this.props.connectingLink}/>}
+            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
 
-            <ArrowMarker/>
+            <ArrowMarker />
           </SvgLand>
 
           {this.props.entities
@@ -151,31 +151,30 @@ class Canvas extends React.PureComponent<CanvasProps,
               CustomEntity: this.props.wrappedCustomEntities[entity.type]
             }))
             .map(Combo => (
-              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity}/>
+              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
             ))}
         </CanvasArtboard>
 
-        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
-        {this.state.statusSidebarOpen &&
-        <StatusSidebar
-          open={this.state.statusSidebarOpen}
-          currentStatus={this.state.currentStatus}
-          statusId={this.state.statusId}
-          emitSidebarChange={this.handleEmitSidebarChange}
-          emitStatusSave={this.handleEmitStatusSave}
-        />
-        }
+        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
+        {/* {this.state.statusSidebarOpen &&
+            <StatusSidebar
+              open={this.state.statusSidebarOpen}
+              currentStatus={this.state.currentStatus}
+              statusId={this.state.statusId}
+              emitSidebarChange={this.handleEmitSidebarChange}
+              emitStatusSave={this.handleEmitStatusSave}
+            />
+          } */}
         {this.state.sidebarOpened &&
-        <EditSidebar
-          handleSidebarChange={this.handleSidebarChange}
-          opened={this.state.sidebarOpened}
-          selectedLabel={this.state.selectedLabel}
-          selectedLinkId={this.state.selectedLinkId}
-          onSelectedLinkLabel={this.onSelectedLinkLabel}
-          onSaveLabel={this.onSaveLabel}/>
+          <EditSidebar
+            handleSidebarChange={this.handleSidebarChange}
+            opened={this.state.sidebarOpened}
+            selectedLabel={this.state.selectedLabel}
+            selectedLinkId={this.state.selectedLinkId}
+            // onSelectedLinkLabel={this.onSelectedLinkLabel}
+            onSaveLabel={this.onSaveLabel} />
         }
       </CanvasViewport>
-
     );
   }
 
@@ -203,14 +202,12 @@ class Canvas extends React.PureComponent<CanvasProps,
   }
 
   onSelectedLinkLabel(e) {
+    e.preventDefault();
+    e.stopPropagation();
     this.setState({ editedLabel: e.target.value });
   }
 
   onSaveLabel(id, initLabel, newLabel) {
-    console.log('the id', id);
-    console.log('the init label', initLabel);
-    console.log('the new label', newLabel);
-    console.log('connecting link', this.props.entities);
     // The initLabel is the starting value of the label
     // The newLabel is the changed value of the label that should be updated
     // The id is the linksTo statusId
@@ -220,16 +217,12 @@ class Canvas extends React.PureComponent<CanvasProps,
         let foundEntity = status.linksTo.find(x => x.target == id && x.label == initLabel);
 
         if (foundEntity) {
-          store.dispatch(setEntities(this.props.entities));
           foundEntity.label = newLabel;
-          console.log('found entity', foundEntity);
+          store.dispatch(setLabel({ id: status.id, to: id, label: newLabel }));
         }
       }
     });
     this.setState({ sidebarOpened: false });
-    // foundObj[0].linksTo[0].label = newLabel;
-    // this.forceUpdate();
-    // console.log('found obj', foundObj[0].linksTo[0].label);
   }
 
   onRemoveLabel() {
@@ -331,6 +324,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
 
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
     ev.preventDefault();
+    ev.stopPropagation();
     this.props.trackMovement({
       x: ev.pageX,
       y: ev.pageY

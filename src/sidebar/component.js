@@ -10,8 +10,17 @@ class EditSidebar extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
     }
+    shouldComponentUpdate(nextProps) {
+        if (this.props.selectedLinkId != nextProps.selectedLinkId) {
+            // console.log('to rerender false')
+            return false
+        } else {
+            // console.log('to rerender true')
+            return true;
+        }
+    }
     componentWillReceiveProps(nextProps) {
-        if (this.props != nextProps) {
+        if (this.props == nextProps) {
             this.setState({
                 initLabel: nextProps.selectedLabel,
                 selectedLabel: nextProps.selectedLabel,
@@ -36,8 +45,8 @@ class EditSidebar extends React.Component {
                             <label>Selected link label:</label>
                         </Form.Field>
                         <Form.Group inline>
-                        <input type='text' name='title' value={this.state.selectedLabel} 
-                                onChange={this.handleChange}/>
+                            {/* <input type='text' name='title' value={this.state.selectedLabel} 
+                                onChange={this.handleChange}/> */}
                             <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
                         </Form.Group>
                     </div>
@@ -52,9 +61,11 @@ class EditSidebar extends React.Component {
         )
     }
     handleChange(event) {
-        this.setState({selectedLabel: event.target.value})
-      }
+        this.setState({ selectedLabel: event.target.value })
+    }
     onSelectedLinkLabel(e) {
+        e.preventDefault();
+        e.stopPropagation();
         this.setState({ selectedLabel: e.target.value })
     }
 }

@@ -50,6 +50,7 @@ export type AddLinkedEntityPayload = {
 };
 export type MovePayload = { x: number, y: number, id: string };
 export type SetNamePayload = { id: EntityId, name: string };
+export type SetLabelPayload = { id: EntityId, name: string };
 export type SetCustomPayload = { id: EntityId, custom: Object };
 export type EntityAction =
   | ActionShape<'rd/entity/SET', EntityState>
@@ -59,6 +60,7 @@ export type EntityAction =
   | ActionShape<'rd/entity/REMOVE', EntityId>
   | ActionShape<'rd/entity/MOVE', MovePayload>
   | ActionShape<'rd/entity/SET_NAME', SetNamePayload>
+  | ActionShape<'rd/entity/SET_LABEL', SetLabelPayload>
   | ActionShape<'rd/entity/SET_CUSTOM', SetCustomPayload>;
 
 export const EntityActionTypeOpen = 'rd/entity/SET';
@@ -69,6 +71,7 @@ export const EntityActionTypesModify = [
   'rd/entity/REMOVE',
   'rd/entity/MOVE',
   'rd/entity/SET_NAME',
+  'rd/entity/SET_LABEL',
   'rd/entity/SET_CUSTOM',
 ];
 
@@ -304,6 +307,29 @@ const entityReducer = (
             : entity
       );
     }
+    case 'rd/entity/SET_LABEL': {
+      const { id, to, label } = action.payload;
+      console.log('the paloua', action.payload);
+      return state.map(
+        entity =>
+          entity.id === id
+            ? {
+                ...entity,
+                linksTo: entity.linksTo
+                  ? entity.linksTo.map(
+                      link =>
+                        link.target === to
+                          ? {
+                              ...link,
+                              label,
+                            }
+                          : link
+                    )
+                  : [{ target: to, label }],
+              }
+            : entity
+      );
+    }
 
     case 'rd/entity/LINK_POINTS': {
       const { from, to, points } = action.payload;
@@ -466,6 +492,10 @@ export const move = (payload: MovePayload): EntityAction => ({
 
 export const setName = (payload: SetNamePayload): EntityAction => ({
   type: 'rd/entity/SET_NAME',
+  payload,
+});
+export const setLabel = (payload: SetLabelPayload): EntityAction => ({
+  type: 'rd/entity/SET_LABEL',
   payload,
 });
 
