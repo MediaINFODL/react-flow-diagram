@@ -113,13 +113,12 @@ class Canvas extends React.PureComponent<CanvasProps,
     this.onSaveLabel = this.onSaveLabel.bind(this);
     this.onRemoveLabel = this.onRemoveLabel.bind(this);
     this.onSelectedLinkLabel = this.onSelectedLinkLabel.bind(this);
-    this.handleEmitSidebarChange = this.handleEmitSidebarChange(this);
+    // this.handleEmitSidebarChange = this.handleEmitSidebarChange(this);
   }
 
   render() {
     return (
       <CanvasViewport
-        onMouseMove={this.props.onMouseMove}
         innerRef={div => this.props.handleRef(div)}
       >
 
@@ -131,7 +130,9 @@ class Canvas extends React.PureComponent<CanvasProps,
           zoomLevel={this.props.zoomLevel}
         >
 
-          <SvgLand width="100%" height="100%">
+          <SvgLand width="100%" height="100%"
+          onMouseMove={this.props.onMouseMove}
+          >
 
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
@@ -155,6 +156,7 @@ class Canvas extends React.PureComponent<CanvasProps,
             ))}
         </CanvasArtboard>
 
+<<<<<<< HEAD
         <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />
         {/* {this.state.statusSidebarOpen &&
             <StatusSidebar
@@ -165,6 +167,19 @@ class Canvas extends React.PureComponent<CanvasProps,
               emitStatusSave={this.handleEmitStatusSave}
             />
           } */}
+=======
+        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
+        {/* {this.state.statusSidebarOpen &&
+        <StatusSidebar
+          open={this.state.statusSidebarOpen}
+          currentStatus={this.state.currentStatus}
+          statusId={this.state.statusId}
+          handleEmitSidebarChange={this.handleEmitSidebarChange}
+          handleEmitStatusSave={this.handleEmitStatusSave}
+          handleEmitStatusDelete={this.handleEmitStatusDelete}
+        />
+        } */}
+>>>>>>> f6df141ff892ec4305429daaa47d76b6331f6cb5
         {this.state.sidebarOpened &&
           <EditSidebar
             handleSidebarChange={this.handleSidebarChange}
@@ -178,15 +193,25 @@ class Canvas extends React.PureComponent<CanvasProps,
     );
   }
 
-  handleEmitSidebarChange() {
-    console.log('open sidebar');
-    // this.setState({
-    //   open: open
-    // });
+  handleEmitSidebarChange = () => {
+    console.log('close sidebar', this.state);
+    this.setState({ statusSidebarOpen: false });
   };
 
   handleEmitStatusSave = data => {
-    console.log('on emit save', data);
+    console.log('catch data', data);
+    console.log(this.props.entities, data.statusId, data.currentStatus);
+    this.props.entities.map(i => {
+      if (i.id === data.statusId) {
+        i.name = data.currentStatus;
+      }
+    });
+    this.setState({ statusSidebarOpen: false });
+  };
+
+  handleEmitStatusDelete = data => {
+    console.log('catch delete status', data);
+    this.setState({ statusSidebarOpen: false });
   };
 
   handleSidebarChange(sidebarOpened, selectedLink) {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
 
 type StatusSidebarProps = {
-  open: boolean,
   currentStatus: string,
   statusId: string
 };
@@ -13,24 +12,29 @@ class StatusSidebar extends Component<StatusSidebarProps> {
     this.state = {
       currentStatus: this.props.currentStatus,
       initStatus: this.props.currentStatus,
-      open: this.props.open,
       statusId: this.props.statusId
     };
-    // this.onClose = this.onClose.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props !== nextProps) {
+      this.setState({
+        currentStatus: nextProps.currentStatus,
+        initStatus: nextProps.currentStatus,
+        statusId: nextProps.statusId
+      });
+    }
   }
 
   onSave = () => {
-    console.log('emit on save');
+    console.log('save emmiter', this.state);
+    this.props.handleEmitStatusSave(this.state);
   };
 
   onClose = () => {
-    console.log('emit on close');
+    console.log('close emmiter', this.state);
+    this.props.handleEmitSidebarChange();
   };
-
-  onStatusChange(e) {
-    this.setState({ currentStatus: e.target.value });
-    console.log(this.state);
-  }
 
   onKeypress = (e) => {
     this.setState({ currentStatus: e.target.value });
@@ -39,6 +43,8 @@ class StatusSidebar extends Component<StatusSidebarProps> {
 
   onRemove = (e) => {
     console.log(e);
+    console.log('delete emmiter', this.state);
+    this.props.handleEmitStatusDelete(this.state);
   };
 
   render() {
@@ -62,7 +68,7 @@ class StatusSidebar extends Component<StatusSidebarProps> {
                    action={{
                      color: 'red',
                      icon: 'trash alternate',
-                     onClick: this.onRemove
+                     onClick: e => this.onRemove(this.state.statusId)
                    }}
                    value={this.state.currentStatus}
                    onChange={this.onKeypress}/>
