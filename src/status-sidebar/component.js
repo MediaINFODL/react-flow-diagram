@@ -1,50 +1,39 @@
 import React, { Component } from 'react';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { removeEntity, setName } from '../entity/reducer';
+import { assignEmptyStatusToStore, assignNewStatusToStore } from '../history/reducer';
 
-type StatusSidebarProps = {
-  currentStatus: string,
-  statusId: string
-};
+type StatusSidebarProps = {};
 
 class StatusSidebar extends Component<StatusSidebarProps> {
   constructor(props) {
     super(props);
-    this.state = {
-      currentStatus: this.props.currentStatus,
-      initStatus: this.props.currentStatus,
-      statusId: this.props.statusId
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props !== nextProps) {
-      this.setState({
-        currentStatus: nextProps.currentStatus,
-        initStatus: nextProps.currentStatus,
-        statusId: nextProps.statusId
-      });
-    }
+    this.state = {};
   }
 
   onSave = () => {
-    console.log('save emmiter', this.state);
-    this.props.handleEmitStatusSave(this.state);
+    console.log('save emmiter', this.props.status.id, this.props.status.name);
+    if (this.props.status.name) {
+      this.props.setName({
+        id: this.props.status.id, name: this.props.status.name
+      });
+      this.props.assignEmptyStatusToStore();
+    }
   };
 
   onClose = () => {
-    console.log('close emmiter', this.state);
-    this.props.handleEmitSidebarChange();
+    this.props.assignEmptyStatusToStore();
   };
 
   onKeypress = (e) => {
-    this.setState({ currentStatus: e.target.value });
-    console.log(this.state);
+    this.props.assignNewStatusToStore(e.target.value);
   };
 
   onRemove = (e) => {
-    console.log(e);
-    console.log('delete emmiter', this.state);
-    this.props.handleEmitStatusDelete(this.state);
+    console.log('delete emmiter', e);
+    this.props.removeEntity(this.props.status.id);
+    this.props.assignEmptyStatusToStore();
   };
 
   render() {
@@ -54,11 +43,10 @@ class StatusSidebar extends Component<StatusSidebarProps> {
         animation='overlay'
         icon='labeled'
         vertical
-        visible={this.props.open}
+        visible={!!this.props.status.id}
         direction='right'
         style={{ width: 400 }}
       >
-        {this.props.currentStatus &&
         <div>
           <Form.Field>
             <label>Selected state title:</label>
@@ -68,13 +56,12 @@ class StatusSidebar extends Component<StatusSidebarProps> {
                    action={{
                      color: 'red',
                      icon: 'trash alternate',
-                     onClick: e => this.onRemove(this.state.statusId)
+                     onClick: e => this.onRemove(e)
                    }}
-                   value={this.state.currentStatus}
+                   value={this.props.status.name}
                    onChange={this.onKeypress}/>
           </Form.Group>
         </div>
-        }
         <Form>
           <Form.Field>
             <Button type="button"
@@ -90,4 +77,25 @@ class StatusSidebar extends Component<StatusSidebarProps> {
   }
 }
 
-export default StatusSidebar;
+const mapStateToProps = state => ({ status: state.status });
+// const mapDispatchToProps = (dispatch: Function) => ({
+//   setName(payload) {
+//     dispatch(setName(payload));
+//   },
+//   removeStatus(payload) {
+//     dispatch(removeEntity(payload));
+//   },
+//   assignNewStatusToStore(payload) {
+//     dispatch(assignNewStatusToStore(payload));
+//   },
+//   assignEmptyStatusToStore() {
+//     dispatch(assignEmptyStatusToStore());
+//   }
+// });
+
+export default connect(mapStateToProps, {
+  setName,
+  removeEntity,
+  assignNewStatusToStore,
+  assignEmptyStatusToStore
+})(StatusSidebar);

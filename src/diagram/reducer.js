@@ -8,7 +8,7 @@ import history from '../history/reducer';
 import type {
   EntityState,
   MetaEntityState,
-  EntityAction,
+  EntityAction
 } from '../entity/reducer';
 import type { CanvasState, CanvasAction } from '../canvas/reducer';
 import type { ConfigState, ConfigAction } from '../config/reducer';
@@ -31,6 +31,7 @@ export type State = {
   config: ConfigState,
   history: HistoryState,
   lastAction: ActionType,
+  status: any
 };
 
 const defaultCoords = { x: 0, y: 0 };
@@ -43,37 +44,38 @@ const initialState = {
       x: 0,
       y: 0,
       width: 100,
-      height: 100,
+      height: 100
     },
     canvasArtboard: {
       x: 0,
       y: 0,
       width: 100,
-      height: 100,
+      height: 100
     },
     connecting: {
       currently: false,
-      from: '',
+      from: ''
     },
     anchoredEntity: {
       isAnchored: false,
-      id: '',
+      id: ''
     },
     canvasAnchor: {
       isMoving: false,
-      coords: defaultCoords,
+      coords: defaultCoords
     },
-    zoom: 1,
+    zoom: 1
   },
   config: {
-    entityTypes: {},
+    entityTypes: {}
   },
   history: {
     past: [],
     future: [],
-    lastAction: '@@INIT',
+    lastAction: '@@INIT'
   },
   lastAction: '@@INIT',
+  status: { id: '', name: '' }
 };
 
 const appReducer = (state: State = initialState, action: Action): State => ({
@@ -85,9 +87,10 @@ const appReducer = (state: State = initialState, action: Action): State => ({
     state.entity,
     state.canvas
   ),
+  status: state.status,
   config: configReducer(state.config, action),
   history: state.history,
-  lastAction: action.type,
+  lastAction: action.type
 });
 
 export default history(appReducer);

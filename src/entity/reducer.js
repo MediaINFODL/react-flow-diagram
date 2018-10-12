@@ -72,7 +72,7 @@ export const EntityActionTypesModify = [
   'rd/entity/MOVE',
   'rd/entity/SET_NAME',
   'rd/entity/SET_LABEL',
-  'rd/entity/SET_CUSTOM',
+  'rd/entity/SET_CUSTOM'
 ];
 
 export type MetaEntityAction =
@@ -95,10 +95,10 @@ const entityReducer = (
         const relevantConfig = configs.entityTypes[entity.type];
         return relevantConfig
           ? {
-              ...entity,
-              width: relevantConfig.width,
-              height: relevantConfig.height,
-            }
+            ...entity,
+            width: relevantConfig.width,
+            height: relevantConfig.height
+          }
           : entity;
       });
     }
@@ -113,8 +113,8 @@ const entityReducer = (
           height: action.payload.height,
           x: action.payload.x,
           y: action.payload.y,
-          name: action.payload.name,
-        },
+          name: action.payload.name
+        }
       ];
 
     case 'rd/entity/LINK_TO': {
@@ -123,24 +123,24 @@ const entityReducer = (
         entity =>
           entity.id === canvas.connecting.from
             ? {
-                ...entity,
-                linksTo: [
-                  ...(entity.linksTo ? entity.linksTo : []),
-                  ...(entity.linksTo &&
-                  entity.linksTo.some(link => link.target === payload)
-                    ? []
-                    : [
-                        {
-                          target: payload,
-                          edited: false,
-                          points: calcLinkPoints(
-                            entity,
-                            state.find(ent => ent.id === payload)
-                          ),
-                        },
-                      ]),
-                ],
-              }
+              ...entity,
+              linksTo: [
+                ...(entity.linksTo ? entity.linksTo : []),
+                ...(entity.linksTo &&
+                entity.linksTo.some(link => link.target === payload)
+                  ? []
+                  : [
+                    {
+                      target: payload,
+                      edited: false,
+                      points: calcLinkPoints(
+                        entity,
+                        state.find(ent => ent.id === payload)
+                      )
+                    }
+                  ])
+              ]
+            }
             : entity
       );
     }
@@ -152,12 +152,12 @@ const entityReducer = (
           existingEntity =>
             existingEntity.id === id
               ? {
-                  ...existingEntity,
-                  linksTo: [
-                    ...(existingEntity.linksTo ? existingEntity.linksTo : []),
-                    { target: entity.id, edited: false },
-                  ],
-                }
+                ...existingEntity,
+                linksTo: [
+                  ...(existingEntity.linksTo ? existingEntity.linksTo : []),
+                  { target: entity.id, edited: false }
+                ]
+              }
               : existingEntity
         ),
         {
@@ -167,21 +167,22 @@ const entityReducer = (
           height: entity.height,
           x: entity.x,
           y: entity.y,
-          name: entity.name,
-        },
+          name: entity.name
+        }
       ];
     }
 
     case 'rd/entity/REMOVE':
+      console.log('pass');
       return state.filter(entity => entity.id !== action.payload).map(
         entity =>
           entity.linksTo
             ? {
-                ...entity,
-                linksTo: entity.linksTo.filter(
-                  link => link.target !== action.payload
-                ),
-              }
+              ...entity,
+              linksTo: entity.linksTo.filter(
+                link => link.target !== action.payload
+              )
+            }
             : entity
       );
 
@@ -189,7 +190,7 @@ const entityReducer = (
       if (canvas.anchoredEntity.isAnchored) {
         const { id } = canvas.anchoredEntity;
         const mEntity = metaEntity.find(e => e.id === id) || {
-          anchor: { x: 0, y: 0 },
+          anchor: { x: 0, y: 0 }
         };
         const x = canvas.cursor.x - mEntity.anchor.x;
         const y = canvas.cursor.y - mEntity.anchor.y;
@@ -206,14 +207,14 @@ const entityReducer = (
                 points: calcLinkPoints(
                   entity,
                   state.find(ent => ent.id === link.target)
-                ),
-              })),
+                )
+              }))
             };
           } else if (entity.id === id) {
             return {
               ...entity,
               x: gridX,
-              y: gridY,
+              y: gridY
             };
           } else if (
             entity.linksTo &&
@@ -225,14 +226,14 @@ const entityReducer = (
                 link =>
                   link.target === id
                     ? {
-                        ...link,
-                        points: calcLinkPoints(
-                          entity,
-                          state.find(ent => ent.id === id)
-                        ),
-                      }
+                      ...link,
+                      points: calcLinkPoints(
+                        entity,
+                        state.find(ent => ent.id === id)
+                      )
+                    }
                     : link
-              ),
+              )
             };
           } else {
             return entity;
@@ -261,14 +262,14 @@ const entityReducer = (
               points: calcLinkPoints(
                 entity,
                 state.find(ent => ent.id === link.target)
-              ),
-            })),
+              )
+            }))
           };
         } else if (entity.id === id) {
           return {
             ...entity,
             x: gridX,
-            y: gridY,
+            y: gridY
           };
         } else if (
           entity.linksTo &&
@@ -280,14 +281,14 @@ const entityReducer = (
               link =>
                 link.target === id
                   ? {
-                      ...link,
-                      points: calcLinkPoints(
-                        entity,
-                        state.find(ent => ent.id === id)
-                      ),
-                    }
+                    ...link,
+                    points: calcLinkPoints(
+                      entity,
+                      state.find(ent => ent.id === id)
+                    )
+                  }
                   : link
-            ),
+            )
           };
         } else {
           return entity;
@@ -301,9 +302,9 @@ const entityReducer = (
         entity =>
           entity.id === id
             ? {
-                ...entity,
-                name,
-              }
+              ...entity,
+              name
+            }
             : entity
       );
     }
@@ -314,19 +315,19 @@ const entityReducer = (
         entity =>
           entity.id === id
             ? {
-                ...entity,
-                linksTo: entity.linksTo
-                  ? entity.linksTo.map(
-                      link =>
-                        link.target === to
-                          ? {
-                              ...link,
-                              label,
-                            }
-                          : link
-                    )
-                  : [{ target: to, label }],
-              }
+              ...entity,
+              linksTo: entity.linksTo
+                ? entity.linksTo.map(
+                  link =>
+                    link.target === to
+                      ? {
+                        ...link,
+                        label
+                      }
+                      : link
+                )
+                : [{ target: to, label }]
+            }
             : entity
       );
     }
@@ -337,19 +338,19 @@ const entityReducer = (
         entity =>
           entity.id === from
             ? {
-                ...entity,
-                linksTo: entity.linksTo
-                  ? entity.linksTo.map(
-                      link =>
-                        link.target === to
-                          ? {
-                              ...link,
-                              points,
-                            }
-                          : link
-                    )
-                  : [{ target: to, points }],
-              }
+              ...entity,
+              linksTo: entity.linksTo
+                ? entity.linksTo.map(
+                  link =>
+                    link.target === to
+                      ? {
+                        ...link,
+                        points
+                      }
+                      : link
+                )
+                : [{ target: to, points }]
+            }
             : entity
       );
     }
@@ -360,9 +361,9 @@ const entityReducer = (
         entity =>
           entity.id === id
             ? {
-                ...entity,
-                custom,
-              }
+              ...entity,
+              custom
+            }
             : entity
       );
     }
@@ -387,8 +388,8 @@ export const metaEntityReducer = (
         isSelected: false,
         anchor: {
           x: ent.width / 2,
-          y: ent.height / 2,
-        },
+          y: ent.height / 2
+        }
       }));
 
     case 'rd/entity/ADD':
@@ -400,9 +401,9 @@ export const metaEntityReducer = (
           isSelected: action.payload.isSelected,
           anchor: {
             x: action.payload.width / 2,
-            y: action.payload.height / 2,
-          },
-        },
+            y: action.payload.height / 2
+          }
+        }
       ];
     case 'rd/entity/ADD_LINKED':
       return [
@@ -413,9 +414,9 @@ export const metaEntityReducer = (
           isSelected: action.payload.entity.isSelected,
           anchor: {
             x: action.payload.entity.width / 2,
-            y: action.payload.entity.height / 2,
-          },
-        },
+            y: action.payload.entity.height / 2
+          }
+        }
       ];
 
     case 'rd/metaentity/SELECT': {
@@ -434,17 +435,17 @@ export const metaEntityReducer = (
         metaEntity =>
           metaEntity.id === id
             ? {
-                ...metaEntity,
-                isAnchored: true,
-                anchor: {
-                  x:
-                    canvas.cursor.x -
-                    (entity.find(e => e.id === id) || { x: 0 }).x,
-                  y:
-                    canvas.cursor.y -
-                    (entity.find(e => e.id === id) || { y: 0 }).y,
-                },
+              ...metaEntity,
+              isAnchored: true,
+              anchor: {
+                x:
+                  canvas.cursor.x -
+                  (entity.find(e => e.id === id) || { x: 0 }).x,
+                y:
+                  canvas.cursor.y -
+                  (entity.find(e => e.id === id) || { y: 0 }).y
               }
+            }
             : { ...metaEntity, isAnchored: false }
       );
     }
@@ -464,7 +465,7 @@ export const metaEntityReducer = (
 
 export const setEntities = (payload: EntityState): EntityAction => ({
   type: 'rd/entity/SET',
-  payload,
+  payload
 });
 
 export const addEntity = (
@@ -473,7 +474,7 @@ export const addEntity = (
 
 export const linkTo = (payload: EntityId): EntityAction => ({
   type: 'rd/entity/LINK_TO',
-  payload,
+  payload
 });
 
 export const addLinkedEntity = (
@@ -482,26 +483,32 @@ export const addLinkedEntity = (
 
 export const removeEntity = (payload: EntityId): EntityAction => ({
   type: 'rd/entity/REMOVE',
-  payload,
+  payload
 });
 
 export const move = (payload: MovePayload): EntityAction => ({
   type: 'rd/entity/MOVE',
-  payload,
+  payload
 });
 
 export const setName = (payload: SetNamePayload): EntityAction => ({
   type: 'rd/entity/SET_NAME',
-  payload,
+  payload
 });
+
+export const setCurrentStatus = (payload: SetNamePayload): EntityAction => ({
+  type: 'rd/entity/SET_STATUS',
+  payload
+});
+
 export const setLabel = (payload: SetLabelPayload): EntityAction => ({
   type: 'rd/entity/SET_LABEL',
-  payload,
+  payload
 });
 
 export const setCustom = (payload: SetCustomPayload): EntityAction => ({
   type: 'rd/entity/SET_CUSTOM',
-  payload,
+  payload
 });
 
 export const selectEntity = (
@@ -509,12 +516,12 @@ export const selectEntity = (
   isSelected?: boolean = true
 ): MetaEntityAction => ({
   type: 'rd/metaentity/SELECT',
-  payload: { id, isSelected },
+  payload: { id, isSelected }
 });
 
 export const unselectAll = (): MetaEntityAction => ({
   type: 'rd/metaentity/UNSELECTALL',
-  payload: null,
+  payload: null
 });
 
 export default entityReducer;

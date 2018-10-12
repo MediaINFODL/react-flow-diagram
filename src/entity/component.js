@@ -8,7 +8,7 @@ import {
   linkTo,
   addLinkedEntity,
   removeEntity,
-  selectEntity,
+  selectEntity, setName
 } from './reducer';
 import { connecting, anchorEntity } from '../canvas/reducer';
 import defaultEntity from './defaultEntity';
@@ -24,18 +24,20 @@ import type {
   MovePayload,
   AddLinkedEntityPayload,
   EntityAction,
-  MetaEntityAction,
+  MetaEntityAction
 } from './reducer';
 import type {
   CanvasState,
   CanvasAction,
   ConnectingPayload,
-  AnchorEntityPayload,
+  AnchorEntityPayload
 } from '../canvas/reducer';
 import type { State } from '../diagram/reducer';
 import type { DefaultEntityProps } from './defaultEntity';
 import type { ContextMenuActions } from '../contextMenu/component';
 import type { ConfigEntityTypes } from '../config/reducer';
+import { assignStatusToStore, testAction } from '../history/reducer';
+import StatusSidebar from '../status-sidebar/component';
 
 /*
  * Presentational
@@ -60,23 +62,23 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
   const remove = {
     action: () => props.removeEntity(props.model.id),
     iconVariety: 'delete',
-    label: 'Remove',
+    label: 'Remove'
   };
 
   const connectAction = {
     action: () => props.connecting({ currently: true, from: props.model.id }),
     iconVariety: 'arrow',
-    label: 'Connect',
+    label: 'Connect'
   };
 
   const addEntities = props.entityTypeNames.map(entityTypeName => ({
     action: () =>
       props.addLinkedEntity({
         entity: props.defaultEntity({ entityType: entityTypeName }),
-        id: props.model.id,
+        id: props.model.id
       }),
     iconVariety: entityTypeName,
-    label: `Add ${entityTypeName}`,
+    label: `Add ${entityTypeName}`
   }));
 
   return [remove, ...addEntities, connectAction];
@@ -98,7 +100,7 @@ const Entity = (props: EntityProps) => (
     style={{
       transform: `translate(${props.model.x}px, ${props.model.y}px)`,
       zIndex: props.isAnchored || props.isSelected ? '100' : '10',
-      cursor: props.toBeConnected ? 'pointer' : 'move',
+      cursor: props.toBeConnected ? 'pointer' : 'move'
     }}
   >
     <div
@@ -109,7 +111,7 @@ const Entity = (props: EntityProps) => (
     >
       {props.children}
     </div>
-    {props.isSelected && <ContextMenu actions={contextMenuActions(props)} />}
+    {props.isSelected && <ContextMenu actions={contextMenuActions(props)}/>}
   </EntityStyle>
 );
 
@@ -150,12 +152,10 @@ type EntityContainerProps = {
   defaultEntity: DefaultEntityProps => EntityModel & MetaEntityModel,
 };
 const EntityContainerHOC = WrappedComponent =>
-  class extends React.PureComponent<
-    EntityContainerProps,
-    EntityContainerState
-  > {
+  class extends React.PureComponent<EntityContainerProps,
+    EntityContainerState> {
     state = {
-      onMouseUpWouldBeClick: true,
+      onMouseUpWouldBeClick: true
     };
 
     componentDidMount() {
@@ -172,6 +172,7 @@ const EntityContainerHOC = WrappedComponent =>
 
     onMouseDown = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
+      // console.log(this.props.model, 'mouse down');
       if (this.props.canvas.connecting.currently) {
         // In this case we want to select an entity to be connected to a
         // previously selected entity to connect from
@@ -225,13 +226,15 @@ const EntityContainerHOC = WrappedComponent =>
           y:
             2 * (this.props.canvas.cursor.y - this.props.meta.anchor.y) -
             this.props.model.y,
-          id: this.props.model.id,
+          id: this.props.model.id
         });
       }
     };
 
     onMouseUp = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
+      console.log('mouse up and assign status to store');
+      this.props.assignStatusToStore(this.props.model);
       if (!this.state.onMouseUpWouldBeClick) {
         // Behaves as if it was spawned with a mouse drag
         // meaning that when you release the mouse button,
@@ -259,7 +262,7 @@ const EntityContainerHOC = WrappedComponent =>
           onMouseLeave={this.onMouseLeave}
           onMouseUp={this.onMouseUp}
         >
-          <WrappedComponent model={this.props.model} meta={this.props.meta} />
+          <WrappedComponent model={this.props.model} meta={this.props.meta}/>
         </Entity>
       );
     }
@@ -271,7 +274,7 @@ const mapStateToProps = (state: State, ownProps) => ({
     metaEntity => metaEntity.id === ownProps.model.id
   ),
   entityTypes: state.config.entityTypes,
-  defaultEntity: defaultEntity(state),
+  defaultEntity: defaultEntity(state)
 });
 
 export default (WrappedComponent: ComponentType<*>) =>
@@ -283,4 +286,5 @@ export default (WrappedComponent: ComponentType<*>) =>
     selectEntity,
     connecting,
     anchorEntity,
+    assignStatusToStore
   })(EntityContainerHOC(WrappedComponent));

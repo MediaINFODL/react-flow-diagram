@@ -131,19 +131,19 @@ class Canvas extends React.PureComponent<CanvasProps,
         >
 
           <SvgLand width="100%" height="100%"
-          onMouseMove={this.props.onMouseMove}
+                   onMouseMove={this.props.onMouseMove}
           >
 
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
               // $FlowFixMe
               .map(entity => <Links key={entity.id}
-                links={entity.linksTo}
-                handleSidebarChange={this.handleSidebarChange} />)}
+                                    links={entity.linksTo}
+                                    handleSidebarChange={this.handleSidebarChange}/>)}
             {/* https://github.com/facebook/flow/issues/1414 */}
-            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
+            {this.props.isConnecting && <Links links={this.props.connectingLink}/>}
 
-            <ArrowMarker />
+            <ArrowMarker/>
           </SvgLand>
 
           {this.props.entities
@@ -152,29 +152,20 @@ class Canvas extends React.PureComponent<CanvasProps,
               CustomEntity: this.props.wrappedCustomEntities[entity.type]
             }))
             .map(Combo => (
-              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
+              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity}/>
             ))}
         </CanvasArtboard>
 
         <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
-        {/* {this.state.statusSidebarOpen &&
-        <StatusSidebar
-          open={this.state.statusSidebarOpen}
-          currentStatus={this.state.currentStatus}
-          statusId={this.state.statusId}
-          handleEmitSidebarChange={this.handleEmitSidebarChange}
-          handleEmitStatusSave={this.handleEmitStatusSave}
-          handleEmitStatusDelete={this.handleEmitStatusDelete}
-        />
-        } */}
+        <StatusSidebar/>
         {this.state.sidebarOpened &&
-          <EditSidebar
-            handleSidebarChange={this.handleSidebarChange}
-            opened={this.state.sidebarOpened}
-            selectedLabel={this.state.selectedLabel}
-            selectedLinkId={this.state.selectedLinkId}
-            // onSelectedLinkLabel={this.onSelectedLinkLabel}
-            onSaveLabel={this.onSaveLabel} />
+        <EditSidebar
+          handleSidebarChange={this.handleSidebarChange}
+          opened={this.state.sidebarOpened}
+          selectedLabel={this.state.selectedLabel}
+          selectedLinkId={this.state.selectedLinkId}
+          // onSelectedLinkLabel={this.onSelectedLinkLabel}
+          onSaveLabel={this.onSaveLabel}/>
         }
       </CanvasViewport>
     );

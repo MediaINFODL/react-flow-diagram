@@ -6,7 +6,7 @@ import type {
   State,
   Action,
   ActionShape,
-  ActionType,
+  ActionType
 } from '../diagram/reducer';
 
 export type HistoryStateShape<T> = {
@@ -41,24 +41,24 @@ const history = (reducer: Reducer<State, Action>) => (
         nextState.history.past[nextState.history.past.length - 1];
       return pastStep
         ? {
-            ...nextState,
-            entity: pastStep.entity,
-            metaEntity: pastStep.metaEntity,
-            history: {
-              past: nextState.history.past.slice(
-                0,
-                nextState.history.past.length - 1
-              ),
-              future: [
-                {
-                  entity: nextState.entity,
-                  metaEntity: nextState.metaEntity,
-                },
-                ...nextState.history.future,
-              ],
-              lastAction: nextState.history.lastAction,
-            },
+          ...nextState,
+          entity: pastStep.entity,
+          metaEntity: pastStep.metaEntity,
+          history: {
+            past: nextState.history.past.slice(
+              0,
+              nextState.history.past.length - 1
+            ),
+            future: [
+              {
+                entity: nextState.entity,
+                metaEntity: nextState.metaEntity
+              },
+              ...nextState.history.future
+            ],
+            lastAction: nextState.history.lastAction
           }
+        }
         : nextState;
     }
 
@@ -66,24 +66,42 @@ const history = (reducer: Reducer<State, Action>) => (
       const futureStep = nextState.history.future[0];
       return futureStep
         ? {
-            ...nextState,
-            entity: futureStep.entity,
-            metaEntity: futureStep.metaEntity,
-            history: {
-              past: [
-                ...nextState.history.past,
-                {
-                  entity: state.entity,
-                  metaEntity: state.metaEntity,
-                },
-              ],
-              future: nextState.history.future.slice(1),
-              lastAction: nextState.history.lastAction,
-            },
+          ...nextState,
+          entity: futureStep.entity,
+          metaEntity: futureStep.metaEntity,
+          history: {
+            past: [
+              ...nextState.history.past,
+              {
+                entity: state.entity,
+                metaEntity: state.metaEntity
+              }
+            ],
+            future: nextState.history.future.slice(1),
+            lastAction: nextState.history.lastAction
           }
+        }
         : nextState;
     }
-
+    case 'STATUS-SELECTED': {
+      if (action.payload.id !== state.status.id) {
+        console.log('status-selected');
+        return Object.assign({}, state, { status: action.payload });
+      }
+      return state;
+    }
+    case 'UPDATE-STATUS': {
+      if (state.status.name !== action.payload) {
+        console.log('update');
+        const new_status = Object.assign({}, state.status, { name: action.payload });
+        return Object.assign({}, state, { status: new_status });
+      }
+      return state;
+    }
+    case 'RESET-STATUS': {
+      console.log('reset');
+      return Object.assign({}, state, { status: { id: '', name: '' } });
+    }
     default:
       if (action.type === state.history.lastAction) {
         return nextState;
@@ -92,16 +110,16 @@ const history = (reducer: Reducer<State, Action>) => (
           ...nextState.history.past,
           {
             entity: state.entity,
-            metaEntity: state.metaEntity,
-          },
+            metaEntity: state.metaEntity
+          }
         ];
         return {
           ...nextState,
           history: {
             past: newPast.length > historyLimit ? newPast.slice(1) : newPast,
             future: [],
-            lastAction: action.type,
-          },
+            lastAction: action.type
+          }
         };
       }
   }
@@ -109,12 +127,27 @@ const history = (reducer: Reducer<State, Action>) => (
 
 export const undo = (): HistoryAction => ({
   type: 'rd/history/UNDO',
-  payload: undefined,
+  payload: undefined
 });
 
 export const redo = (): HistoryAction => ({
   type: 'rd/history/REDO',
-  payload: undefined,
+  payload: undefined
+});
+
+export const assignStatusToStore = (payload) => ({
+  type: 'STATUS-SELECTED',
+  payload
+});
+
+export const assignNewStatusToStore = (payload) => ({
+  type: 'UPDATE-STATUS',
+  payload
+});
+
+export const assignEmptyStatusToStore = () => ({
+  type: 'RESET-STATUS',
+  payload: undefined
 });
 
 export default history;
