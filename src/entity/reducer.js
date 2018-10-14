@@ -308,6 +308,7 @@ const entityReducer = (
             : entity
       );
     }
+
     case 'rd/entity/SET_LABEL': {
       const { id, to, label } = action.payload;
       console.log('the paloua', action.payload);
@@ -391,7 +392,6 @@ export const metaEntityReducer = (
           y: ent.height / 2
         }
       }));
-
     case 'rd/entity/ADD':
       return [
         ...state,
@@ -418,7 +418,6 @@ export const metaEntityReducer = (
           }
         }
       ];
-
     case 'rd/metaentity/SELECT': {
       const { id, isSelected } = action.payload;
       return state.map(
@@ -428,7 +427,6 @@ export const metaEntityReducer = (
             : { ...metaEntity, isSelected: false }
       );
     }
-
     case 'rd/canvas/ANCHOR_ENTITY': {
       const { id } = action.payload;
       return state.map(
@@ -449,15 +447,12 @@ export const metaEntityReducer = (
             : { ...metaEntity, isAnchored: false }
       );
     }
-
     case 'rd/entity/REMOVE':
       return state.filter(ent => ent.id !== action.payload);
-
     case 'rd/entity/CONNECT':
     case 'rd/metaentity/UNSELECTALL':
     case 'rd/canvas/ANCHOR_CANVAS':
       return state.map(unselectMetaEntity);
-
     default:
       return state;
   }

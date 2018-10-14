@@ -129,11 +129,11 @@ class Canvas extends React.PureComponent<CanvasProps,
           artboard={this.props.artboard}
           zoomLevel={this.props.zoomLevel}
         >
-
-          <SvgLand width="100%" height="100%"
-                   onMouseMove={this.props.onMouseMove}
+          <SvgLand
+            width="100%"
+            height="100%"
+            onMouseMove={this.props.onMouseMove}
           >
-
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
               // $FlowFixMe
@@ -142,7 +142,6 @@ class Canvas extends React.PureComponent<CanvasProps,
                                     handleSidebarChange={this.handleSidebarChange}/>)}
             {/* https://github.com/facebook/flow/issues/1414 */}
             {this.props.isConnecting && <Links links={this.props.connectingLink}/>}
-
             <ArrowMarker/>
           </SvgLand>
 

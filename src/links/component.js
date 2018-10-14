@@ -24,43 +24,59 @@ const InteractionLine = style.path`
 `;
 
 type ArrowBodyProps = {
+  rawPoints: { x: number, y: number }[],
   points: string,
   id: EntityId,
   label: ?string,
   handleSidebarChange: () => void
 };
-class ArrowBody extends React.PureComponent<
-  ArrowBodyProps
-  > {
+
+class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   constructor(props) {
     super(props);
+    this.state = {
+      label: this.props.label
+    };
   }
+
+  checkIfLabelIsDown = () => {
+    let flag = true;
+    let init = this.props.rawPoints[0].x;
+    this.props.rawPoints.map((p: Point) => {
+      if (p.x < init) {
+        flag = false;
+      }
+    });
+    if (!flag) {
+      this.state.label = this.state.label.split('').reverse().join('');
+    }
+    return flag ? 0 : 180;
+  };
+
   render() {
-
     return (
-
       <g>
-        <Line d={this.props.points} id={`line${this.props.id}`} />
-        <InteractionLine
-          d={this.props.points}
-        />
+        <Line d={this.props.points} id={`line${this.props.id}`}/>
+        <InteractionLine d={this.props.points}/>
         {this.props.label && (
-          <text dy="-.25rem">
+          <text
+            dy="-.3rem"
+            rotate={this.checkIfLabelIsDown()}>
             <textPath
               xlinkHref={`#line${this.props.id}`}
-              startOffset="33%"
+              startOffset="35%"
               style={{ fontSize: '.8rem', cursor: 'pointer' }}
               onClick={() => {
                 // Handles the opening on the sidebar, as well as passing the selected label
                 this.props.handleSidebarChange(true, this.props);
               }}
             >
-              {this.props.label}
+              {this.state.label}
             </textPath>
           </text>
         )}
       </g>
-    )
+    );
   }
 }
 
@@ -78,10 +94,8 @@ type ArrowBodyContainerProps = {
   links: Links,
   handleSidebarChange: () => void
 };
-class ArrowBodyContainer extends React.PureComponent<
-  ArrowBodyContainerProps
-  >
-{
+
+class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
   render() {
     return (
       <g>
@@ -93,13 +107,14 @@ class ArrowBodyContainer extends React.PureComponent<
                 id={link.target}
                 label={link.label}
                 points={pointsToString(link.points)}
+                rawPoints={link.points}
                 handleSidebarChange={this.props.handleSidebarChange}
               >
               </ArrowBody>
             )
         )}
       </g>
-    )
+    );
   }
 }
 

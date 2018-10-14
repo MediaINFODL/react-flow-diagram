@@ -255,7 +255,7 @@ const model: EntityState = [
         ]
       }
     ]
-    
+
   },
   {
     id: 'indexdone',
