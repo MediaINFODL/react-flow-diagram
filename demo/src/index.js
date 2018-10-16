@@ -8,7 +8,8 @@ import model2 from './model-example2';
 import model from './model-example';
 import { config, customEntities } from './config-example';
 import MenuNav from '../../src/menu/component';
-import { Button, button } from 'semantic-ui-react';
+import { Divider, Button, Icon, Grid, Container, Header } from 'semantic-ui-react';
+import './menu.css';
 
 
 // eslint-disable-next-line no-unused-expressions
@@ -58,9 +59,25 @@ class Demo extends React.PureComponent<{}> {
   render() {
     return (
       <Main>
-        <h1>react-flow-diagram Demo</h1>
+      <Grid container columns={1} stackable>
+      <Grid.Column>  
+      <Header as='h2' content='React-flow-diagram Demo' textAlign='left' />
+      </Grid.Column>
+      </Grid>
+        <Grid container columns={2} stackable>
+        <Grid.Column>  
         <MenuNav />
-        <Button onClick={this.saveChanges}>Save Changes</Button>
+        </Grid.Column>
+        <Grid.Column className='save-button'> 
+        <div>
+        <Button positive primary icon onClick={this.saveChangesicon} labelPosition='right'>
+            Save
+            <Icon name='right save' />
+        </Button>
+        </div>
+        </Grid.Column>
+        </Grid>
+        <Divider hidden />
         <Diagram customEntities={customEntities} />
       </Main>
     );
