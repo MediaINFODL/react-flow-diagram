@@ -25,7 +25,7 @@ const ArrowMarker = () => (
     markerHeight="10"
     orient="auto"
   >
-    <Arrow d="M 1 5 L 11 10 L 1 15 Z" />
+    <Arrow d="M 1 5 L 11 10 L 1 15 Z"/>
   </marker>
 );
 

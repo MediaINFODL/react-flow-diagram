@@ -3,7 +3,7 @@
 import React from 'react';
 import style from 'styled-components';
 
-import type { Links, Point, EntityId } from '../entity/reducer';
+import type { EntityId, Links, Point } from '../entity/reducer';
 /*
  * Presentational
  * ==================================== */
@@ -13,6 +13,7 @@ const Line = style.path`
   stroke-width: .1em;
   stroke: black;
   stroke-linejoin: round;
+  marker-start: url("#circle-start");
   marker-end: url("#arrow-end");
 `;
 
@@ -85,13 +86,60 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
  * Container
  * ==================================== */
 
-const pointsToString = (points: Array<Point>): string =>
-  points
+const pointsToString = (points: Array<Point>): string => {
+  const str = points
     .reduce((acc, curr) => `${acc} ${curr.x},${curr.y} L`, 'M')
     .replace(/ L$/, '');
+  return str;
+};
+
+const positionStartOfPath = (points: Array<Point>, entity) => {
+  if (!entity) {
+    return pointsToString(points);
+  }
+  const start = points[0];
+  const joint = points[1];
+
+  let direction = '';
+
+  if (start.x > joint.x) {
+    direction = 'left';
+  } else if (start.x < joint.x) {
+    direction = 'right';
+  }
+
+  if (start.y > joint.y) {
+    direction = 'up';
+  } else if (start.y < joint.y) {
+    direction = 'down';
+  }
+
+  let connectValue;
+  switch (direction) {
+    case 'left':
+      connectValue = entity.x;
+      points[0].x = connectValue;
+      break;
+    case 'right':
+      connectValue = entity.x + entity.width;
+      points[0].x = connectValue;
+      break;
+    case 'up':
+      connectValue = entity.y;
+      points[0].y = connectValue;
+      break;
+    case 'down':
+      connectValue = entity.y + entity.height;
+      points[0].y = connectValue;
+      break;
+  }
+
+  return pointsToString(points);
+};
 
 type ArrowBodyContainerProps = {
   links: Links,
+  entity: any,
   handleSidebarChange: () => void
 };
 
@@ -106,7 +154,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
                 key={link.target}
                 id={link.target}
                 label={link.label}
-                points={pointsToString(link.points)}
+                points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}
                 handleSidebarChange={this.props.handleSidebarChange}
               >

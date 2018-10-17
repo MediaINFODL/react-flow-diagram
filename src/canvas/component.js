@@ -24,6 +24,7 @@ import type { CustomEntities } from '../diagram/component';
 import type { State } from '../diagram/reducer';
 import type { HistoryAction } from '../history/reducer';
 import StatusSidebar from '../status-sidebar/component';
+import CircleMarker from '../circleMarker/component';
 /*
  * Presentational
  * ==================================== */
@@ -134,11 +135,13 @@ class Canvas extends React.PureComponent<CanvasProps,
             height="100%"
             onMouseMove={this.props.onMouseMove}
           >
+            <CircleMarker/>
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
               // $FlowFixMe
               .map(entity => <Links key={entity.id}
                                     links={entity.linksTo}
+                                    entity={entity}
                                     handleSidebarChange={this.handleSidebarChange}/>)}
             {/* https://github.com/facebook/flow/issues/1414 */}
             {this.props.isConnecting && <Links links={this.props.connectingLink}/>}
