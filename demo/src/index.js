@@ -59,25 +59,19 @@ class Demo extends React.PureComponent<{}> {
   render() {
     return (
       <Main>
-      <Grid container columns={1} stackable>
-      <Grid.Column>  
-      <Header as='h2' content='React-flow-diagram Demo' textAlign='left' />
-      </Grid.Column>
-      </Grid>
-        <Grid container columns={2} stackable>
+        <div className='header-container'>
         <Grid.Column>  
         <MenuNav />
         </Grid.Column>
         <Grid.Column className='save-button'> 
         <div>
         <Button positive primary icon onClick={this.saveChangesicon} labelPosition='right'>
-            Save
-            <Icon name='right save' />
+            Save Workflow
+            <Icon name=' save' />
         </Button>
         </div>
         </Grid.Column>
-        </Grid>
-        <Divider hidden />
+        </div>
         <Diagram customEntities={customEntities} />
       </Main>
     );

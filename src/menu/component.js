@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown, Menu } from 'semantic-ui-react';
+import { Dropdown, Menu, Select } from 'semantic-ui-react';
 import {  store, setEntities  } from '../../src'
 import model2 from '../../demo/src//model-example2';
 import model from '../../demo/src/model-example';
@@ -14,6 +14,7 @@ changeWorkfow(item){
 render() {
   // This syntax ensures `this` is bound within handleClick
   return (
+    <div>
     <Menu vertical>
     <Dropdown item text='All models'>
       <Dropdown.Menu>
@@ -23,6 +24,10 @@ render() {
       </Dropdown.Menu>
     </Dropdown>
   </Menu>
+  <Select 
+    placeholder='Select workflow' 
+    options={workflowOptions} />
+  </div>
   );
 }
 
