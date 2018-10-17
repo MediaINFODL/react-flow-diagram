@@ -24,10 +24,7 @@ render() {
       </Dropdown.Menu>
     </Dropdown>
   </Menu>
-  <Select 
-    placeholder='Select workflow' 
-    options={workflowOptions} />
-  </div>
+</div>
   );
 }
 
