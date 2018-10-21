@@ -78,20 +78,6 @@ class StatusSidebar extends Component<StatusSidebarProps> {
 }
 
 const mapStateToProps = state => ({ status: state.status });
-// const mapDispatchToProps = (dispatch: Function) => ({
-//   setName(payload) {
-//     dispatch(setName(payload));
-//   },
-//   removeStatus(payload) {
-//     dispatch(removeEntity(payload));
-//   },
-//   assignNewStatusToStore(payload) {
-//     dispatch(assignNewStatusToStore(payload));
-//   },
-//   assignEmptyStatusToStore() {
-//     dispatch(assignEmptyStatusToStore());
-//   }
-// });
 
 export default connect(mapStateToProps, {
   setName,
