@@ -1,0 +1,17 @@
+.save-button{
+    text-align: right;
+}
+.header-container{
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+  -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+  box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+  z-index: 1;
+  height: 60px;
+  padding: 10px
+}
+.header-container > div{
+    flex-grow:1;
+}
+

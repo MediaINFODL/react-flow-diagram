@@ -35,11 +35,13 @@ const PanelTool = style.li`
   height: ${props => props.width}px;
   padding: .6em;
   ${props =>
-    props.separator ? 'border-top: 1px solid rgba(0, 0, 0, .25);' : ''}
-  background-color: #ddd;
+    props.separator ? 'border-top: 1px solid rgba(0, 0, 0, .05);' : ''}
+  background-color: white;
   transition: background-color ease-in 80ms;
   cursor: pointer;
-
+  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);  
   &:hover {
     background-color: #ccc;
   }

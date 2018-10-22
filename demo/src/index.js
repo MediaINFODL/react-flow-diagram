@@ -8,7 +8,8 @@ import model2 from './model-example2';
 import model from './model-example';
 import { config, customEntities } from './config-example';
 import MenuNav from '../../src/menu/component';
-import { Button, button } from 'semantic-ui-react';
+import { Divider, Button, Icon, Grid, Container, Header } from 'semantic-ui-react';
+import './menu.css';
 
 
 // eslint-disable-next-line no-unused-expressions
@@ -43,7 +44,7 @@ class Demo extends React.PureComponent<{}> {
     })
   }
   saveChanges(item){
-    console.log(this.state.newModel)
+    console.log(JSON.stringify(this.state.newModel))
     console.log("this is an object that will go to Future API")
   }
   componentWillMount() {
@@ -58,9 +59,19 @@ class Demo extends React.PureComponent<{}> {
   render() {
     return (
       <Main>
-        <h1>react-flow-diagram Demo</h1>
+        <div className='header-container'>
+        <Grid.Column>  
         <MenuNav />
-        <Button onClick={this.saveChanges}>Save Changes</Button>
+        </Grid.Column>
+        <Grid.Column className='save-button'> 
+        <div>
+        <Button positive primary icon onClick={this.saveChanges} labelPosition='right'>
+            Save Workflow
+            <Icon name=' save' />
+        </Button>
+        </div>
+        </Grid.Column>
+        </div>
         <Diagram customEntities={customEntities} />
       </Main>
     );

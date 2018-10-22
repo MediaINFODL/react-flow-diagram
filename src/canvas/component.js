@@ -24,6 +24,7 @@ import type { CustomEntities } from '../diagram/component';
 import type { State } from '../diagram/reducer';
 import type { HistoryAction } from '../history/reducer';
 import StatusSidebar from '../status-sidebar/component';
+import CircleMarker from '../circleMarker/component';
 /*
  * Presentational
  * ==================================== */
@@ -33,7 +34,7 @@ const CanvasViewport = style.div`
   flex: 1 0 auto;
   position: relative;
   overflow: hidden;
-  background-color: #282828;
+  background-color: #fefefe;
 
   & * {
     box-sizing: border-box;
@@ -56,8 +57,8 @@ const CanvasArtboard = style.div.attrs({
       height: `${props.artboard.height}px`
     };
     const gridStyle = {
-      backgroundImage: `linear-gradient(0deg, transparent 0%, transparent ${restPercentage}%, rgba(0, 0, 0, .2) 100%),
-linear-gradient(90deg, transparent 0%, transparent ${restPercentage}%, rgba(0, 0, 0, .2) 100%)`,
+      backgroundImage: `linear-gradient(0deg, transparent 0%, transparent ${restPercentage}%, rgba(0, 0, 0, .05) 100%),
+linear-gradient(90deg, transparent 0%, transparent ${restPercentage}%, rgba(0, 0, 0, .05) 100%)`,
       backgroundSize: `${props.gridSize}px ${props.gridSize}px`
     };
     return props.gridSize ? { ...defaultStyles, ...gridStyle } : defaultStyles;
@@ -65,7 +66,7 @@ linear-gradient(90deg, transparent 0%, transparent ${restPercentage}%, rgba(0, 0
 })`
   position: relative;
   transform-origin: 0 0;
-  background-color: #eee;
+  background-color: white;
   overflow: hidden;
 `;
 
@@ -134,11 +135,13 @@ class Canvas extends React.PureComponent<CanvasProps,
             height="100%"
             onMouseMove={this.props.onMouseMove}
           >
+            <CircleMarker/>
             {this.props.entities
               .filter(entity => 'linksTo' in entity)
               // $FlowFixMe
               .map(entity => <Links key={entity.id}
                                     links={entity.linksTo}
+                                    entity={entity}
                                     handleSidebarChange={this.handleSidebarChange}/>)}
             {/* https://github.com/facebook/flow/issues/1414 */}
             {this.props.isConnecting && <Links links={this.props.connectingLink}/>}

@@ -8,7 +8,7 @@ import {
   linkTo,
   addLinkedEntity,
   removeEntity,
-  selectEntity, setName
+  selectEntity
 } from './reducer';
 import { connecting, anchorEntity } from '../canvas/reducer';
 import defaultEntity from './defaultEntity';
@@ -36,8 +36,7 @@ import type { State } from '../diagram/reducer';
 import type { DefaultEntityProps } from './defaultEntity';
 import type { ContextMenuActions } from '../contextMenu/component';
 import type { ConfigEntityTypes } from '../config/reducer';
-import { assignStatusToStore, testAction } from '../history/reducer';
-import StatusSidebar from '../status-sidebar/component';
+import { assignStatusToStore } from '../history/reducer';
 
 /*
  * Presentational
@@ -81,7 +80,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
     label: `Add ${entityTypeName}`
   }));
 
-  return [remove, ...addEntities, connectAction];
+  return [...addEntities, connectAction];
 };
 
 const EntityStyle = style.div`
@@ -155,7 +154,8 @@ const EntityContainerHOC = WrappedComponent =>
   class extends React.PureComponent<EntityContainerProps,
     EntityContainerState> {
     state = {
-      onMouseUpWouldBeClick: true
+      onMouseUpWouldBeClick: true,
+      entityCoordinates: { x: this.props.canvas.cursor.x, y: this.props.canvas.cursor.y }
     };
 
     componentDidMount() {
@@ -172,6 +172,9 @@ const EntityContainerHOC = WrappedComponent =>
 
     onMouseDown = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
+      const { x, y } = this.props.model;
+      this.setState({ entityCoordinates: { x, y } });
+      console.log('mouse down', this.props.model.x, this.props.model.y);
       // console.log(this.props.model, 'mouse down');
       if (this.props.canvas.connecting.currently) {
         // In this case we want to select an entity to be connected to a
@@ -233,8 +236,9 @@ const EntityContainerHOC = WrappedComponent =>
 
     onMouseUp = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
-      console.log('mouse up and assign status to store');
-      this.props.assignStatusToStore(this.props.model);
+      if (this.state.entityCoordinates.x === this.props.model.x && this.state.entityCoordinates.y === this.props.model.y) {
+        this.props.assignStatusToStore(this.props.model);
+      }
       if (!this.state.onMouseUpWouldBeClick) {
         // Behaves as if it was spawned with a mouse drag
         // meaning that when you release the mouse button,
