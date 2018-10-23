@@ -90,7 +90,7 @@ type CanvasProps = {
   onMouseDown: () => void,
   onMouseMove: (SyntheticMouseEvent<HTMLElement>) => void,
   onMouseUp: () => void,
-  handleSidebarChange: () => void
+  handleSidebarChange?: () => void
 };
 
 class Canvas extends React.PureComponent<CanvasProps,
@@ -120,6 +120,7 @@ class Canvas extends React.PureComponent<CanvasProps,
   render() {
     return (
       <CanvasViewport
+        onMouseMove={this.props.onMouseMove}
         innerRef={div => this.props.handleRef(div)}
       >
 
@@ -172,27 +173,6 @@ class Canvas extends React.PureComponent<CanvasProps,
       </CanvasViewport>
     );
   }
-
-  handleEmitSidebarChange = () => {
-    console.log('close sidebar', this.state);
-    this.setState({ statusSidebarOpen: false });
-  };
-
-  handleEmitStatusSave = data => {
-    console.log('catch data', data);
-    console.log(this.props.entities, data.statusId, data.currentStatus);
-    this.props.entities.map(i => {
-      if (i.id === data.statusId) {
-        i.name = data.currentStatus;
-      }
-    });
-    this.setState({ statusSidebarOpen: false });
-  };
-
-  handleEmitStatusDelete = data => {
-    console.log('catch delete status', data);
-    this.setState({ statusSidebarOpen: false });
-  };
 
   handleSidebarChange(sidebarOpened, selectedLink) {
     console.log('the sel', selectedLink);

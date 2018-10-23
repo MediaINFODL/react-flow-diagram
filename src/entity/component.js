@@ -174,8 +174,6 @@ const EntityContainerHOC = WrappedComponent =>
       ev.stopPropagation();
       const { x, y } = this.props.model;
       this.setState({ entityCoordinates: { x, y } });
-      console.log('mouse down', this.props.model.x, this.props.model.y);
-      // console.log(this.props.model, 'mouse down');
       if (this.props.canvas.connecting.currently) {
         // In this case we want to select an entity to be connected to a
         // previously selected entity to connect from

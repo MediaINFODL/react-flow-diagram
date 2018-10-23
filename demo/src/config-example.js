@@ -11,25 +11,25 @@ const config: ConfigState = {
   entityTypes: {
     Task: {
       width: 125,
-      height: 75,
+      height: 75
     },
     Event: {
       width: 50,
-      height: 50,
-    },
+      height: 50
+    }
   },
-  gridSize: 25,
+  gridSize: 1
 };
 
 const customEntities: CustomEntities = {
   Task: {
     component: Task,
-    icon: taskIcon,
+    icon: taskIcon
   },
   Event: {
     component: Event,
-    icon: eventIcon,
-  },
+    icon: eventIcon
+  }
 };
 
 export { config, customEntities };

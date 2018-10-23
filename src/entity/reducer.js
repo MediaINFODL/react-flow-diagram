@@ -196,6 +196,7 @@ const entityReducer = (
         const y = canvas.cursor.y - mEntity.anchor.y;
         const gridX = positionAdjustedToGrid(x, canvas.gridSize);
         const gridY = positionAdjustedToGrid(y, canvas.gridSize);
+        // console.log(mEntity, canvas.cursor, 'ENTITET I KURSOR', gridX, gridY);
         return state.map(entity => {
           if (entity.linksTo && entity.id === id) {
             return {
