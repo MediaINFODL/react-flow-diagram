@@ -50,6 +50,7 @@ export type AddLinkedEntityPayload = {
 };
 export type MovePayload = { x: number, y: number, id: string };
 export type SetNamePayload = { id: EntityId, name: string };
+export type SetEntityCrossPayload = { id: EntityId, entity: EntityModel };
 export type SetLabelPayload = { id: EntityId, name: string };
 export type SetCustomPayload = { id: EntityId, custom: Object };
 export type EntityAction =
@@ -103,6 +104,11 @@ const entityReducer = (
       });
     }
 
+    case 'rd/entity/SET_ENTITY_CROSS':
+      const data = action.payload;
+      console.log(data, 'WE GOOD');
+      break;
+
     case 'rd/entity/ADD':
       return [
         ...state,
@@ -135,7 +141,8 @@ const entityReducer = (
                       edited: false,
                       points: calcLinkPoints(
                         entity,
-                        state.find(ent => ent.id === payload)
+                        state.find(ent => ent.id === payload),
+                        'rd/entity/LINK_TO'
                       )
                     }
                   ])
@@ -207,7 +214,9 @@ const entityReducer = (
                 ...link,
                 points: calcLinkPoints(
                   entity,
-                  state.find(ent => ent.id === link.target)
+                  state.find(ent => ent.id === link.target),
+                  link,
+                  'rd/canvas/TRACK #1'
                 )
               }))
             };
@@ -230,7 +239,9 @@ const entityReducer = (
                       ...link,
                       points: calcLinkPoints(
                         entity,
-                        state.find(ent => ent.id === id)
+                        state.find(ent => ent.id === id),
+                        link,
+                        'rd/canvas/TRACK #2'
                       )
                     }
                     : link
@@ -262,7 +273,9 @@ const entityReducer = (
               ...link,
               points: calcLinkPoints(
                 entity,
-                state.find(ent => ent.id === link.target)
+                state.find(ent => ent.id === link.target),
+                link,
+                'rd/entity/MOVE #1'
               )
             }))
           };
@@ -285,7 +298,9 @@ const entityReducer = (
                     ...link,
                     points: calcLinkPoints(
                       entity,
-                      state.find(ent => ent.id === id)
+                      state.find(ent => ent.id === id),
+                      link,
+                      'rd/entity/MOVE #2'
                     )
                   }
                   : link
@@ -504,6 +519,11 @@ export const setLabel = (payload: SetLabelPayload): EntityAction => ({
 
 export const setCustom = (payload: SetCustomPayload): EntityAction => ({
   type: 'rd/entity/SET_CUSTOM',
+  payload
+});
+
+export const setEntityCross = (payload: SetEntityCrossPayload): EntityAction => ({
+  type: 'rd/entity/SET_ENTITY_CROSS',
   payload
 });
 

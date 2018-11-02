@@ -1,6 +1,7 @@
 // @flow
 
 import type { EntityModel, Point, Link } from '../entity/reducer';
+import { store } from '../../src';
 
 type Rect = {|
   x: number,
@@ -42,12 +43,12 @@ const calcDefaultPointsAccordingToMainAxis = (
 
     const midPntAlpha: Point = {
       [mainAxis]: distance,
-      [crossAxis]: fromMid[crossAxis],
+      [crossAxis]: fromMid[crossAxis]
     };
 
     const midPntBeta: Point = {
       [mainAxis]: distance,
-      [crossAxis]: toMid[crossAxis],
+      [crossAxis]: toMid[crossAxis]
     };
 
     const lastPnt: Point = {
@@ -55,14 +56,14 @@ const calcDefaultPointsAccordingToMainAxis = (
         from[mainAxis] > to[mainAxis]
           ? to[mainAxis] + to[mainDimension]
           : to[mainAxis],
-      [crossAxis]: toMid[crossAxis],
+      [crossAxis]: toMid[crossAxis]
     };
 
     return [fromMid, midPntAlpha, midPntBeta, lastPnt];
   } else {
     const midPoint: Point = {
       [mainAxis]: toMid[mainAxis],
-      [crossAxis]: fromMid[crossAxis],
+      [crossAxis]: fromMid[crossAxis]
     };
 
     const lastPnt: Point = {
@@ -70,7 +71,7 @@ const calcDefaultPointsAccordingToMainAxis = (
       [crossAxis]:
         from[crossAxis] > to[crossAxis]
           ? to[crossAxis] + to[crossDimension]
-          : to[crossAxis],
+          : to[crossAxis]
     };
 
     return [fromMid, midPoint, lastPnt];
@@ -102,7 +103,7 @@ const linesIntersection = (
     : null;
 };
 
-// We have a Point A and an EntityModel (a box with x, y, width, height)
+// We have a Point A and an EntityModel (a fromBox with x, y, width, height)
 // We make a line J from A to the center of EntityModel (toMid)
 // This function finds the intersection between line J and the perimeter of EntityModel
 //
@@ -113,24 +114,24 @@ const linesIntersection = (
 const pointEntityIntersection = (from: Point, to: EntityModel): Point => {
   const toMid: Point = {
     x: to.x + to.width / 2,
-    y: to.y + to.height / 2,
+    y: to.y + to.height / 2
   };
 
   const upLeft: Point = {
     x: to.x,
-    y: to.y,
+    y: to.y
   };
   const upRight: Point = {
     x: to.x + to.width,
-    y: to.y,
+    y: to.y
   };
   const downRight: Point = {
     x: to.x + to.width,
-    y: to.y + to.height,
+    y: to.y + to.height
   };
   const downLeft: Point = {
     x: to.x,
-    y: to.y + to.height,
+    y: to.y + to.height
   };
   const interUp = linesIntersection(upLeft, upRight, from, toMid);
   const interRight = linesIntersection(upRight, downRight, from, toMid);
@@ -167,12 +168,12 @@ const newPointTwins = (
       return [
         {
           x: entity.x + entity.width / 2,
-          y: entity.y,
+          y: entity.y
         },
         {
           x: entity.x + entity.width / 2,
-          y: wanderer.y,
-        },
+          y: wanderer.y
+        }
       ];
     } else {
       // ent
@@ -180,12 +181,12 @@ const newPointTwins = (
       return [
         {
           x: entity.x + entity.width / 2,
-          y: entity.y + entity.height,
+          y: entity.y + entity.height
         },
         {
           x: entity.x + entity.width / 2,
-          y: wanderer.y,
-        },
+          y: wanderer.y
+        }
       ];
     }
   }
@@ -196,24 +197,24 @@ const newPointTwins = (
       return [
         {
           x: entity.x,
-          y: entity.y + entity.height / 2,
+          y: entity.y + entity.height / 2
         },
         {
           x: wanderer.x,
-          y: entity.y + entity.height / 2,
-        },
+          y: entity.y + entity.height / 2
+        }
       ];
     } else {
       // ent -
       return [
         {
           x: entity.x + entity.width,
-          y: entity.y + entity.height / 2,
+          y: entity.y + entity.height / 2
         },
         {
           x: wanderer.x,
-          y: entity.y + entity.height / 2,
-        },
+          y: entity.y + entity.height / 2
+        }
       ];
     }
   }
@@ -258,7 +259,7 @@ const calcPointsOfEdited = (
   } else if (points.length === 2) {
     const fromMid: Point = {
       x: from.x + from.width / 2,
-      y: from.y + from.height / 2,
+      y: from.y + from.height / 2
     };
     const fromMidToIntersection = pointEntityIntersection(fromMid, to);
     return [fromMid, fromMidToIntersection];
@@ -267,13 +268,13 @@ const calcPointsOfEdited = (
       return [
         inContactFrom,
         { x: inContactFrom.x, y: inContactTo.y },
-        inContactTo,
+        inContactTo
       ];
     } else if (inContactFrom.y === wandererFrom.y) {
       return [
         inContactFrom,
         { x: inContactTo.x, y: inContactFrom.y },
-        inContactTo,
+        inContactTo
       ];
     } else {
       return [inContactFrom, points[1], inContactTo];
@@ -285,7 +286,7 @@ const calcPointsOfEdited = (
     wandererFrom,
     ...points.slice(2, points.length - 2),
     wandererTo,
-    inContactTo,
+    inContactTo
   ];
 };
 
@@ -303,12 +304,13 @@ const calcPointsOfEdited = (
 //
 const calcLinkPoints = (
   from: ?EntityModel,
-  to: ?(Rect | EntityModel)
+  to: ?(Rect | EntityModel),
+  linky?: Link,
+  src?: any
 ): Array<Point> => {
   if (from == null || to == null) {
     return [{ x: 0, y: 0 }, { x: 100, y: 100 }];
   }
-
   if (to.id) {
     const toEnt: EntityModel = to;
     if (
@@ -322,16 +324,236 @@ const calcLinkPoints = (
     }
   }
 
-  const fromMid: Point = {
-    x: from.x + from.width / 2,
-    y: from.y + from.height / 2,
+  const fromBox = {
+    x1: from.x,
+    y1: from.y,
+    x2: from.x + from.width,
+    y2: from.y + from.height
   };
-  const toMid: Point = {
-    x: to.x + to.width / 2,
-    y: to.y + to.height / 2,
+  const toBox = {
+    x1: to.x,
+    y1: to.y,
+    x2: to.x + to.width,
+    y2: to.y + to.height
   };
 
-  if (Math.abs(fromMid.x - toMid.x) > Math.abs(fromMid.y - toMid.y)) {
+  const mainCross = {
+    left: [],
+    right: [],
+    top: [],
+    bottom: [],
+    index: -1
+  };
+  const inCross = {
+    top: [],
+    right: [],
+    bottom: [],
+    left: []
+  };
+  const toCross = {
+    left: [],
+    right: [],
+    top: [],
+    bottom: []
+  };
+  const fromData = {};
+  let toDirection = '';
+
+  if (linky.points && linky.points.length > 1) {
+    const start = linky.points[0];
+    const joint = linky.points[1];
+
+    const endJoint = linky.points[linky.points.length - 2];
+    const end = linky.points[linky.points.length - 1];
+
+    fromData.name = linky.target;
+
+    if (start.x > joint.x) {
+      fromData.direction = 'left';
+    } else if (start.x < joint.x) {
+      fromData.direction = 'right';
+    }
+    if (start.y > joint.y) {
+      fromData.direction = 'top';
+    } else if (start.y < joint.y) {
+      fromData.direction = 'bottom';
+    }
+
+    if (endJoint.x > end.x) {
+      toDirection = 'right';
+    } else if (endJoint.x < end.x) {
+      toDirection = 'left';
+    }
+    if (endJoint.y > end.y) {
+      toDirection = 'bottom';
+    } else if (endJoint.y < end.y) {
+      toDirection = 'top';
+    }
+  }
+  if (from && from.linksTo) {
+    from.linksTo.map((l: Link, index) => {
+      if (l.points.length > 1) {
+        const start = l.points[0];
+        const joint = l.points[1];
+
+        if (start.x > joint.x) {
+          mainCross.left.push(l);
+        } else if (start.x < joint.x) {
+          mainCross.right.push(l);
+        }
+        if (start.y > joint.y) {
+          mainCross.top.push(l);
+        } else if (start.y < joint.y) {
+          mainCross.bottom.push(l);
+        }
+        if (l.target === fromData.name) {
+          mainCross.index = index;
+        }
+      }
+    });
+  }
+
+  const entityStore = store.getState();
+
+  /**
+   * Links entering From entity (dragged one)
+   * @type {Array}
+   */
+  let linksInFromEntity = [];
+  /**
+   * Links entering To entity
+   * @type {Array}
+   */
+  let linksInToEntity = [];
+  /**
+   * Links leaving To entity
+   * @type {Array}
+   */
+  let linksOutToEntity = [];
+  entityStore.entity.map((en: EntityModel) => {
+    if (en.linksTo && en.linksTo.length) {
+      if (en.id === to.id) {
+        en.linksTo.map((link: Link) => {
+          linksOutToEntity.push(link);
+        });
+      }
+      if (en.id !== from.id) {
+        en.linksTo.map((link: Link) => {
+          if (link.target === from.id) {
+            linksInFromEntity.push(link);
+          }
+        });
+      }
+      en.linksTo.map((link: Link) => {
+        if (to.id === link.target) {
+          linksInToEntity.push({ ...link, id: en.id });
+        }
+      });
+    }
+  });
+  linksInFromEntity.map(i => {
+    const start = i.points[i.points.length - 2];
+    const joint = i.points[i.points.length - 1];
+
+    if (start.x > joint.x) {
+      mainCross.right.push(i);
+    } else if (start.x < joint.x) {
+      mainCross.left.push(i);
+    }
+    if (start.y > joint.y) {
+      mainCross.bottom.push(i);
+    } else if (start.y < joint.y) {
+      mainCross.top.push(i);
+    }
+  });
+  linksOutToEntity.map(i => {
+    const start = i.points[0];
+    const joint = i.points[1];
+
+    if (start.x > joint.x) {
+      toCross.left.push(i);
+    } else if (start.x < joint.x) {
+      toCross.right.push(i);
+    }
+    if (start.y > joint.y) {
+      toCross.top.push(i);
+    } else if (start.y < joint.y) {
+      toCross.bottom.push(i);
+    }
+  });
+  linksInToEntity.map(i => {
+    const joint = i.points[i.points.length - 2];
+    const end = i.points[i.points.length - 1];
+
+    if (joint.x > end.x) {
+      inCross.right.push(i);
+    } else if (joint.x < end.x) {
+      inCross.left.push(i);
+    }
+    if (joint.y > end.y) {
+      inCross.bottom.push(i);
+    } else if (joint.y < end.y) {
+      inCross.top.push(i);
+    }
+  });
+
+  const merge = {
+    top: [...inCross.top, ...toCross.top],
+    right: [...inCross.right, ...toCross.right],
+    bottom: [...inCross.bottom, ...toCross.bottom],
+    left: [...inCross.left, ...toCross.left]
+  };
+  const main_arr = mainCross[fromData.direction];
+  const merge_arr = merge[toDirection];
+  let fromX = 0;
+  let fromY = 0;
+  let toX = 0;
+  let toY = 0;
+
+  if (main_arr && main_arr.length > 1) {
+    const len = main_arr.length;
+    main_arr.map((i, index) => {
+      if (i.target === fromData.name) {
+        if (fromData.direction === 'top' || fromData.direction === 'bottom') {
+          const step = Math.round(Math.abs((fromBox.x1 - fromBox.x2) / (len + 1)));
+          fromX = step * (index + 1);
+        } else {
+          const step = Math.round(Math.abs((fromBox.y1 - fromBox.y2) / (len + 1)));
+          fromY = step * (index + 1);
+        }
+      }
+    });
+  }
+  if (merge_arr && merge_arr.length > 1) {
+    const len = merge_arr.length;
+    merge_arr.map((i, index) => {
+      if (i.id === from.id) {
+        if (toDirection === 'top' || toDirection === 'bottom') {
+          const step = Math.round(Math.abs((toBox.x1 - toBox.x2) / (len + 1)));
+          toX = step * (len - index);
+        } else {
+          const step = Math.round(Math.abs((toBox.y1 - toBox.y2) / (len + 1)));
+          toY = step * (len - index);
+        }
+      }
+    });
+  }
+
+  const fromMid: Point = {
+    x: from.x + (fromX ? fromX : from.width / 2),
+    y: from.y + (fromY ? fromY : from.height / 2)
+  };
+  const toMid: Point = {
+    x: to.x + (toX ? toX : to.width / 2),
+    y: to.y + (toY ? toY : to.height / 2)
+  };
+
+  /**
+   * console.log
+   */
+  // console.log(from.name, main_arr, merge_arr, to.name);
+
+  if (Math.abs(fromMid.x - toMid.x) >= Math.abs(fromMid.y - toMid.y)) {
     // If horizontal distance is greater than vertical distance
     return calcDefaultPointsAccordingToMainAxis('x', from, to, fromMid, toMid);
   } else {

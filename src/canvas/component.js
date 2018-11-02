@@ -387,7 +387,8 @@ const makeConnectingLinks = (state: State): LinksType => {
         y: state.canvas.cursor.y,
         width: 0,
         height: 0
-      }
+      },
+      'makeConnectingLinks'
     );
     return [
       {

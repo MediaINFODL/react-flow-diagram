@@ -18,7 +18,7 @@ const config: ConfigState = {
       height: 50
     }
   },
-  gridSize: 1
+  gridSize: 5
 };
 
 const customEntities: CustomEntities = {

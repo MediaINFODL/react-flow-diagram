@@ -14,7 +14,7 @@ const model3: EntityState = [{
   'height': 75,
   'x': 100,
   'y': 75,
-  'name': 'Data Entry on nubmer one',
+  'name': 'Data Entry',
   'linksTo': [{
     'target': 'dataentryinprogress',
     'edited': false,
@@ -52,15 +52,18 @@ const model3: EntityState = [{
     'target': 'dataentered',
     'edited': false,
     'label': 'Approve',
-    'points': [{ 'x': 712.5, 'y': 225 }, { 'y': 463, 'x': 712.5 }, { 'y': 463, 'x': 717.5 }, { 'y': 701, 'x': 717.5 }]
+    'points': [{ 'x': 712.5, 'y': 225 }, { 'y': 277.5, 'x': 712.5 }, { 'y': 277.5, 'x': 592.5 }, {
+      'y': 330,
+      'x': 592.5
+    }]
   }]
 }, {
   'id': 'dataentered',
   'type': 'Task',
   'width': 125,
   'height': 75,
-  'x': 655,
-  'y': 700,
+  'x': 530,
+  'y': 330,
   'name': 'Data Entered',
   'linksTo': []
 }, {
