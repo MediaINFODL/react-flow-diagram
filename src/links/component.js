@@ -1,8 +1,8 @@
 // @flow
 
-import React from 'react';
-import style from 'styled-components';
-import type { EntityId, Links, Point } from '../entity/reducer';
+import React from "react";
+import style from "styled-components";
+import type { EntityId, Links, Point } from "../entity/reducer";
 
 /*
  * Presentational
@@ -66,21 +66,56 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     }
   }
 
+  checkIfZigZagLine = points => {
+    const start = points[0];
+    const startJoint = points[1];
+    const endJoint = points[2];
+    const end = points[3];
+    let startDirection;
+    let endDirection;
+
+    if (start.x > startJoint.x) {
+      startDirection = "left";
+    } else if (start.x < startJoint.x) {
+      startDirection = "right";
+    }
+
+    if (start.y > startJoint.y) {
+      startDirection = "up";
+    } else if (start.y < startJoint.y) {
+      startDirection = "down";
+    }
+
+    if (end.x < endJoint.x) {
+      endDirection = "left";
+    } else if (end.x > endJoint.x) {
+      endDirection = "right";
+    }
+
+    if (end.y < endJoint.y) {
+      endDirection = "up";
+    } else if (end.y > endJoint.y) {
+      endDirection = "down";
+    }
+
+    return startDirection && endDirection && startDirection === endDirection;
+  };
+
   getMethodForLabelPosition = () => {
     const points = this.props.rawPoints;
-    let max_distance = -1;
+    let maxDistance = -1;
     let pt = [];
     for (let i = 0; i < points.length; i++) {
       if (points[i + 1]) {
         const d = Math.sqrt(Math.pow(points[i + 1].x - points[i].x, 2) + Math.pow(points[i + 1].y - points[i].y, 2));
-        if (d >= max_distance) {
-          if (d === max_distance && points.length > 3) {
+        if (d >= maxDistance) {
+          if (points.length === 4 && this.checkIfZigZagLine(points)) {
             pt = [];
             pt.push(points[0]);
             pt.push(points[points.length - 1]);
             return { x: (pt[0].x + pt[1].x) / 2, y: (pt[0].y + pt[1].y) / 2 };
           }
-          max_distance = d;
+          maxDistance = d;
           pt = [];
           pt.push(points[i]);
           pt.push(points[i + 1]);
@@ -90,13 +125,9 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     return { x: (pt[0].x + pt[1].x) / 2, y: (pt[0].y + pt[1].y) / 2 };
   };
 
-  getLabelX = () => {
-    return this.getMethodForLabelPosition().x - this.state.width / 2;
-  };
+  getLabelX = () => this.getMethodForLabelPosition().x - this.state.width / 2;
 
-  getLabelY = () => {
-    return this.getMethodForLabelPosition().y - this.state.height / 2;
-  };
+  getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
   render() {
     return (
@@ -133,8 +164,8 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
 
 const pointsToString = (points: Array<Point>): string => {
   const str = points
-    .reduce((acc, curr) => `${acc} ${curr.x},${curr.y} L`, 'M')
-    .replace(/ L$/, '');
+    .reduce((acc, curr) => `${acc} ${curr.x},${curr.y} L`, "M")
+    .replace(/ L$/, "");
   return str;
 };
 
@@ -145,35 +176,35 @@ const positionStartOfPath = (points: Array<Point>, entity) => {
   const start = points[0];
   const joint = points[1];
 
-  let direction = '';
+  let direction = "";
 
   if (start.x > joint.x) {
-    direction = 'left';
+    direction = "left";
   } else if (start.x < joint.x) {
-    direction = 'right';
+    direction = "right";
   }
 
   if (start.y > joint.y) {
-    direction = 'up';
+    direction = "up";
   } else if (start.y < joint.y) {
-    direction = 'down';
+    direction = "down";
   }
 
   let connect;
   switch (direction) {
-    case 'left':
+    case "left":
       connect = entity.x;
       points[0].x = connect;
       break;
-    case 'right':
+    case "right":
       connect = entity.x + entity.width;
       points[0].x = connect;
       break;
-    case 'up':
+    case "up":
       connect = entity.y;
       points[0].y = connect;
       break;
-    case 'down':
+    case "down":
       connect = entity.y + entity.height;
       points[0].y = connect;
       break;
@@ -224,8 +255,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
                 points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}
                 handleSidebarChange={this.props.handleSidebarChange}
-              >
-              </ArrowBody>
+              />
             )
         )}
       </g>
