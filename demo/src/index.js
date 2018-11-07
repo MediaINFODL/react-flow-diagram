@@ -83,4 +83,6 @@ class Demo extends React.PureComponent<{}> {
 }
 
 // $FlowFixMe
-render(<Demo/>, document.querySelector("#demo"));
+// render(<Demo/>, document.querySelector("#demo"));
+
+export default Demo;
