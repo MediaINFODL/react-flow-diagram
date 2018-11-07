@@ -1,21 +1,16 @@
 // @flow
 
-import Task from './task/component';
-import taskIcon from './task/icon';
-import Event from './event/component';
-import eventIcon from './event/icon';
-
-import type { ConfigState, CustomEntities } from 'react-flow-diagram';
+import Task from "./task/component";
+import taskIcon from "./task/icon";
+import Event from "./event/component";
+import eventIcon from "./event/icon";
+import type { ConfigState, CustomEntities } from "react-flow-diagram";
 
 const config: ConfigState = {
   entityTypes: {
     Task: {
-      width: 125,
-      height: 75
-    },
-    Event: {
-      width: 50,
-      height: 50
+      width: 100,
+      height: 60
     }
   },
   gridSize: 1

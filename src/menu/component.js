@@ -1,14 +1,14 @@
-import React from 'react';
-import { Dropdown, Menu } from 'semantic-ui-react';
-import { store, setEntities } from '../../src';
-import axios from 'axios';
-import model from '../../demo/src/model-example';
-import model1 from '../../demo/src/data/modelexample.json';
-import model2 from '../../demo/src/model-example2';
-import model3 from '../../demo/src/model-example3';
-import model4 from '../../demo/src/model-example4';
-import model5 from '../../demo/src/model-example5';
-import model6 from '../../demo/src/model-example6';
+import React from "react";
+import { Dropdown, Menu } from "semantic-ui-react";
+import { store, setEntities } from "../../src";
+import axios from "axios";
+import model from "../../demo/src/model-example";
+import model1 from "../../demo/src/data/modelexample.json";
+import model2 from "../../demo/src/model-example2";
+import model3 from "../../demo/src/model-example3";
+import model4 from "../../demo/src/model-example4";
+import model5 from "../../demo/src/model-example5";
+import model6 from "../../demo/src/model-example6";
 
 class MenuNav extends React.Component {
 
@@ -21,18 +21,16 @@ class MenuNav extends React.Component {
   }
 
   componentWillMount() {
-    axios.get('./demo/src/data/')
-      .then(response => {
-        let test = [];
-        for (let i in response.data) {
-          console.log(response.data[i].data);
-
-        }
-        this.setState({ workflows: response.data });
-        console.log(this.state.workflows);
+    axios.get("./demo/src/data")
+      .then(res => {
+        // for (let i in res.data) {
+        //   console.log(res.data[i]);
+        // }
+        this.setState({ workflows: res.data });
+        console.log("workflow init");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
       });
   }
 

@@ -129,6 +129,10 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
 
   getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
+  emitLabelData = data => {
+    console.log("LABEL CLICK", data);
+  };
+
   render() {
     return (
       <g>
@@ -145,7 +149,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
               innerRef={(el) => this.el = el}
               xlinkHref={`#line${this.props.id}`}
               onClick={() => {
-                this.props.handleSidebarChange(true, this.props);
+                this.emitLabelData(this.props);
               }}
             >
               {this.props.label}

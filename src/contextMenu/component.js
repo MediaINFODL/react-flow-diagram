@@ -1,10 +1,10 @@
 // @flow
 
-import React from 'react';
-import style from 'styled-components';
-import Icon from '../icon/component';
+import React from "react";
+import style from "styled-components";
+import Icon from "../icon/component";
 
-import type { IconVariety } from '../icon/component';
+import type { IconVariety } from "../icon/component";
 
 /*
  * Presentational
@@ -14,7 +14,7 @@ const ContextMenuStyle = style.ul`
   position: absolute;
   right: -.5em;
   transform: translateX(100%);
-  align-self: flex-start;
+  align-self: center;
 `;
 
 const Action = style.li`
@@ -44,7 +44,7 @@ const ContextMenu = (props: ContextMenuProps) => (
         key={action.label}
         onMouseDown={stopActionPropagation(action.action)}
       >
-        <Icon name={action.iconVariety} label={action.label} />
+        <Icon name={action.iconVariety} label={action.label}/>
       </Action>
     ))}
   </ContextMenuStyle>

@@ -1,7 +1,7 @@
 // @flow
 
-import type { EntityModel, Point, Link } from '../entity/reducer';
-import { store } from '../../src';
+import type { EntityModel, Point, Link } from "../entity/reducer";
+import { store } from "../../src";
 
 type Rect = {|
   x: number,
@@ -24,15 +24,15 @@ type Rect = {|
 // the user has never edited the link and expects a declarative arrow behaviour
 //
 const calcDefaultPointsAccordingToMainAxis = (
-  mainAxis: 'x' | 'y',
+  mainAxis: "x" | "y",
   from: EntityModel,
   to: Rect | EntityModel,
   fromMid: Point,
   toMid: Point
 ): Array<Point> => {
-  const crossAxis = mainAxis === 'x' ? 'y' : 'x';
-  const mainDimension = mainAxis === 'x' ? 'width' : 'height';
-  const crossDimension = mainAxis === 'x' ? 'height' : 'width';
+  const crossAxis = mainAxis === "x" ? "y" : "x";
+  const mainDimension = mainAxis === "x" ? "width" : "height";
+  const crossDimension = mainAxis === "x" ? "height" : "width";
 
   if (
     from[crossAxis] + from[crossDimension] > to[crossAxis] &&
@@ -357,7 +357,7 @@ const calcLinkPoints = (
     bottom: []
   };
   const fromData = {};
-  let toDirection = '';
+  let toDirection = "";
 
   if (linky.points && linky.points.length > 1) {
     const start = linky.points[0];
@@ -369,30 +369,30 @@ const calcLinkPoints = (
     fromData.name = linky.target;
 
     if (start.x > joint.x) {
-      fromData.direction = 'left';
+      fromData.direction = "left";
     } else if (start.x < joint.x) {
-      fromData.direction = 'right';
+      fromData.direction = "right";
     }
     if (start.y > joint.y) {
-      fromData.direction = 'top';
+      fromData.direction = "top";
     } else if (start.y < joint.y) {
-      fromData.direction = 'bottom';
+      fromData.direction = "bottom";
     }
 
     if (endJoint.x > end.x) {
-      toDirection = 'right';
+      toDirection = "right";
     } else if (endJoint.x < end.x) {
-      toDirection = 'left';
+      toDirection = "left";
     }
     if (endJoint.y > end.y) {
-      toDirection = 'bottom';
+      toDirection = "bottom";
     } else if (endJoint.y < end.y) {
-      toDirection = 'top';
+      toDirection = "top";
     }
   }
   if (from && from.linksTo) {
     from.linksTo.map((l: Link, index) => {
-      if (l.points.length > 1) {
+      if (l.points && l.points.length > 1) {
         const start = l.points[0];
         const joint = l.points[1];
 
@@ -481,19 +481,21 @@ const calcLinkPoints = (
       toCross.bottom.push(i);
     }
   });
-  linksInToEntity.map(i => {
-    const joint = i.points[i.points.length - 2];
-    const end = i.points[i.points.length - 1];
+  linksInToEntity.map((i: Link) => {
+    if (i.points && i.points.length) {
+      const joint = i.points[i.points.length - 2];
+      const end = i.points[i.points.length - 1];
 
-    if (joint.x > end.x) {
-      inCross.right.push(i);
-    } else if (joint.x < end.x) {
-      inCross.left.push(i);
-    }
-    if (joint.y > end.y) {
-      inCross.bottom.push(i);
-    } else if (joint.y < end.y) {
-      inCross.top.push(i);
+      if (joint.x > end.x) {
+        inCross.right.push(i);
+      } else if (joint.x < end.x) {
+        inCross.left.push(i);
+      }
+      if (joint.y > end.y) {
+        inCross.bottom.push(i);
+      } else if (joint.y < end.y) {
+        inCross.top.push(i);
+      }
     }
   });
 
@@ -514,7 +516,7 @@ const calcLinkPoints = (
     const len = main_arr.length;
     main_arr.map((i, index) => {
       if (i.target === fromData.name) {
-        if (fromData.direction === 'top' || fromData.direction === 'bottom') {
+        if (fromData.direction === "top" || fromData.direction === "bottom") {
           const step = Math.round(Math.abs((fromBox.x1 - fromBox.x2) / (len + 1)));
           fromX = step * (index + 1);
         } else {
@@ -528,7 +530,7 @@ const calcLinkPoints = (
     const len = merge_arr.length;
     merge_arr.map((i, index) => {
       if (i.id === from.id) {
-        if (toDirection === 'top' || toDirection === 'bottom') {
+        if (toDirection === "top" || toDirection === "bottom") {
           const step = Math.round(Math.abs((toBox.x1 - toBox.x2) / (len + 1)));
           toX = step * (len - index);
         } else {
@@ -555,9 +557,9 @@ const calcLinkPoints = (
 
   if (Math.abs(fromMid.x - toMid.x) >= Math.abs(fromMid.y - toMid.y)) {
     // If horizontal distance is greater than vertical distance
-    return calcDefaultPointsAccordingToMainAxis('x', from, to, fromMid, toMid);
+    return calcDefaultPointsAccordingToMainAxis("x", from, to, fromMid, toMid);
   } else {
-    return calcDefaultPointsAccordingToMainAxis('y', from, to, fromMid, toMid);
+    return calcDefaultPointsAccordingToMainAxis("y", from, to, fromMid, toMid);
   }
 };
 

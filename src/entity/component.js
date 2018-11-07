@@ -1,21 +1,21 @@
 // @flow
 
-import React from 'react';
-import style from 'styled-components';
-import { connect } from 'react-redux';
+import React from "react";
+import style from "styled-components";
+import { connect } from "react-redux";
 import {
   move,
   linkTo,
   addLinkedEntity,
   removeEntity,
   selectEntity
-} from './reducer';
-import { connecting, anchorEntity } from '../canvas/reducer';
-import defaultEntity from './defaultEntity';
-import ContextMenu from '../contextMenu/component';
+} from "./reducer";
+import { connecting, anchorEntity } from "../canvas/reducer";
+import defaultEntity from "./defaultEntity";
+import ContextMenu from "../contextMenu/component";
 
 // eslint-disable-next-line import/first
-import type { ComponentType, Node } from 'react';
+import type { ComponentType, Node } from "react";
 import type {
   EntityId,
   EntityModel,
@@ -25,18 +25,18 @@ import type {
   AddLinkedEntityPayload,
   EntityAction,
   MetaEntityAction
-} from './reducer';
+} from "./reducer";
 import type {
   CanvasState,
   CanvasAction,
   ConnectingPayload,
   AnchorEntityPayload
-} from '../canvas/reducer';
-import type { State } from '../diagram/reducer';
-import type { DefaultEntityProps } from './defaultEntity';
-import type { ContextMenuActions } from '../contextMenu/component';
-import type { ConfigEntityTypes } from '../config/reducer';
-import { assignStatusToStore } from '../history/reducer';
+} from "../canvas/reducer";
+import type { State } from "../diagram/reducer";
+import type { DefaultEntityProps } from "./defaultEntity";
+import type { ContextMenuActions } from "../contextMenu/component";
+import type { ConfigEntityTypes } from "../config/reducer";
+import { assignStatusToStore } from "../history/reducer";
 
 /*
  * Presentational
@@ -60,14 +60,14 @@ type EntityProps = {
 const contextMenuActions = (props: EntityProps): ContextMenuActions => {
   const remove = {
     action: () => props.removeEntity(props.model.id),
-    iconVariety: 'delete',
-    label: 'Remove'
+    iconVariety: "delete",
+    label: "Remove"
   };
 
   const connectAction = {
     action: () => props.connecting({ currently: true, from: props.model.id }),
-    iconVariety: 'arrow',
-    label: 'Connect'
+    iconVariety: "arrow",
+    label: "Connect"
   };
 
   const addEntities = props.entityTypeNames.map(entityTypeName => ({
@@ -77,7 +77,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
         id: props.model.id
       }),
     iconVariety: entityTypeName,
-    label: `Add ${entityTypeName}`
+    label: `Add status`
   }));
 
   return [...addEntities, connectAction];
@@ -98,8 +98,8 @@ const Entity = (props: EntityProps) => (
   <EntityStyle
     style={{
       transform: `translate(${props.model.x}px, ${props.model.y}px)`,
-      zIndex: props.isAnchored || props.isSelected ? '100' : '10',
-      cursor: props.toBeConnected ? 'pointer' : 'move'
+      zIndex: props.isAnchored || props.isSelected ? "100" : "10",
+      cursor: props.toBeConnected ? "pointer" : "move"
     }}
   >
     <div
@@ -235,13 +235,16 @@ const EntityContainerHOC = WrappedComponent =>
     onMouseUp = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
       if (this.state.entityCoordinates.x === this.props.model.x && this.state.entityCoordinates.y === this.props.model.y) {
-        this.props.assignStatusToStore(this.props.model);
+        // this.props.assignStatusToStore(this.props.model);
+        console.log("ENTITY CLICK", this.props.model);
+      } else {
+        console.log("ENTITY DRAGGED", this.props.entityData);
       }
       if (!this.state.onMouseUpWouldBeClick) {
         // Behaves as if it was spawned with a mouse drag
         // meaning that when you release the mouse button,
         // the element will de-anchor
-        this.props.anchorEntity({ id: '', isAnchored: false });
+        this.props.anchorEntity({ id: "", isAnchored: false });
         this.props.selectEntity(this.props.model.id);
       }
       // else it behaves as if it was spawned with a mouse click
@@ -271,6 +274,7 @@ const EntityContainerHOC = WrappedComponent =>
   };
 
 const mapStateToProps = (state: State, ownProps) => ({
+  entityData: state.entity,
   canvas: state.canvas,
   meta: state.metaEntity.find(
     metaEntity => metaEntity.id === ownProps.model.id
