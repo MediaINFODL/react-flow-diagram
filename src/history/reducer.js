@@ -35,7 +35,6 @@ const history = (reducer: Reducer<State, Action>) => (
     case '@@INIT':
     case '@@redux/INIT':
       return nextState;
-
     case 'rd/history/UNDO': {
       const pastStep =
         nextState.history.past[nextState.history.past.length - 1];
@@ -61,7 +60,6 @@ const history = (reducer: Reducer<State, Action>) => (
         }
         : nextState;
     }
-
     case 'rd/history/REDO': {
       const futureStep = nextState.history.future[0];
       return futureStep
@@ -83,14 +81,14 @@ const history = (reducer: Reducer<State, Action>) => (
         }
         : nextState;
     }
-    case 'STATUS-SELECTED': {
+    case 'STATUS/SET': {
       if (action.payload.id !== state.status.id) {
-        console.log('status-selected');
+        // console.log('status-selected');
         return Object.assign({}, state, { status: action.payload });
       }
       return state;
     }
-    case 'UPDATE-STATUS': {
+    case 'STATUS/UPDATE': {
       if (state.status.name !== action.payload) {
         console.log('update');
         const new_status = Object.assign({}, state.status, { name: action.payload });
@@ -98,10 +96,16 @@ const history = (reducer: Reducer<State, Action>) => (
       }
       return state;
     }
-    case 'RESET-STATUS': {
-      console.log('reset');
+    case 'STATUS/REMOVE': {
       return Object.assign({}, state, { status: { id: '', name: '' } });
     }
+    case 'LABEL/SET':
+      if (action.payload.id !== state.label.id) {
+        return Object.assign({}, state, { label: action.payload });
+      }
+      return state;
+    case 'LABEL/REMOVE':
+      return Object.assign({}, state, { label: {} });
     default:
       if (action.type === state.history.lastAction) {
         return nextState;
@@ -136,17 +140,27 @@ export const redo = (): HistoryAction => ({
 });
 
 export const assignStatusToStore = (payload) => ({
-  type: 'STATUS-SELECTED',
+  type: 'STATUS/SET',
   payload
 });
 
 export const assignNewStatusToStore = (payload) => ({
-  type: 'UPDATE-STATUS',
+  type: 'STATUS/UPDATE',
   payload
 });
 
 export const assignEmptyStatusToStore = () => ({
-  type: 'RESET-STATUS',
+  type: 'STATUS/REMOVE',
+  payload: undefined
+});
+
+export const assignLabelToStore = payload => ({
+  type: 'LABEL/SET',
+  payload
+});
+
+export const assignEmptyLabelToStore = () => ({
+  type: 'LABEL/REMOVE',
   payload: undefined
 });
 

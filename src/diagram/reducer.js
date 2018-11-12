@@ -31,7 +31,8 @@ export type State = {
   config: ConfigState,
   history: HistoryState,
   lastAction: ActionType,
-  status: any
+  status: any,
+  label: any
 };
 
 const defaultCoords = { x: 0, y: 0 };
@@ -75,7 +76,8 @@ const initialState = {
     lastAction: '@@INIT'
   },
   lastAction: '@@INIT',
-  status: { id: '', name: '' }
+  status: { id: '', name: '' },
+  label: {}
 };
 
 const appReducer = (state: State = initialState, action: Action): State => ({
@@ -88,6 +90,7 @@ const appReducer = (state: State = initialState, action: Action): State => ({
     state.canvas
   ),
   status: state.status,
+  label: state.label,
   config: configReducer(state.config, action),
   history: state.history,
   lastAction: action.type

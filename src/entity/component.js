@@ -235,10 +235,10 @@ const EntityContainerHOC = WrappedComponent =>
     onMouseUp = (ev: SyntheticMouseEvent<HTMLElement>) => {
       ev.stopPropagation();
       if (this.state.entityCoordinates.x === this.props.model.x && this.state.entityCoordinates.y === this.props.model.y) {
-        // this.props.assignStatusToStore(this.props.model);
-        console.log("ENTITY CLICK", this.props.model);
+        this.props.assignStatusToStore(this.props.model);
+        // console.log("ENTITY CLICK", this.props.model);
       } else {
-        console.log("ENTITY DRAGGED", this.props.entityData);
+        // console.log("ENTITY DRAGGED", this.props.entityData);
       }
       if (!this.state.onMouseUpWouldBeClick) {
         // Behaves as if it was spawned with a mouse drag

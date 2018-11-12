@@ -160,7 +160,7 @@ class Canvas extends React.PureComponent<CanvasProps,
         </CanvasArtboard>
 
         <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
-        <StatusSidebar/>
+        {/*<StatusSidebar/>*/}
         {this.state.sidebarOpened &&
         <EditSidebar
           handleSidebarChange={this.handleSidebarChange}

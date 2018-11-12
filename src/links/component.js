@@ -2,7 +2,9 @@
 
 import React from "react";
 import style from "styled-components";
+import { store } from '..';
 import type { EntityId, Links, Point } from "../entity/reducer";
+import { assignLabelToStore } from '../history/reducer';
 
 /*
  * Presentational
@@ -130,7 +132,8 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
   emitLabelData = data => {
-    console.log("LABEL CLICK", data);
+    // console.log("LABEL CLICK", data);
+    store.dispatch(assignLabelToStore(data));
   };
 
   render() {
