@@ -73,7 +73,8 @@ export const EntityActionTypesModify = [
   'rd/entity/MOVE',
   'rd/entity/SET_NAME',
   'rd/entity/SET_LABEL',
-  'rd/entity/SET_CUSTOM'
+  'rd/entity/SET_CUSTOM',
+  'rd/label/REMOVE_LABEL'
 ];
 
 export type MetaEntityAction =
@@ -327,7 +328,6 @@ const entityReducer = (
 
     case 'rd/entity/SET_LABEL': {
       const { id, to, label } = action.payload;
-      console.log('the paloua', action.payload);
       return state.map(
         entity =>
           entity.id === id
@@ -348,6 +348,18 @@ const entityReducer = (
             : entity
       );
     }
+
+    case 'rd/label/REMOVE_LABEL':
+      const { id, to, label } = action.payload;
+      return state.map(
+        entity =>
+          entity.id === id
+            ? {
+              ...entity,
+              linksTo: entity.linksTo ? entity.linksTo.filter(link => link.target !== to && link.target !== label) : [{ target: to, label }]
+            }
+            : entity
+      );
 
     case 'rd/entity/LINK_POINTS': {
       const { from, to, points } = action.payload;
@@ -514,6 +526,11 @@ export const setCurrentStatus = (payload: SetNamePayload): EntityAction => ({
 
 export const setLabel = (payload: SetLabelPayload): EntityAction => ({
   type: 'rd/entity/SET_LABEL',
+  payload
+});
+
+export const removeLabel = (payload): EntityAction => ({
+  type: 'rd/label/REMOVE_LABEL',
   payload
 });
 
