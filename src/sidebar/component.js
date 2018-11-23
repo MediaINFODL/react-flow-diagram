@@ -1,5 +1,5 @@
 import React from 'react';
-import { Diagram, store, setEntities, setConfig, diagramOn } from '../../src';
+import { Diagram, store, setEntities, setConfig, diagramOn } from '../';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
 class EditSidebar extends React.Component {
     constructor(props) {

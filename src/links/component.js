@@ -2,9 +2,9 @@
 
 import React from "react";
 import style from "styled-components";
-import { store } from '..';
+import { store } from "../";
 import type { EntityId, Links, Point } from "../entity/reducer";
-import { assignLabelToStore } from '../history/reducer';
+import { assignLabelToStore } from "../history/reducer";
 
 /*
  * Presentational
@@ -132,7 +132,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
   emitLabelData = data => {
-    // console.log("LABEL CLICK", data);
+    console.log("LABEL CLICK", data);
     store.dispatch(assignLabelToStore(data));
   };
 
@@ -258,6 +258,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
               <ArrowBody
                 key={link.target}
                 id={link.target}
+                uid={link.uid}
                 label={link.label}
                 points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}

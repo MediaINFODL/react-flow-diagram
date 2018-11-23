@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, Menu } from "semantic-ui-react";
-import { store, setEntities } from "../../src";
+import { store, setEntities } from "../";
 import axios from "axios";
 import model from "../../demo/src/model-example";
 import model1 from "../../demo/src/data/modelexample.json";

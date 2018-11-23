@@ -1,13 +1,13 @@
 // @flow
 
-import type { Reducer } from 'redux';
-import type { EntityState, MetaEntityState } from '../entity/reducer';
+import type { Reducer } from "redux";
+import type { EntityState, MetaEntityState } from "../entity/reducer";
 import type {
   State,
   Action,
   ActionShape,
   ActionType
-} from '../diagram/reducer';
+} from "../diagram/reducer";
 
 export type HistoryStateShape<T> = {
   past: Array<T>,
@@ -20,8 +20,8 @@ export type HistoryState = HistoryStateShape<{
 }>;
 
 export type HistoryAction =
-  | ActionShape<'rd/history/UNDO', void>
-  | ActionShape<'rd/history/REDO', void>;
+  | ActionShape<"rd/history/UNDO", void>
+  | ActionShape<"rd/history/REDO", void>;
 
 const historyLimit = 50;
 
@@ -31,11 +31,11 @@ const history = (reducer: Reducer<State, Action>) => (
 ): State => {
   const nextState = reducer(state, action);
   switch (action.type) {
-    case 'rd/canvas/TRACK':
-    case '@@INIT':
-    case '@@redux/INIT':
+    case "rd/canvas/TRACK":
+    case "@@INIT":
+    case "@@redux/INIT":
       return nextState;
-    case 'rd/history/UNDO': {
+    case "rd/history/UNDO": {
       const pastStep =
         nextState.history.past[nextState.history.past.length - 1];
       return pastStep
@@ -60,7 +60,7 @@ const history = (reducer: Reducer<State, Action>) => (
         }
         : nextState;
     }
-    case 'rd/history/REDO': {
+    case "rd/history/REDO": {
       const futureStep = nextState.history.future[0];
       return futureStep
         ? {
@@ -81,30 +81,31 @@ const history = (reducer: Reducer<State, Action>) => (
         }
         : nextState;
     }
-    case 'STATUS/SET': {
+    case "STATUS/SET": {
       if (action.payload.id !== state.status.id) {
         // console.log('status-selected');
         return Object.assign({}, state, { status: action.payload });
       }
       return state;
     }
-    case 'STATUS/UPDATE': {
+    case "STATUS/UPDATE": {
       if (state.status.name !== action.payload) {
-        console.log('update');
+        console.log("update");
         const new_status = Object.assign({}, state.status, { name: action.payload });
         return Object.assign({}, state, { status: new_status });
       }
       return state;
     }
-    case 'STATUS/REMOVE': {
-      return Object.assign({}, state, { status: { id: '', name: '' } });
+    case "STATUS/REMOVE": {
+      return Object.assign({}, state, { status: { id: "", name: "" } });
     }
-    case 'LABEL/SET':
-      if (action.payload.id !== state.label.id) {
+    case "LABEL/SET":
+      if (action.payload.uid !== state.label.uid) {
+        console.log("PAYLOAD", action.payload);
         return Object.assign({}, state, { label: action.payload });
       }
       return state;
-    case 'LABEL/REMOVE':
+    case "LABEL/REMOVE":
       return Object.assign({}, state, { label: {} });
     default:
       if (action.type === state.history.lastAction) {
@@ -130,37 +131,37 @@ const history = (reducer: Reducer<State, Action>) => (
 };
 
 export const undo = (): HistoryAction => ({
-  type: 'rd/history/UNDO',
+  type: "rd/history/UNDO",
   payload: undefined
 });
 
 export const redo = (): HistoryAction => ({
-  type: 'rd/history/REDO',
+  type: "rd/history/REDO",
   payload: undefined
 });
 
 export const assignStatusToStore = (payload) => ({
-  type: 'STATUS/SET',
+  type: "STATUS/SET",
   payload
 });
 
 export const assignNewStatusToStore = (payload) => ({
-  type: 'STATUS/UPDATE',
+  type: "STATUS/UPDATE",
   payload
 });
 
 export const assignEmptyStatusToStore = () => ({
-  type: 'STATUS/REMOVE',
+  type: "STATUS/REMOVE",
   payload: undefined
 });
 
 export const assignLabelToStore = payload => ({
-  type: 'LABEL/SET',
+  type: "LABEL/SET",
   payload
 });
 
 export const assignEmptyLabelToStore = () => ({
-  type: 'LABEL/REMOVE',
+  type: "LABEL/REMOVE",
   payload: undefined
 });
 

@@ -1,7 +1,7 @@
 // @flow
 
 import type { EntityModel, Point, Link } from "../entity/reducer";
-import { store } from "../../src";
+import { store } from "../";
 
 type Rect = {|
   x: number,

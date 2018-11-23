@@ -4,7 +4,7 @@ import React from 'react';
 import style from 'styled-components';
 import { connect } from 'react-redux';
 import { configViewport, trackMovement, anchorCanvas, zoom } from './reducer';
-import { store, setEntities } from '../../src';
+import { store, setEntities } from '../';
 import { undo, redo } from '../history/reducer';
 import { setName, setLabel } from '../entity/reducer';
 import { icons } from '../icon/component';
