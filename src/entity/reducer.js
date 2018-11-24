@@ -126,7 +126,7 @@ const entityReducer = (
       ];
 
     case "rd/entity/LINK_TO": {
-      console.log("rd/entity/LINK_POINTS", action);
+      // console.log("rd/entity/LINK_POINTS", action);
       const { payload } = action;
       return state.map(
         entity =>
@@ -157,7 +157,7 @@ const entityReducer = (
     }
 
     case "rd/entity/ADD_LINKED": {
-      console.log("rd/entity/LINK_POINTS", action);
+      // console.log("rd/entity/LINK_POINTS", action);
       const { entity, id } = action.payload;
       return [
         ...state.map(
@@ -369,7 +369,7 @@ const entityReducer = (
       );
 
     case "rd/entity/LINK_POINTS": {
-      console.log("rd/entity/LINK_POINTS", action);
+      // console.log("rd/entity/LINK_POINTS", action);
       const { from, to, points } = action.payload;
       return state.map(
         entity =>

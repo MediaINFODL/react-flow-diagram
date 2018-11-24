@@ -1,30 +1,30 @@
 // @flow
 
-import React from 'react';
-import style from 'styled-components';
-import { connect } from 'react-redux';
-import { configViewport, trackMovement, anchorCanvas, zoom } from './reducer';
-import { store, setEntities } from '../';
-import { undo, redo } from '../history/reducer';
-import { setName, setLabel } from '../entity/reducer';
-import { icons } from '../icon/component';
-import EntityHOC from '../entity/component';
-import Panel from '../panel/component';
-import Links from '../links/component';
-import ArrowMarker from '../arrowMarker/component';
-import EditSidebar from '../sidebar/component';
-import Debug, { Fairy } from '../debug/component';
-import calcLinkPoints from '../links/calcLinkPoints';
-import elemLayout from './elemLayout';
-import { Button, Popup } from 'semantic-ui-react';
-import type { ComponentType } from 'React';
-import type { Coords, CanvasAction } from './reducer';
-import type { EntityState, Point, Links as LinksType } from '../entity/reducer';
-import type { CustomEntities } from '../diagram/component';
-import type { State } from '../diagram/reducer';
-import type { HistoryAction } from '../history/reducer';
-import StatusSidebar from '../status-sidebar/component';
-import CircleMarker from '../circleMarker/component';
+import React from "react";
+import style from "styled-components";
+import { connect } from "react-redux";
+import { configViewport, trackMovement, anchorCanvas, zoom } from "./reducer";
+import { store, setEntities } from "../";
+import { undo, redo } from "../history/reducer";
+import { setName, setLabel } from "../entity/reducer";
+import { icons } from "../icon/component";
+import EntityHOC from "../entity/component";
+import Panel from "../panel/component";
+import Links from "../links/component";
+import ArrowMarker from "../arrowMarker/component";
+import EditSidebar from "../sidebar/component";
+import Debug, { Fairy } from "../debug/component";
+import calcLinkPoints from "../links/calcLinkPoints";
+import elemLayout from "./elemLayout";
+import { Button, Popup } from "semantic-ui-react";
+import type { ComponentType } from "React";
+import type { Coords, CanvasAction } from "./reducer";
+import type { EntityState, Point, Links as LinksType } from "../entity/reducer";
+import type { CustomEntities } from "../diagram/component";
+import type { State } from "../diagram/reducer";
+import type { HistoryAction } from "../history/reducer";
+import StatusSidebar from "../status-sidebar/component";
+import CircleMarker from "../circleMarker/component";
 /*
  * Presentational
  * ==================================== */
@@ -98,14 +98,14 @@ class Canvas extends React.PureComponent<CanvasProps,
 
   state = {
     sidebarOpened: false,
-    selectedLinkId: '',
-    selectedLabel: '',
-    editedLabel: '',
+    selectedLinkId: "",
+    selectedLabel: "",
+    editedLabel: "",
     model: {},
     statusSidebarOpen: true,
-    statusId: '',
-    currentStatus: 'my',
-    newStatus: ''
+    statusId: "",
+    currentStatus: "my",
+    newStatus: ""
   };
 
   constructor(props) {
@@ -138,7 +138,7 @@ class Canvas extends React.PureComponent<CanvasProps,
           >
             <CircleMarker/>
             {this.props.entities
-              .filter(entity => 'linksTo' in entity)
+              .filter(entity => "linksTo" in entity)
               // $FlowFixMe
               .map(entity => <Links key={entity.id}
                                     links={entity.linksTo}
@@ -175,12 +175,12 @@ class Canvas extends React.PureComponent<CanvasProps,
   }
 
   handleSidebarChange(sidebarOpened, selectedLink) {
-    console.log('the sel', selectedLink);
+    console.log("the sel", selectedLink);
     // Sidebar can be opened by selecting a link entity
     // Sidebar can be closed by cancel button from the sidebar component 
     this.setState({
-      selectedLabel: selectedLink.label ? selectedLink.label : '',
-      selectedLinkId: selectedLink.id ? selectedLink.id : '',
+      selectedLabel: selectedLink.label ? selectedLink.label : "",
+      selectedLinkId: selectedLink.id ? selectedLink.id : "",
       sidebarOpened
     });
 
@@ -220,19 +220,19 @@ class Canvas extends React.PureComponent<CanvasProps,
  * ==================================== */
 
 type CanvasContainerProps = {
-  entities: EntityState,
+  entities?: EntityState,
   customEntities: CustomEntities,
-  isConnecting: boolean,
-  connectingLink: LinksType,
-  gridSize: ?number,
-  artboard: { x: number, y: number, width: number, height: number },
-  zoomLevel: number,
-  configViewport: () => CanvasAction,
-  trackMovement: Coords => CanvasAction,
-  anchorCanvas: boolean => CanvasAction,
-  zoom: number => CanvasAction,
-  undo: () => HistoryAction,
-  redo: () => HistoryAction,
+  isConnecting?: boolean,
+  connectingLink?: LinksType,
+  gridSize?: ?number,
+  artboard?: { x: number, y: number, width: number, height: number },
+  zoomLevel?: number,
+  configViewport?: () => CanvasAction,
+  trackMovement?: Coords => CanvasAction,
+  anchorCanvas?: boolean => CanvasAction,
+  zoom?: number => CanvasAction,
+  undo?: () => HistoryAction,
+  redo?: () => HistoryAction,
 };
 type CanvasContainerState = {
   zoomStep: number,
@@ -248,11 +248,11 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   };
 
   componentDidMount() {
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
 
-    window.document.addEventListener('keydown', this.handleKey);
+    window.document.addEventListener("keydown", this.handleKey);
 
     Object.keys(this.props.customEntities).forEach(entityType => {
       icons.addIcon({
@@ -262,7 +262,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   }
 
   componentWillUnmount() {
-    window.document.removeEventListener('keydown', this.handleKey);
+    window.document.removeEventListener("keydown", this.handleKey);
     this.canvasDOM = undefined;
     elemLayout.gc();
   }
@@ -288,13 +288,13 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   }
 
   handleKey = (ev: SyntheticKeyboardEvent<HTMLElement>) => {
-    if (ev.getModifierState('Meta') || ev.getModifierState('Control')) {
+    if (ev.getModifierState("Meta") || ev.getModifierState("Control")) {
       switch (ev.key) {
-        case 'z':
+        case "z":
           ev.preventDefault();
           this.props.undo();
           break;
-        case 'y':
+        case "y":
           ev.preventDefault();
           this.props.redo();
           break;
@@ -388,17 +388,17 @@ const makeConnectingLinks = (state: State): LinksType => {
         width: 0,
         height: 0
       },
-      'makeConnectingLinks'
+      "makeConnectingLinks"
     );
     return [
       {
-        target: 'will_connect',
+        target: "will_connect",
         edited: false,
         points
       }
     ];
   } else {
-    return [{ target: 'noop', edited: false }];
+    return [{ target: "noop", edited: false }];
   }
 };
 

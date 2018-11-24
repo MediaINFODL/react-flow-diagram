@@ -1,22 +1,10 @@
-"use strict";
-
-exports.__esModule = true;
-exports.unselectAll = exports.selectEntity = exports.setEntityCross = exports.setCustom = exports.removeLabel = exports.setLabel = exports.setCurrentStatus = exports.setName = exports.move = exports.removeEntity = exports.addLinkedEntity = exports.linkTo = exports.addEntity = exports.setEntities = exports.metaEntityReducer = exports.EntityActionTypesModify = exports.EntityActionTypeOpen = undefined;
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _calcLinkPoints = require("../links/calcLinkPoints");
+import calcLinkPoints from "../links/calcLinkPoints";
+import positionAdjustedToGrid from "../canvas/positionAdjustedToGrid";
 
-var _calcLinkPoints2 = _interopRequireDefault(_calcLinkPoints);
-
-var _positionAdjustedToGrid = require("../canvas/positionAdjustedToGrid");
-
-var _positionAdjustedToGrid2 = _interopRequireDefault(_positionAdjustedToGrid);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var EntityActionTypeOpen = exports.EntityActionTypeOpen = "rd/entity/SET";
-var EntityActionTypesModify = exports.EntityActionTypesModify = ["rd/entity/ADD", "rd/entity/LINK_TO", "rd/entity/ADD_LINKED", "rd/entity/REMOVE", "rd/entity/MOVE", "rd/entity/SET_NAME", "rd/entity/SET_LABEL", "rd/entity/SET_CUSTOM", "rd/label/REMOVE_LABEL"];
+export var EntityActionTypeOpen = "rd/entity/SET";
+export var EntityActionTypesModify = ["rd/entity/ADD", "rd/entity/LINK_TO", "rd/entity/ADD_LINKED", "rd/entity/REMOVE", "rd/entity/MOVE", "rd/entity/SET_NAME", "rd/entity/SET_LABEL", "rd/entity/SET_CUSTOM", "rd/label/REMOVE_LABEL"];
 
 var entityReducer = function entityReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -69,7 +57,7 @@ var entityReducer = function entityReducer() {
               target: payload,
               uid: new Date().valueOf(),
               edited: false,
-              points: (0, _calcLinkPoints2.default)(entity, state.find(function (ent) {
+              points: calcLinkPoints(entity, state.find(function (ent) {
                 return ent.id === payload;
               }), "rd/entity/LINK_TO")
             }])
@@ -123,8 +111,8 @@ var entityReducer = function entityReducer() {
           };
           var _x2 = canvas.cursor.x - mEntity.anchor.x;
           var _y = canvas.cursor.y - mEntity.anchor.y;
-          var gridX = (0, _positionAdjustedToGrid2.default)(_x2, canvas.gridSize);
-          var gridY = (0, _positionAdjustedToGrid2.default)(_y, canvas.gridSize);
+          var gridX = positionAdjustedToGrid(_x2, canvas.gridSize);
+          var gridY = positionAdjustedToGrid(_y, canvas.gridSize);
           // console.log(mEntity, canvas.cursor, 'ENTITET I KURSOR', gridX, gridY);
           return state.map(function (entity) {
             if (entity.linksTo && entity.id === _id3) {
@@ -133,7 +121,7 @@ var entityReducer = function entityReducer() {
                 y: gridY,
                 linksTo: entity.linksTo.map(function (link) {
                   return _extends({}, link, {
-                    points: (0, _calcLinkPoints2.default)(entity, state.find(function (ent) {
+                    points: calcLinkPoints(entity, state.find(function (ent) {
                       return ent.id === link.target;
                     }), link, "rd/canvas/TRACK #1")
                   });
@@ -150,7 +138,7 @@ var entityReducer = function entityReducer() {
               return _extends({}, entity, {
                 linksTo: entity.linksTo.map(function (link) {
                   return link.target === _id3 ? _extends({}, link, {
-                    points: (0, _calcLinkPoints2.default)(entity, state.find(function (ent) {
+                    points: calcLinkPoints(entity, state.find(function (ent) {
                       return ent.id === _id3;
                     }), link, "rd/canvas/TRACK #2")
                   }) : link;
@@ -175,8 +163,8 @@ var entityReducer = function entityReducer() {
             _x3 = _action$payload2.x,
             _y2 = _action$payload2.y;
 
-        var _gridX = (0, _positionAdjustedToGrid2.default)(_x3, canvas.gridSize);
-        var _gridY = (0, _positionAdjustedToGrid2.default)(_y2, canvas.gridSize);
+        var _gridX = positionAdjustedToGrid(_x3, canvas.gridSize);
+        var _gridY = positionAdjustedToGrid(_y2, canvas.gridSize);
         return state.map(function (entity) {
           if (entity.linksTo && entity.id === _id4) {
             return _extends({}, entity, {
@@ -184,7 +172,7 @@ var entityReducer = function entityReducer() {
               y: _gridY,
               linksTo: entity.linksTo.map(function (link) {
                 return _extends({}, link, {
-                  points: (0, _calcLinkPoints2.default)(entity, state.find(function (ent) {
+                  points: calcLinkPoints(entity, state.find(function (ent) {
                     return ent.id === link.target;
                   }), link, "rd/entity/MOVE #1")
                 });
@@ -201,7 +189,7 @@ var entityReducer = function entityReducer() {
             return _extends({}, entity, {
               linksTo: entity.linksTo.map(function (link) {
                 return link.target === _id4 ? _extends({}, link, {
-                  points: (0, _calcLinkPoints2.default)(entity, state.find(function (ent) {
+                  points: calcLinkPoints(entity, state.find(function (ent) {
                     return ent.id === _id4;
                   }), link, "rd/entity/MOVE #2")
                 }) : link;
@@ -304,7 +292,7 @@ var deselectMetaEntity = function deselectMetaEntity(metaEntity) {
   return _extends({}, metaEntity, { isSelected: false });
 };
 
-var metaEntityReducer = exports.metaEntityReducer = function metaEntityReducer() {
+export var metaEntityReducer = function metaEntityReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var action = arguments[1];
   var entity = arguments[2];
@@ -384,85 +372,85 @@ var metaEntityReducer = exports.metaEntityReducer = function metaEntityReducer()
   }
 };
 
-var setEntities = exports.setEntities = function setEntities(payload) {
+export var setEntities = function setEntities(payload) {
   return {
     type: "rd/entity/SET",
     payload: payload
   };
 };
 
-var addEntity = exports.addEntity = function addEntity(payload) {
+export var addEntity = function addEntity(payload) {
   return { type: "rd/entity/ADD", payload: payload };
 };
 
-var linkTo = exports.linkTo = function linkTo(payload) {
+export var linkTo = function linkTo(payload) {
   return {
     type: "rd/entity/LINK_TO",
     payload: payload
   };
 };
 
-var addLinkedEntity = exports.addLinkedEntity = function addLinkedEntity(payload) {
+export var addLinkedEntity = function addLinkedEntity(payload) {
   return { type: "rd/entity/ADD_LINKED", payload: payload };
 };
 
-var removeEntity = exports.removeEntity = function removeEntity(payload) {
+export var removeEntity = function removeEntity(payload) {
   return {
     type: "rd/entity/REMOVE",
     payload: payload
   };
 };
 
-var move = exports.move = function move(payload) {
+export var move = function move(payload) {
   return {
     type: "rd/entity/MOVE",
     payload: payload
   };
 };
 
-var setName = exports.setName = function setName(payload) {
+export var setName = function setName(payload) {
   return {
     type: "rd/entity/SET_NAME",
     payload: payload
   };
 };
 
-var setCurrentStatus = exports.setCurrentStatus = function setCurrentStatus(payload) {
+export var setCurrentStatus = function setCurrentStatus(payload) {
   return {
     type: "rd/entity/SET_STATUS",
     payload: payload
   };
 };
 
-var setLabel = exports.setLabel = function setLabel(payload) {
+export var setLabel = function setLabel(payload) {
   return {
     type: "rd/entity/SET_LABEL",
     payload: payload
   };
 };
 
-var removeLabel = exports.removeLabel = function removeLabel(payload) {
+export var removeLabel = function removeLabel(payload) {
   return {
     type: "rd/label/REMOVE_LABEL",
     payload: payload
   };
 };
 
-var setCustom = exports.setCustom = function setCustom(payload) {
+export var setCustom = function setCustom(payload) {
   return {
     type: "rd/entity/SET_CUSTOM",
     payload: payload
   };
 };
 
-var setEntityCross = exports.setEntityCross = function setEntityCross(payload) {
+export var setEntityCross = function setEntityCross(payload) {
   return {
     type: "rd/entity/SET_ENTITY_CROSS",
     payload: payload
   };
 };
 
-var selectEntity = exports.selectEntity = function selectEntity(id) {
+export var selectEntity = function selectEntity(id) {
   var isSelected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   return {
     type: "rd/metaentity/SELECT",
@@ -470,11 +458,11 @@ var selectEntity = exports.selectEntity = function selectEntity(id) {
   };
 };
 
-var unselectAll = exports.unselectAll = function unselectAll() {
+export var unselectAll = function unselectAll() {
   return {
     type: "rd/metaentity/UNSELECTALL",
     payload: null
   };
 };
 
-exports.default = entityReducer;
+export default entityReducer;

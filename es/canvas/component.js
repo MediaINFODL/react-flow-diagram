@@ -1,76 +1,8 @@
-"use strict";
-
-exports.__esModule = true;
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _templateObject = _taggedTemplateLiteralLoose(["\n  min-height: 10em;\n  flex: 1 0 auto;\n  position: relative;\n  overflow: hidden;\n  background-color: #fefefe;\n\n  & * {\n    box-sizing: border-box;\n  }\n  & ul,\n  & ol {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n  }\n"], ["\n  min-height: 10em;\n  flex: 1 0 auto;\n  position: relative;\n  overflow: hidden;\n  background-color: #fefefe;\n\n  & * {\n    box-sizing: border-box;\n  }\n  & ul,\n  & ol {\n    list-style-type: none;\n    margin: 0;\n    padding: 0;\n  }\n"]),
     _templateObject2 = _taggedTemplateLiteralLoose(["\n  position: relative;\n  transform-origin: 0 0;\n  background-color: white;\n  overflow: hidden;\n"], ["\n  position: relative;\n  transform-origin: 0 0;\n  background-color: white;\n  overflow: hidden;\n"]),
     _templateObject3 = _taggedTemplateLiteralLoose(["\n  position: absolute;\n  top: 0;\n  left: 0;\n"], ["\n  position: absolute;\n  top: 0;\n  left: 0;\n"]);
-
-var _react = require("react");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _styledComponents = require("styled-components");
-
-var _styledComponents2 = _interopRequireDefault(_styledComponents);
-
-var _reactRedux = require("react-redux");
-
-var _reducer = require("./reducer");
-
-var _ = require("../");
-
-var _reducer2 = require("../history/reducer");
-
-var _reducer3 = require("../entity/reducer");
-
-var _component = require("../icon/component");
-
-var _component2 = require("../entity/component");
-
-var _component3 = _interopRequireDefault(_component2);
-
-var _component4 = require("../panel/component");
-
-var _component5 = _interopRequireDefault(_component4);
-
-var _component6 = require("../links/component");
-
-var _component7 = _interopRequireDefault(_component6);
-
-var _component8 = require("../arrowMarker/component");
-
-var _component9 = _interopRequireDefault(_component8);
-
-var _component10 = require("../sidebar/component");
-
-var _component11 = _interopRequireDefault(_component10);
-
-var _component12 = require("../debug/component");
-
-var _component13 = _interopRequireDefault(_component12);
-
-var _calcLinkPoints = require("../links/calcLinkPoints");
-
-var _calcLinkPoints2 = _interopRequireDefault(_calcLinkPoints);
-
-var _elemLayout = require("./elemLayout");
-
-var _elemLayout2 = _interopRequireDefault(_elemLayout);
-
-var _semanticUiReact = require("semantic-ui-react");
-
-var _component14 = require("../status-sidebar/component");
-
-var _component15 = _interopRequireDefault(_component14);
-
-var _component16 = require("../circleMarker/component");
-
-var _component17 = _interopRequireDefault(_component16);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -80,13 +12,33 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw; return strings; }
 
+import React from "react";
+import style from "styled-components";
+import { connect } from "react-redux";
+import { configViewport, trackMovement, anchorCanvas, zoom } from "./reducer";
+import { store, setEntities } from "../";
+import { undo, redo } from "../history/reducer";
+import { setName, setLabel } from "../entity/reducer";
+import { icons } from "../icon/component";
+import EntityHOC from "../entity/component";
+import Panel from "../panel/component";
+import Links from "../links/component";
+import ArrowMarker from "../arrowMarker/component";
+import EditSidebar from "../sidebar/component";
+import Debug, { Fairy } from "../debug/component";
+import calcLinkPoints from "../links/calcLinkPoints";
+import elemLayout from "./elemLayout";
+import { Button, Popup } from "semantic-ui-react";
+
+import StatusSidebar from "../status-sidebar/component";
+import CircleMarker from "../circleMarker/component";
 /*
  * Presentational
  * ==================================== */
 
-var CanvasViewport = _styledComponents2.default.div(_templateObject);
+var CanvasViewport = style.div(_templateObject);
 
-var CanvasArtboard = _styledComponents2.default.div.attrs({
+var CanvasArtboard = style.div.attrs({
   style: function style(props) {
     var restPercentage = 100 - 100 / props.gridSize;
     var defaultStyles = {
@@ -102,7 +54,7 @@ var CanvasArtboard = _styledComponents2.default.div.attrs({
   }
 })(_templateObject2);
 
-var SvgLand = _styledComponents2.default.svg(_templateObject3);
+var SvgLand = style.svg(_templateObject3);
 
 var Canvas = function (_React$PureComponent) {
   _inherits(Canvas, _React$PureComponent);
@@ -135,7 +87,7 @@ var Canvas = function (_React$PureComponent) {
   Canvas.prototype.render = function render() {
     var _this2 = this;
 
-    return _react2.default.createElement(
+    return React.createElement(
       CanvasViewport,
       {
         onMouseMove: this.props.onMouseMove,
@@ -143,7 +95,7 @@ var Canvas = function (_React$PureComponent) {
           return _this2.props.handleRef(div);
         }
       },
-      _react2.default.createElement(
+      React.createElement(
         CanvasArtboard,
         {
           onMouseDown: this.props.onMouseDown,
@@ -152,26 +104,26 @@ var Canvas = function (_React$PureComponent) {
           artboard: this.props.artboard,
           zoomLevel: this.props.zoomLevel
         },
-        _react2.default.createElement(
+        React.createElement(
           SvgLand,
           {
             width: "100%",
             height: "100%",
             onMouseMove: this.props.onMouseMove
           },
-          _react2.default.createElement(_component17.default, null),
+          React.createElement(CircleMarker, null),
           this.props.entities.filter(function (entity) {
             return "linksTo" in entity;
           })
           // $FlowFixMe
           .map(function (entity) {
-            return _react2.default.createElement(_component7.default, { key: entity.id,
+            return React.createElement(Links, { key: entity.id,
               links: entity.linksTo,
               entity: entity,
               handleSidebarChange: _this2.handleSidebarChange });
           }),
-          this.props.isConnecting && _react2.default.createElement(_component7.default, { links: this.props.connectingLink }),
-          _react2.default.createElement(_component9.default, null)
+          this.props.isConnecting && React.createElement(Links, { links: this.props.connectingLink }),
+          React.createElement(ArrowMarker, null)
         ),
         this.props.entities.map(function (entity) {
           return {
@@ -179,11 +131,11 @@ var Canvas = function (_React$PureComponent) {
             CustomEntity: _this2.props.wrappedCustomEntities[entity.type]
           };
         }).map(function (Combo) {
-          return _react2.default.createElement(Combo.CustomEntity, { key: Combo.entity.id, model: Combo.entity });
+          return React.createElement(Combo.CustomEntity, { key: Combo.entity.id, model: Combo.entity });
         })
       ),
-      _react2.default.createElement(_component5.default, { zoomIn: this.props.zoomIn, zoomOut: this.props.zoomOut }),
-      this.state.sidebarOpened && _react2.default.createElement(_component11.default, {
+      React.createElement(Panel, { zoomIn: this.props.zoomIn, zoomOut: this.props.zoomOut }),
+      this.state.sidebarOpened && React.createElement(EditSidebar, {
         handleSidebarChange: this.handleSidebarChange,
         opened: this.state.sidebarOpened,
         selectedLabel: this.state.selectedLabel,
@@ -223,7 +175,7 @@ var Canvas = function (_React$PureComponent) {
 
         if (foundEntity) {
           foundEntity.label = newLabel;
-          _.store.dispatch((0, _reducer3.setLabel)({ id: status.id, to: id, label: newLabel }));
+          store.dispatch(setLabel({ id: status.id, to: id, label: newLabel }));
         }
       }
     });
@@ -233,7 +185,7 @@ var Canvas = function (_React$PureComponent) {
   Canvas.prototype.onRemoveLabel = function onRemoveLabel() {};
 
   return Canvas;
-}(_react2.default.PureComponent);
+}(React.PureComponent);
 
 /*
  * Container
@@ -256,7 +208,7 @@ var CanvasContainer = function (_React$PureComponent2) {
     }, _this3.wrappedCustomEntities = Object.assign.apply(Object, [{}].concat(Object.keys(_this3.props.customEntities).map(function (type) {
       var _ref;
 
-      return _ref = {}, _ref[type] = (0, _component3.default)((0, _reactRedux.connect)(null, { setName: _reducer3.setName })(_this3.props.customEntities[type].component)), _ref;
+      return _ref = {}, _ref[type] = EntityHOC(connect(null, { setName: setName })(_this3.props.customEntities[type].component)), _ref;
     }))), _this3.handleKey = function (ev) {
       if (ev.getModifierState("Meta") || ev.getModifierState("Control")) {
         switch (ev.key) {
@@ -306,20 +258,20 @@ var CanvasContainer = function (_React$PureComponent2) {
     Object.keys(this.props.customEntities).forEach(function (entityType) {
       var _icons$addIcon;
 
-      _component.icons.addIcon((_icons$addIcon = {}, _icons$addIcon[entityType] = _this4.props.customEntities[entityType].icon, _icons$addIcon));
+      icons.addIcon((_icons$addIcon = {}, _icons$addIcon[entityType] = _this4.props.customEntities[entityType].icon, _icons$addIcon));
     });
   };
 
   CanvasContainer.prototype.componentWillUnmount = function componentWillUnmount() {
     window.document.removeEventListener("keydown", this.handleKey);
     this.canvasDOM = undefined;
-    _elemLayout2.default.gc();
+    elemLayout.gc();
   };
 
   CanvasContainer.prototype.setOffset = function setOffset() {
     if (this.canvasDOM) {
       var cd = this.canvasDOM;
-      _elemLayout2.default.set(cd);
+      elemLayout.set(cd);
       if (window.scrollY !== 0) {
         window.scrollTo(0, 0);
       }
@@ -353,7 +305,7 @@ var CanvasContainer = function (_React$PureComponent2) {
   };
 
   CanvasContainer.prototype.render = function render() {
-    return _react2.default.createElement(Canvas, {
+    return React.createElement(Canvas, {
       entities: this.props.entities,
       wrappedCustomEntities: this.wrappedCustomEntities,
       handleRef: this.handleRef,
@@ -371,11 +323,11 @@ var CanvasContainer = function (_React$PureComponent2) {
   };
 
   return CanvasContainer;
-}(_react2.default.PureComponent);
+}(React.PureComponent);
 
 var makeConnectingLinks = function makeConnectingLinks(state) {
   if (state.canvas.connecting.currently) {
-    var points = (0, _calcLinkPoints2.default)(state.entity.find(function (entity) {
+    var points = calcLinkPoints(state.entity.find(function (entity) {
       return entity.id === state.canvas.connecting.from;
     }), {
       x: state.canvas.cursor.x,
@@ -404,12 +356,11 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, {
-  configViewport: _reducer.configViewport,
-  trackMovement: _reducer.trackMovement,
-  anchorCanvas: _reducer.anchorCanvas,
-  zoom: _reducer.zoom,
-  undo: _reducer2.undo,
-  redo: _reducer2.redo
+export default connect(mapStateToProps, {
+  configViewport: configViewport,
+  trackMovement: trackMovement,
+  anchorCanvas: anchorCanvas,
+  zoom: zoom,
+  undo: undo,
+  redo: redo
 })(CanvasContainer);
-module.exports = exports["default"];
