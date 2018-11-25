@@ -132,7 +132,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
   emitLabelData = data => {
-    console.log("LABEL CLICK", data);
+    // console.log("LABEL CLICK", data);
     store.dispatch(assignLabelToStore(data));
   };
 

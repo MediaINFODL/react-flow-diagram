@@ -108,7 +108,7 @@ const entityReducer = (
 
     case "rd/entity/SET_ENTITY_CROSS":
       const data = action.payload;
-      console.log(data, "WE GOOD");
+      // console.log(data, "WE GOOD");
       break;
 
     case "rd/entity/ADD":
@@ -185,7 +185,7 @@ const entityReducer = (
     }
 
     case "rd/entity/REMOVE":
-      console.log("pass");
+      // console.log("pass");
       return state.filter(entity => entity.id !== action.payload).map(
         entity =>
           entity.linksTo
@@ -331,36 +331,27 @@ const entityReducer = (
     }
 
     case "rd/entity/SET_LABEL": {
-      const { id, to, label } = action.payload;
+      const { id, label, uid } = action.payload;
+      // console.log(action.payload, "PAYLOAD");
       return state.map(
-        entity =>
-          entity.id === id
-            ? {
-              ...entity,
-              linksTo: entity.linksTo
-                ? entity.linksTo.map(
-                  link =>
-                    link.target === to
-                      ? {
-                        ...link,
-                        label
-                      }
-                      : link
-                )
-                : [{ target: to, label }]
-            }
-            : entity
+        entity => {
+          return {
+            ...entity,
+            linksTo: entity.linksTo ? entity.linksTo.map(link =>
+              link.uid === uid ? { ...link, label } : link) : [{ target: id, label, uid }]
+          };
+        }
       );
     }
 
     case "rd/label/REMOVE_LABEL":
-      const { id, uid, to, label } = action.payload;
+      const { id, uid, label } = action.payload;
       return state.map(
         entity => {
           return {
             ...entity,
             linksTo: entity.linksTo ? entity.linksTo.filter(link => link.uid !== uid) : [{
-              target: to,
+              target: id,
               uid,
               label
             }]

@@ -30,7 +30,7 @@ var entityReducer = function entityReducer() {
 
     case "rd/entity/SET_ENTITY_CROSS":
       var data = action.payload;
-      console.log(data, "WE GOOD");
+      // console.log(data, "WE GOOD");
       break;
 
     case "rd/entity/ADD":
@@ -88,7 +88,7 @@ var entityReducer = function entityReducer() {
       }
 
     case "rd/entity/REMOVE":
-      console.log("pass");
+      // console.log("pass");
       return state.filter(function (entity) {
         return entity.id !== action.payload;
       }).map(function (entity) {
@@ -218,17 +218,16 @@ var entityReducer = function entityReducer() {
       {
         var _action$payload4 = action.payload,
             _id6 = _action$payload4.id,
-            _to = _action$payload4.to,
-            _label2 = _action$payload4.label;
+            _label2 = _action$payload4.label,
+            _uid2 = _action$payload4.uid;
+        // console.log(action.payload, "PAYLOAD");
 
         return state.map(function (entity) {
-          return entity.id === _id6 ? _extends({}, entity, {
+          return _extends({}, entity, {
             linksTo: entity.linksTo ? entity.linksTo.map(function (link) {
-              return link.target === _to ? _extends({}, link, {
-                label: _label2
-              }) : link;
-            }) : [{ target: _to, label: _label2 }]
-          }) : entity;
+              return link.uid === _uid2 ? _extends({}, link, { label: _label2 }) : link;
+            }) : [{ target: _id6, label: _label2, uid: _uid2 }]
+          });
         });
       }
 
@@ -236,7 +235,6 @@ var entityReducer = function entityReducer() {
       var _action$payload5 = action.payload,
           _id = _action$payload5.id,
           _uid = _action$payload5.uid,
-          to = _action$payload5.to,
           _label = _action$payload5.label;
 
       return state.map(function (entity) {
@@ -244,7 +242,7 @@ var entityReducer = function entityReducer() {
           linksTo: entity.linksTo ? entity.linksTo.filter(function (link) {
             return link.uid !== _uid;
           }) : [{
-            target: to,
+            target: _id,
             uid: _uid,
             label: _label
           }]
@@ -256,17 +254,17 @@ var entityReducer = function entityReducer() {
         // console.log("rd/entity/LINK_POINTS", action);
         var _action$payload6 = action.payload,
             from = _action$payload6.from,
-            _to2 = _action$payload6.to,
+            to = _action$payload6.to,
             _points = _action$payload6.points;
 
         return state.map(function (entity) {
           return entity.id === from ? _extends({}, entity, {
             linksTo: entity.linksTo ? entity.linksTo.map(function (link) {
-              return link.target === _to2 ? _extends({}, link, {
+              return link.target === to ? _extends({}, link, {
                 uid: new Date().valueOf(),
                 points: _points
               }) : link;
-            }) : [{ target: _to2, points: _points }]
+            }) : [{ target: to, points: _points }]
           }) : entity;
         });
       }

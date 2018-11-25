@@ -452,33 +452,37 @@ const calcLinkPoints = (
     }
   });
   linksInFromEntity.map(i => {
-    const start = i.points[i.points.length - 2];
-    const joint = i.points[i.points.length - 1];
+    if (i.points && i.points.length) {
+      const start = i.points[i.points.length - 2];
+      const joint = i.points[i.points.length - 1];
 
-    if (start.x > joint.x) {
-      mainCross.right.push(i);
-    } else if (start.x < joint.x) {
-      mainCross.left.push(i);
-    }
-    if (start.y > joint.y) {
-      mainCross.bottom.push(i);
-    } else if (start.y < joint.y) {
-      mainCross.top.push(i);
+      if (start.x > joint.x) {
+        mainCross.right.push(i);
+      } else if (start.x < joint.x) {
+        mainCross.left.push(i);
+      }
+      if (start.y > joint.y) {
+        mainCross.bottom.push(i);
+      } else if (start.y < joint.y) {
+        mainCross.top.push(i);
+      }
     }
   });
   linksOutToEntity.map(i => {
-    const start = i.points[0];
-    const joint = i.points[1];
+    if (i.points && i.points.length) {
+      const start = i.points[0];
+      const joint = i.points[1];
 
-    if (start.x > joint.x) {
-      toCross.left.push(i);
-    } else if (start.x < joint.x) {
-      toCross.right.push(i);
-    }
-    if (start.y > joint.y) {
-      toCross.top.push(i);
-    } else if (start.y < joint.y) {
-      toCross.bottom.push(i);
+      if (start.x > joint.x) {
+        toCross.left.push(i);
+      } else if (start.x < joint.x) {
+        toCross.right.push(i);
+      }
+      if (start.y > joint.y) {
+        toCross.top.push(i);
+      } else if (start.y < joint.y) {
+        toCross.bottom.push(i);
+      }
     }
   });
   linksInToEntity.map((i: Link) => {

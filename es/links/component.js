@@ -102,7 +102,7 @@ var ArrowBody = function (_React$PureComponent) {
     };
 
     _this.emitLabelData = function (data) {
-      console.log("LABEL CLICK", data);
+      // console.log("LABEL CLICK", data);
       store.dispatch(assignLabelToStore(data));
     };
 

@@ -101,7 +101,7 @@ const history = (reducer: Reducer<State, Action>) => (
     }
     case "LABEL/SET":
       if (action.payload.uid !== state.label.uid) {
-        console.log("PAYLOAD", action.payload);
+        // console.log("PAYLOAD", action.payload);
         return Object.assign({}, state, { label: action.payload });
       }
       return state;

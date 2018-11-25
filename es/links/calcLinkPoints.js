@@ -366,48 +366,52 @@ var calcLinkPoints = function calcLinkPoints(from, to, linky, src) {
     }
   });
   linksInFromEntity.map(function (i) {
-    var start = i.points[i.points.length - 2];
-    var joint = i.points[i.points.length - 1];
+    if (i.points && i.points.length) {
+      var _start2 = i.points[i.points.length - 2];
+      var _joint2 = i.points[i.points.length - 1];
 
-    if (start.x > joint.x) {
-      mainCross.right.push(i);
-    } else if (start.x < joint.x) {
-      mainCross.left.push(i);
-    }
-    if (start.y > joint.y) {
-      mainCross.bottom.push(i);
-    } else if (start.y < joint.y) {
-      mainCross.top.push(i);
+      if (_start2.x > _joint2.x) {
+        mainCross.right.push(i);
+      } else if (_start2.x < _joint2.x) {
+        mainCross.left.push(i);
+      }
+      if (_start2.y > _joint2.y) {
+        mainCross.bottom.push(i);
+      } else if (_start2.y < _joint2.y) {
+        mainCross.top.push(i);
+      }
     }
   });
   linksOutToEntity.map(function (i) {
-    var start = i.points[0];
-    var joint = i.points[1];
+    if (i.points && i.points.length) {
+      var _start3 = i.points[0];
+      var _joint3 = i.points[1];
 
-    if (start.x > joint.x) {
-      toCross.left.push(i);
-    } else if (start.x < joint.x) {
-      toCross.right.push(i);
-    }
-    if (start.y > joint.y) {
-      toCross.top.push(i);
-    } else if (start.y < joint.y) {
-      toCross.bottom.push(i);
+      if (_start3.x > _joint3.x) {
+        toCross.left.push(i);
+      } else if (_start3.x < _joint3.x) {
+        toCross.right.push(i);
+      }
+      if (_start3.y > _joint3.y) {
+        toCross.top.push(i);
+      } else if (_start3.y < _joint3.y) {
+        toCross.bottom.push(i);
+      }
     }
   });
   linksInToEntity.map(function (i) {
     if (i.points && i.points.length) {
-      var _joint2 = i.points[i.points.length - 2];
+      var _joint4 = i.points[i.points.length - 2];
       var _end = i.points[i.points.length - 1];
 
-      if (_joint2.x > _end.x) {
+      if (_joint4.x > _end.x) {
         inCross.right.push(i);
-      } else if (_joint2.x < _end.x) {
+      } else if (_joint4.x < _end.x) {
         inCross.left.push(i);
       }
-      if (_joint2.y > _end.y) {
+      if (_joint4.y > _end.y) {
         inCross.bottom.push(i);
-      } else if (_joint2.y < _end.y) {
+      } else if (_joint4.y < _end.y) {
         inCross.top.push(i);
       }
     }
