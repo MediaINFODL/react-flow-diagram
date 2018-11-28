@@ -1,6 +1,8 @@
 var _templateObject = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: .1em;\n  stroke: black;\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"], ["\n  fill: none;\n  stroke-width: .1em;\n  stroke: black;\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"]),
     _templateObject2 = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"], ["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"]),
-    _templateObject3 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"]);
+    _templateObject3 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"]),
+    _templateObject4 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"]),
+    _templateObject5 = _taggedTemplateLiteralLoose(["\n  &:hover {\n    span {\n      display: inline-block;\n    }\n  }\n"], ["\n  &:hover {\n    span {\n      display: inline-block;\n    }\n  }\n"]);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -25,6 +27,10 @@ var Line = style.path(_templateObject);
 var InteractionLine = style.path(_templateObject2);
 
 var Label = style.p(_templateObject3);
+
+var Plus = style.span(_templateObject4);
+
+var Group = style.g(_templateObject5);
 
 var ArrowBody = function (_React$PureComponent) {
   _inherits(ArrowBody, _React$PureComponent);
@@ -138,7 +144,7 @@ var ArrowBody = function (_React$PureComponent) {
     var _this2 = this;
 
     return React.createElement(
-      "g",
+      Group,
       null,
       React.createElement(Line, { d: this.props.points, id: "line" + this.props.id }),
       React.createElement(InteractionLine, { d: this.props.points }),
@@ -162,6 +168,27 @@ var ArrowBody = function (_React$PureComponent) {
             }
           },
           this.props.label
+        )
+      ),
+      !this.props.label && React.createElement(
+        "foreignObject",
+        {
+          x: this.getLabelX(),
+          y: this.getLabelY(),
+          width: this.state.width,
+          height: this.state.height
+        },
+        React.createElement(
+          Plus,
+          {
+            innerRef: function innerRef(el) {
+              return _this2.el = el;
+            },
+            onClick: function onClick() {
+              _this2.emitLabelData(_this2.props);
+            }
+          },
+          "+"
         )
       )
     );

@@ -7,7 +7,7 @@ import { Button } from "semantic-ui-react";
 import { Diagram, store, setEntities, setConfig, diagramOn } from "../../src";
 import { config } from "./config-example";
 import "./demo.css";
-import { removeLabel, setLabel } from "../../src/entity/reducer";
+import { addLabel, removeLabel, setLabel } from "../../src/entity/reducer";
 
 injectGlobal`
   * {
@@ -159,6 +159,17 @@ class Demo extends React.PureComponent<{}> {
     store.dispatch(setLabel(obj));
   };
 
+  addLabel = () => {
+    const data = store.getState();
+    const { id, uid } = data.label;
+    const obj = {
+      id,
+      uid,
+      label: "ADD!"
+    };
+    store.dispatch(addLabel(obj));
+  };
+
   render() {
     return (
       <Main>
@@ -166,6 +177,7 @@ class Demo extends React.PureComponent<{}> {
           <Button positive onClick={this.getWorkflowData}>Print workflow</Button>
           <Button negative onClick={this.deleteLabel}>Delete label</Button>
           <Button positive onClick={this.updateLabel}>Update label</Button>
+          <Button positive onClick={this.addLabel}>Add label</Button>
         </div>
         <Diagram/>
       </Main>

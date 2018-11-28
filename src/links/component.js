@@ -36,6 +36,26 @@ const Label = style.p`
   cursor: pointer;
 `;
 
+const Plus = style.span`
+  background: #444;
+  border-radius: 3px;
+  color: #fff;
+  display: none;
+  font-size: 11px;
+  line-height: 15px;
+  padding: 2px 5px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+`;
+
+const Group = style.g`
+  &:hover {
+    span {
+      display: inline-block;
+    }
+  }
+`;
+
 type ArrowBodyProps = {
   rawPoints: { x: number, y: number }[],
   points: string,
@@ -138,7 +158,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
 
   render() {
     return (
-      <g>
+      <Group>
         <Line d={this.props.points} id={`line${this.props.id}`}/>
         <InteractionLine d={this.props.points}/>
         {this.props.label && (
@@ -159,7 +179,22 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
             </Label>
           </foreignObject>
         )}
-      </g>
+        {!this.props.label && (
+          <foreignObject
+            x={this.getLabelX()}
+            y={this.getLabelY()}
+            width={this.state.width}
+            height={this.state.height}
+          >
+            <Plus
+              innerRef={(el) => this.el = el}
+              onClick={() => {
+                this.emitLabelData(this.props);
+              }}
+            >+</Plus>
+          </foreignObject>
+        )}
+      </Group>
     );
   }
 }

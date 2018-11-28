@@ -52,8 +52,8 @@ export type AddLinkedEntityPayload = {
 export type MovePayload = { x: number, y: number, id: string };
 export type SetNamePayload = { id: EntityId, name: string };
 export type SetEntityCrossPayload = { id: EntityId, entity: EntityModel };
-export type SetLabelPayload = { id: EntityId, name: string };
-export type SetCustomPayload = { id: EntityId, custom: Object };
+export type SetLabelPayload = { id: EntityId, name: string, id: EntityId };
+export type AddLabelPayload = { uid: number, label: string };
 export type EntityAction =
   | ActionShape<"rd/entity/SET", EntityState>
   | ActionShape<"rd/entity/ADD", EntityModel & MetaEntityModel>
@@ -63,7 +63,9 @@ export type EntityAction =
   | ActionShape<"rd/entity/MOVE", MovePayload>
   | ActionShape<"rd/entity/SET_NAME", SetNamePayload>
   | ActionShape<"rd/entity/SET_LABEL", SetLabelPayload>
+  | ActionShape<"rd/entity/ADD_LABEL", AddLabelPayload>
   | ActionShape<"rd/entity/SET_CUSTOM", SetCustomPayload>;
+export type SetCustomPayload = { id: EntityId, custom: Object };
 
 export const EntityActionTypeOpen = "rd/entity/SET";
 export const EntityActionTypesModify = [
@@ -74,6 +76,7 @@ export const EntityActionTypesModify = [
   "rd/entity/MOVE",
   "rd/entity/SET_NAME",
   "rd/entity/SET_LABEL",
+  "rd/entity/ADD_LABEL",
   "rd/entity/SET_CUSTOM",
   "rd/label/REMOVE_LABEL"
 ];
@@ -338,12 +341,23 @@ const entityReducer = (
           return {
             ...entity,
             linksTo: entity.linksTo ? entity.linksTo.map(link =>
-              link.uid === uid ? { ...link, label } : link) : [{ target: id, label, uid }]
+              link.uid === uid ? { ...link, label } : link) : []
           };
         }
       );
     }
-
+    case "rd/entity/ADD_LABEL": {
+      const { id, label, uid } = action.payload;
+      return state.map(
+        entity => {
+          return {
+            ...entity,
+            linksTo: entity.linksTo ? entity.linksTo.map(link =>
+              link.uid === uid ? { ...link, label } : link) : []
+          };
+        }
+      );
+    }
     case "rd/label/REMOVE_LABEL":
       const { id, uid, label } = action.payload;
       return state.map(
@@ -521,6 +535,11 @@ export const setName = (payload: SetNamePayload): EntityAction => ({
 
 export const setCurrentStatus = (payload: SetNamePayload): EntityAction => ({
   type: "rd/entity/SET_STATUS",
+  payload
+});
+
+export const addLabel = (payload: AddLabelPayload): EntityAction => ({
+  type: "rd/entity/ADD_LABEL",
   payload
 });
 
