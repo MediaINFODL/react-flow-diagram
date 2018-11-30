@@ -7,7 +7,7 @@ import { Button } from "semantic-ui-react";
 import { Diagram, store, setEntities, setConfig, diagramOn } from "../../src";
 import { config } from "./config-example";
 import "./demo.css";
-import { addLabel, removeLabel, setLabel } from "../../src/entity/reducer";
+import { addLabel, removeEntity, removeLabel, setLabel, setName } from "../../src/entity/reducer";
 
 injectGlobal`
   * {
@@ -129,12 +129,11 @@ class Demo extends React.PureComponent<{}> {
   }
 
   componentWillMount() {
+    diagramOn("anyChange", ev => {
+      console.log("ev: ", ev);
+    });
     store.dispatch(setConfig(config));
     store.dispatch(setEntities(model));
-    // store.subscribe(() => {
-    //   const d = store.getState();
-    //   console.log(JSON.stringify(d.entity));
-    // });
   }
 
   saveChanges(item) {
@@ -159,6 +158,21 @@ class Demo extends React.PureComponent<{}> {
     store.dispatch(setLabel(obj));
   };
 
+  deleteEntity = () => {
+    const data = store.getState();
+    // console.log(data.status);
+    store.dispatch(removeEntity(data.status.id));
+  };
+
+  updateEntity = () => {
+    const data = store.getState();
+    const obj = {
+      ...data.status,
+      name: "NEW!"
+    };
+    store.dispatch(setName(obj));
+  };
+
   addLabel = () => {
     const data = store.getState();
     const { id, uid } = data.label;
@@ -178,6 +192,8 @@ class Demo extends React.PureComponent<{}> {
           <Button negative onClick={this.deleteLabel}>Delete label</Button>
           <Button positive onClick={this.updateLabel}>Update label</Button>
           <Button positive onClick={this.addLabel}>Add label</Button>
+          <Button negative onClick={this.deleteEntity}>Delete entity</Button>
+          <Button positive onClick={this.updateEntity}>Update entity</Button>
         </div>
         <Diagram/>
       </Main>

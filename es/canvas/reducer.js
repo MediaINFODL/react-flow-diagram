@@ -1,6 +1,6 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import elemLayout from './elemLayout';
+import elemLayout from "./elemLayout";
 
 var addEntityHelper = function addEntityHelper(id) {
   return {
@@ -25,15 +25,15 @@ var configViewportHelper = function configViewportHelper(state) {
 
 var canvasReducer = function canvasReducer(state, action) {
   switch (action.type) {
-    case 'rd/canvas/CONFIG_VIEWPORT':
+    case "rd/canvas/CONFIG_VIEWPORT":
       return configViewportHelper(state);
 
-    case 'rd/config/SET':
+    case "rd/config/SET":
       return _extends({}, state, {
         gridSize: action.payload.gridSize
       });
 
-    case 'rd/canvas/TRACK':
+    case "rd/canvas/TRACK":
       return state.canvasAnchor.isMoving ? _extends({}, state, {
         canvasArtboard: _extends({}, canvasArtboardDimensions(state.canvasViewport, {
           x: action.payload.x - state.canvasViewport.x - state.canvasAnchor.coords.x * state.zoom,
@@ -49,18 +49,19 @@ var canvasReducer = function canvasReducer(state, action) {
         }
       });
 
-    case 'rd/canvas/ZOOM':
+    case "rd/canvas/ZOOM":
       return _extends({}, state, {
         zoom: action.payload,
         canvasArtboard: _extends({}, state.canvasArtboard, canvasArtboardDimensions(state.canvasViewport, state.canvasArtboard, action.payload))
       });
 
-    case 'rd/canvas/CONNECT':
+    case "rd/canvas/CONNECT":
+      // console.log("rd/canvas/CONNECT");
       return _extends({}, state, {
         connecting: action.payload
       });
 
-    case 'rd/canvas/ANCHOR_CANVAS':
+    case "rd/canvas/ANCHOR_CANVAS":
       return _extends({}, state, {
         canvasAnchor: {
           isMoving: action.payload,
@@ -68,22 +69,26 @@ var canvasReducer = function canvasReducer(state, action) {
         }
       });
 
-    case 'rd/canvas/ANCHOR_ENTITY':
+    case "rd/canvas/ANCHOR_ENTITY":
+      // console.log("rd/canvas/ANCHOR_ENTITY");
       return _extends({}, state, {
         anchoredEntity: action.payload
       });
 
-    case 'rd/entity/ADD':
+    case "rd/entity/ADD":
+      // console.log("rd/entity/ADD");
       return _extends({}, configViewportHelper(state), addEntityHelper(action.payload.id));
 
-    case 'rd/entity/ADD_LINKED':
+    case "rd/entity/ADD_LINKED":
+      // console.log("rd/entity/ADD_LINKED");
       return _extends({}, configViewportHelper(state), addEntityHelper(action.payload.entity.id));
 
-    case 'rd/entity/LINK_TO':
+    case "rd/entity/LINK_TO":
+      // console.log("rd/entity/LINK_TO");
       return _extends({}, state, {
         connecting: {
           currently: false,
-          from: ''
+          from: ""
         }
       });
 
@@ -94,28 +99,28 @@ var canvasReducer = function canvasReducer(state, action) {
 
 export var configViewport = function configViewport(payload) {
   return {
-    type: 'rd/canvas/CONFIG_VIEWPORT',
+    type: "rd/canvas/CONFIG_VIEWPORT",
     payload: payload
   };
 };
 
 export var trackMovement = function trackMovement(payload) {
   return {
-    type: 'rd/canvas/TRACK',
+    type: "rd/canvas/TRACK",
     payload: payload
   };
 };
 
 export var zoom = function zoom(payload) {
   return {
-    type: 'rd/canvas/ZOOM',
+    type: "rd/canvas/ZOOM",
     payload: payload
   };
 };
 
 export var connecting = function connecting(payload) {
   return {
-    type: 'rd/canvas/CONNECT',
+    type: "rd/canvas/CONNECT",
     payload: payload
   };
 };
@@ -124,16 +129,16 @@ export var anchorEntity = function anchorEntity(_ref) {
   var _ref$isAnchored = _ref.isAnchored,
       isAnchored = _ref$isAnchored === undefined ? true : _ref$isAnchored,
       _ref$id = _ref.id,
-      id = _ref$id === undefined ? '' : _ref$id;
+      id = _ref$id === undefined ? "" : _ref$id;
   return {
-    type: 'rd/canvas/ANCHOR_ENTITY',
+    type: "rd/canvas/ANCHOR_ENTITY",
     payload: { isAnchored: isAnchored, id: id }
   };
 };
 
 export var anchorCanvas = function anchorCanvas(payload) {
   return {
-    type: 'rd/canvas/ANCHOR_CANVAS',
+    type: "rd/canvas/ANCHOR_CANVAS",
     payload: payload
   };
 };
