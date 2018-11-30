@@ -73,7 +73,7 @@ const diagramOn = (
   store.subscribe(() => {
     const state = store.getState();
     if (checkForProperAction(state.lastAction)) {
-      console.log(state.lastAction, action);
+      // console.log(state.lastAction, action);
       fn(state.entity);
     }
   });
