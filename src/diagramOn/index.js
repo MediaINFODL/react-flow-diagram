@@ -1,13 +1,13 @@
 // @flow
 
-import { store } from '../diagram/component';
+import { store } from "../diagram/component";
 import {
   EntityActionTypeOpen,
-  EntityActionTypesModify,
-} from '../entity/reducer';
+  EntityActionTypesModify
+} from "../entity/reducer";
 
-import type { ActionType } from '../diagram/reducer';
-import type { EntityState } from '../entity/reducer';
+import type { ActionType } from "../diagram/reducer";
+import type { EntityState } from "../entity/reducer";
 
 type DiagramOnAction = ActionType | Array<ActionType>;
 type DiagramOnCallback = EntityState => *;
@@ -19,7 +19,7 @@ const isLastAction = (
   lastAction: ActionType,
   action: DiagramOnAction
 ): boolean =>
-  typeof action === 'string'
+  typeof action === "string"
     ? lastAction === action
     : action.indexOf(lastAction) > -1;
 
@@ -32,16 +32,34 @@ const isLastAction = (
 //
 const lastActionMatchesAction = (
   lastAction: ActionType,
-  action: DiagramOnAction | 'anyChange' | 'open'
+  action: DiagramOnAction | "anyChange" | "open"
 ): boolean => {
   switch (action) {
-    case 'anyChange':
+    case "anyChange":
       return EntityActionTypesModify.indexOf(lastAction) > -1;
-    case 'open':
+    case "open":
       return lastAction === EntityActionTypeOpen;
     default:
       return isLastAction(lastAction, action);
   }
+};
+
+const checkForProperAction = (action: string): boolean => {
+  let flag;
+  switch (action) {
+    case "rd/canvas/TRACK":
+      flag = false;
+      break;
+    case "rd/canvas/ANCHOR_ENTITY":
+      flag = false;
+      break;
+    case "rd/canvas/ANCHOR_CANVAS":
+      flag = false;
+      break;
+    default:
+      flag = true;
+  }
+  return flag;
 };
 
 // diagramOn will return a function
@@ -49,14 +67,13 @@ const lastActionMatchesAction = (
 // http://redux.js.org/docs/api/Store.html#subscribelistener
 //
 const diagramOn = (
-  action: DiagramOnAction | 'anyChange' | 'open',
+  action: DiagramOnAction | "anyChange" | "open",
   fn: DiagramOnCallback
 ): DiagramOnReturn =>
   store.subscribe(() => {
     const state = store.getState();
-    if (lastActionMatchesAction(state.lastAction, action)) {
-    console.log('the store', action);
-
+    if (checkForProperAction(state.lastAction)) {
+      // console.log(state.lastAction, action);
       fn(state.entity);
     }
   });

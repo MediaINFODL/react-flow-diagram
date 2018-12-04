@@ -2,7 +2,9 @@
 
 import React from "react";
 import style from "styled-components";
+import { store } from "../";
 import type { EntityId, Links, Point } from "../entity/reducer";
+import { assignLabelToStore } from "../history/reducer";
 
 /*
  * Presentational
@@ -32,6 +34,26 @@ const Label = style.p`
   font-size: 11px;
   padding: 2px 5px;
   cursor: pointer;
+`;
+
+const Plus = style.span`
+  background: #444;
+  border-radius: 3px;
+  color: #fff;
+  display: none;
+  font-size: 11px;
+  line-height: 15px;
+  padding: 2px 5px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+`;
+
+const Group = style.g`
+  &:hover {
+    span {
+      display: inline-block;
+    }
+  }
 `;
 
 type ArrowBodyProps = {
@@ -129,9 +151,14 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
 
   getLabelY = () => this.getMethodForLabelPosition().y - this.state.height / 2;
 
+  emitLabelData = data => {
+    // console.log("LABEL CLICK", data);
+    store.dispatch(assignLabelToStore(data));
+  };
+
   render() {
     return (
-      <g>
+      <Group>
         <Line d={this.props.points} id={`line${this.props.id}`}/>
         <InteractionLine d={this.props.points}/>
         {this.props.label && (
@@ -145,14 +172,29 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
               innerRef={(el) => this.el = el}
               xlinkHref={`#line${this.props.id}`}
               onClick={() => {
-                this.props.handleSidebarChange(true, this.props);
+                this.emitLabelData(this.props);
               }}
             >
               {this.props.label}
             </Label>
           </foreignObject>
         )}
-      </g>
+        {!this.props.label && (
+          <foreignObject
+            x={this.getLabelX()}
+            y={this.getLabelY()}
+            width={this.state.width}
+            height={this.state.height}
+          >
+            <Plus
+              innerRef={(el) => this.el = el}
+              onClick={() => {
+                this.emitLabelData(this.props);
+              }}
+            >+</Plus>
+          </foreignObject>
+        )}
+      </Group>
     );
   }
 }
@@ -251,6 +293,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
               <ArrowBody
                 key={link.target}
                 id={link.target}
+                uid={link.uid}
                 label={link.label}
                 points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}
