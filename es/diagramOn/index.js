@@ -51,7 +51,7 @@ var diagramOn = function diagramOn(action, fn) {
   return store.subscribe(function () {
     var state = store.getState();
     if (checkForProperAction(state.lastAction)) {
-      console.log(state.lastAction, action);
+      // console.log(state.lastAction, action);
       fn(state.entity);
     }
   });

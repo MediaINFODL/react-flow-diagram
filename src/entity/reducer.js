@@ -334,8 +334,7 @@ const entityReducer = (
     }
 
     case "rd/entity/SET_LABEL": {
-      const { id, label, uid } = action.payload;
-      // console.log(action.payload, "PAYLOAD");
+      const { label, uid } = action.payload;
       return state.map(
         entity => {
           return {
@@ -347,7 +346,7 @@ const entityReducer = (
       );
     }
     case "rd/entity/ADD_LABEL": {
-      const { id, label, uid } = action.payload;
+      const { label, uid } = action.payload;
       return state.map(
         entity => {
           return {
@@ -359,16 +358,12 @@ const entityReducer = (
       );
     }
     case "rd/label/REMOVE_LABEL":
-      const { id, uid, label } = action.payload;
+      const { uid } = action.payload;
       return state.map(
         entity => {
           return {
             ...entity,
-            linksTo: entity.linksTo ? entity.linksTo.filter(link => link.uid !== uid) : [{
-              target: id,
-              uid,
-              label
-            }]
+            linksTo: entity.linksTo ? entity.linksTo.filter(link => link.uid !== uid) : []
           };
         }
       );

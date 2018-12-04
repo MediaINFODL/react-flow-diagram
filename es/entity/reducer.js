@@ -70,10 +70,10 @@ var entityReducer = function entityReducer() {
         // console.log("rd/entity/LINK_POINTS", action);
         var _action$payload = action.payload,
             _entity = _action$payload.entity,
-            _id2 = _action$payload.id;
+            _id = _action$payload.id;
 
         return [].concat(state.map(function (existingEntity) {
-          return existingEntity.id === _id2 ? _extends({}, existingEntity, {
+          return existingEntity.id === _id ? _extends({}, existingEntity, {
             linksTo: [].concat(existingEntity.linksTo ? existingEntity.linksTo : [], [{ target: _entity.id, edited: false, uid: new Date().valueOf() }])
           }) : existingEntity;
         }), [{
@@ -102,10 +102,10 @@ var entityReducer = function entityReducer() {
     case "rd/canvas/TRACK":
       {
         if (canvas.anchoredEntity.isAnchored) {
-          var _id3 = canvas.anchoredEntity.id;
+          var _id2 = canvas.anchoredEntity.id;
 
           var mEntity = metaEntity.find(function (e) {
-            return e.id === _id3;
+            return e.id === _id2;
           }) || {
             anchor: { x: 0, y: 0 }
           };
@@ -115,7 +115,7 @@ var entityReducer = function entityReducer() {
           var gridY = positionAdjustedToGrid(_y, canvas.gridSize);
           // console.log(mEntity, canvas.cursor, 'ENTITET I KURSOR', gridX, gridY);
           return state.map(function (entity) {
-            if (entity.linksTo && entity.id === _id3) {
+            if (entity.linksTo && entity.id === _id2) {
               return _extends({}, entity, {
                 x: gridX,
                 y: gridY,
@@ -127,19 +127,19 @@ var entityReducer = function entityReducer() {
                   });
                 })
               });
-            } else if (entity.id === _id3) {
+            } else if (entity.id === _id2) {
               return _extends({}, entity, {
                 x: gridX,
                 y: gridY
               });
             } else if (entity.linksTo && entity.linksTo.some(function (link) {
-              return link.target === _id3;
+              return link.target === _id2;
             })) {
               return _extends({}, entity, {
                 linksTo: entity.linksTo.map(function (link) {
-                  return link.target === _id3 ? _extends({}, link, {
+                  return link.target === _id2 ? _extends({}, link, {
                     points: calcLinkPoints(entity, state.find(function (ent) {
-                      return ent.id === _id3;
+                      return ent.id === _id2;
                     }), link, "rd/canvas/TRACK #2")
                   }) : link;
                 })
@@ -159,14 +159,14 @@ var entityReducer = function entityReducer() {
     case "rd/entity/MOVE":
       {
         var _action$payload2 = action.payload,
-            _id4 = _action$payload2.id,
+            _id3 = _action$payload2.id,
             _x3 = _action$payload2.x,
             _y2 = _action$payload2.y;
 
         var _gridX = positionAdjustedToGrid(_x3, canvas.gridSize);
         var _gridY = positionAdjustedToGrid(_y2, canvas.gridSize);
         return state.map(function (entity) {
-          if (entity.linksTo && entity.id === _id4) {
+          if (entity.linksTo && entity.id === _id3) {
             return _extends({}, entity, {
               x: _gridX,
               y: _gridY,
@@ -178,19 +178,19 @@ var entityReducer = function entityReducer() {
                 });
               })
             });
-          } else if (entity.id === _id4) {
+          } else if (entity.id === _id3) {
             return _extends({}, entity, {
               x: _gridX,
               y: _gridY
             });
           } else if (entity.linksTo && entity.linksTo.some(function (link) {
-            return link.target === _id4;
+            return link.target === _id3;
           })) {
             return _extends({}, entity, {
               linksTo: entity.linksTo.map(function (link) {
-                return link.target === _id4 ? _extends({}, link, {
+                return link.target === _id3 ? _extends({}, link, {
                   points: calcLinkPoints(entity, state.find(function (ent) {
-                    return ent.id === _id4;
+                    return ent.id === _id3;
                   }), link, "rd/entity/MOVE #2")
                 }) : link;
               })
@@ -204,11 +204,11 @@ var entityReducer = function entityReducer() {
     case "rd/entity/SET_NAME":
       {
         var _action$payload3 = action.payload,
-            _id5 = _action$payload3.id,
+            _id4 = _action$payload3.id,
             _name = _action$payload3.name;
 
         return state.map(function (entity) {
-          return entity.id === _id5 ? _extends({}, entity, {
+          return entity.id === _id4 ? _extends({}, entity, {
             name: _name
           }) : entity;
         });
@@ -217,15 +217,13 @@ var entityReducer = function entityReducer() {
     case "rd/entity/SET_LABEL":
       {
         var _action$payload4 = action.payload,
-            _id6 = _action$payload4.id,
-            _label2 = _action$payload4.label,
+            _label = _action$payload4.label,
             _uid2 = _action$payload4.uid;
-        // console.log(action.payload, "PAYLOAD");
 
         return state.map(function (entity) {
           return _extends({}, entity, {
             linksTo: entity.linksTo ? entity.linksTo.map(function (link) {
-              return link.uid === _uid2 ? _extends({}, link, { label: _label2 }) : link;
+              return link.uid === _uid2 ? _extends({}, link, { label: _label }) : link;
             }) : []
           });
         });
@@ -233,43 +231,35 @@ var entityReducer = function entityReducer() {
     case "rd/entity/ADD_LABEL":
       {
         var _action$payload5 = action.payload,
-            _id7 = _action$payload5.id,
-            _label3 = _action$payload5.label,
+            _label2 = _action$payload5.label,
             _uid3 = _action$payload5.uid;
 
         return state.map(function (entity) {
           return _extends({}, entity, {
             linksTo: entity.linksTo ? entity.linksTo.map(function (link) {
-              return link.uid === _uid3 ? _extends({}, link, { label: _label3 }) : link;
+              return link.uid === _uid3 ? _extends({}, link, { label: _label2 }) : link;
             }) : []
           });
         });
       }
     case "rd/label/REMOVE_LABEL":
-      var _action$payload6 = action.payload,
-          _id = _action$payload6.id,
-          _uid = _action$payload6.uid,
-          _label = _action$payload6.label;
+      var _uid = action.payload.uid;
 
       return state.map(function (entity) {
         return _extends({}, entity, {
           linksTo: entity.linksTo ? entity.linksTo.filter(function (link) {
             return link.uid !== _uid;
-          }) : [{
-            target: _id,
-            uid: _uid,
-            label: _label
-          }]
+          }) : []
         });
       });
 
     case "rd/entity/LINK_POINTS":
       {
         // console.log("rd/entity/LINK_POINTS", action);
-        var _action$payload7 = action.payload,
-            from = _action$payload7.from,
-            to = _action$payload7.to,
-            _points = _action$payload7.points;
+        var _action$payload6 = action.payload,
+            from = _action$payload6.from,
+            to = _action$payload6.to,
+            _points = _action$payload6.points;
 
         return state.map(function (entity) {
           return entity.id === from ? _extends({}, entity, {
@@ -285,12 +275,12 @@ var entityReducer = function entityReducer() {
 
     case "rd/entity/SET_CUSTOM":
       {
-        var _action$payload8 = action.payload,
-            _id8 = _action$payload8.id,
-            _custom = _action$payload8.custom;
+        var _action$payload7 = action.payload,
+            _id5 = _action$payload7.id,
+            _custom = _action$payload7.custom;
 
         return state.map(function (entity) {
-          return entity.id === _id8 ? _extends({}, entity, {
+          return entity.id === _id5 ? _extends({}, entity, {
             custom: _custom
           }) : entity;
         });
@@ -345,27 +335,27 @@ export var metaEntityReducer = function metaEntityReducer() {
       }]);
     case "rd/metaentity/SELECT":
       {
-        var _action$payload9 = action.payload,
-            _id9 = _action$payload9.id,
-            _isSelected = _action$payload9.isSelected;
+        var _action$payload8 = action.payload,
+            _id6 = _action$payload8.id,
+            _isSelected = _action$payload8.isSelected;
 
         return state.map(function (metaEntity) {
-          return metaEntity.id === _id9 ? _extends({}, metaEntity, { isSelected: _isSelected }) : _extends({}, metaEntity, { isSelected: false });
+          return metaEntity.id === _id6 ? _extends({}, metaEntity, { isSelected: _isSelected }) : _extends({}, metaEntity, { isSelected: false });
         });
       }
     case "rd/canvas/ANCHOR_ENTITY":
       {
-        var _id10 = action.payload.id;
+        var _id7 = action.payload.id;
 
         return state.map(function (metaEntity) {
-          return metaEntity.id === _id10 ? _extends({}, metaEntity, {
+          return metaEntity.id === _id7 ? _extends({}, metaEntity, {
             isAnchored: true,
             anchor: {
               x: canvas.cursor.x - (entity.find(function (e) {
-                return e.id === _id10;
+                return e.id === _id7;
               }) || { x: 0 }).x,
               y: canvas.cursor.y - (entity.find(function (e) {
-                return e.id === _id10;
+                return e.id === _id7;
               }) || { y: 0 }).y
             }
           }) : _extends({}, metaEntity, { isAnchored: false });
