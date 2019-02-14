@@ -50,7 +50,7 @@ var contextMenuActions = function contextMenuActions(props) {
         });
       },
       iconVariety: entityTypeName,
-      label: "Add status"
+      label: entityTypeName == 'Task' ? `Add status` : `Add Starting status`
     };
   });
 
