@@ -44,25 +44,39 @@ var entityReducer = function entityReducer() {
         name: action.payload.name
       }]);
 
-    case "rd/entity/LINK_TO":
-      {
+      case "rd/entity/LINK_TO": {
         // console.log("rd/entity/LINK_POINTS", action);
-        var payload = action.payload;
-
-        return state.map(function (entity) {
-          return entity.id === canvas.connecting.from ? _extends({}, entity, {
-            linksTo: [].concat(entity.linksTo ? entity.linksTo : [], entity.linksTo && entity.linksTo.some(function (link) {
-              return link.target === payload;
-            }) ? [] : [{
-              target: payload,
-              uid: new Date().valueOf(),
-              edited: false,
-              points: calcLinkPoints(entity, state.find(function (ent) {
-                return ent.id === payload;
-              }), "rd/entity/LINK_TO")
-            }])
-          }) : entity;
-        });
+        const { payload } = action;
+        let startTransition = state.find(entity => entity.id == payload)
+        if (startTransition.type !== 'Event') {
+          return state.map(
+            entity =>
+              entity.id === canvas.connecting.from
+                ? {
+                  ...entity,
+                  linksTo: [
+                    ...(entity.linksTo ? entity.linksTo : []),
+                    ...(entity.linksTo &&
+                      entity.linksTo.some(link => link.target === payload)
+                      ? []
+                      : [
+                        {
+                          target: payload,
+                          uid: new Date().valueOf(),
+                          edited: false,
+                          points: calcLinkPoints(
+                            entity,
+                            state.find(ent => ent.id === payload),
+                            "rd/entity/LINK_TO"
+                          )
+                        }
+                      ])
+                  ]
+                }
+                : entity
+          );
+        }
+        return state;
       }
 
     case "rd/entity/ADD_LINKED":

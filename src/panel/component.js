@@ -68,7 +68,7 @@ const Panel = (props: PanelProps) => (
           key={entityTypeName}
           onMouseDown={() => props.addEntityHelper(entityTypeName)}
         >
-          <Icon name={entityTypeName} label={`Add status`}/>
+          <Icon name={entityTypeName} label={entityTypeName == 'Task' ? `Add status`: 'Add starting Transition'}/>
         </PanelTool>
       ))}
       <PanelTool

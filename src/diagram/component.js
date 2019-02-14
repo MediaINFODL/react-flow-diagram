@@ -12,6 +12,8 @@ import type { EntityType } from "../entity/reducer";
 import type { DiagComponentProps } from "react-flow-diagram";
 import Task from "../task/component";
 import taskIcon from "../task/icon";
+import Event from "../event/component";
+import eventIcon from "../event/icon"
 
 export const store = createStore(
   reducer,
@@ -32,6 +34,10 @@ const customEntities: CustomEntities = {
   Task: {
     component: Task,
     icon: taskIcon
+  },
+  Event: {
+    component: Event,
+    icon: eventIcon
   }
 };
 

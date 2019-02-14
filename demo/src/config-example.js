@@ -11,6 +11,10 @@ const config: ConfigState = {
     Task: {
       width: 100,
       height: 60
+    },
+    Event:{
+      width: 5,
+      height: 5
     }
   },
   gridSize: 1

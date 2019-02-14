@@ -57,7 +57,7 @@ type EntityProps = {
   connecting: ConnectingPayload => CanvasAction,
   defaultEntity: DefaultEntityProps => EntityModel & MetaEntityModel,
 };
-const contextMenuActions = (props: EntityProps): ContextMenuActions => {
+const contextMenuActions = (props: EntityProps): ContextMenuActions => {  
   const remove = {
     action: () => props.removeEntity(props.model.id),
     iconVariety: "delete",
@@ -77,7 +77,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
         id: props.model.id
       }),
     iconVariety: entityTypeName,
-    label: `Add status`
+    label: entityTypeName == 'Task' ? `Add status` : `Add Starting status`
   }));
 
   return [...addEntities, connectAction];

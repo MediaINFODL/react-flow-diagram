@@ -131,32 +131,36 @@ const entityReducer = (
     case "rd/entity/LINK_TO": {
       // console.log("rd/entity/LINK_POINTS", action);
       const { payload } = action;
-      return state.map(
-        entity =>
-          entity.id === canvas.connecting.from
-            ? {
-              ...entity,
-              linksTo: [
-                ...(entity.linksTo ? entity.linksTo : []),
-                ...(entity.linksTo &&
-                entity.linksTo.some(link => link.target === payload)
-                  ? []
-                  : [
-                    {
-                      target: payload,
-                      uid: new Date().valueOf(),
-                      edited: false,
-                      points: calcLinkPoints(
-                        entity,
-                        state.find(ent => ent.id === payload),
-                        "rd/entity/LINK_TO"
-                      )
-                    }
-                  ])
-              ]
-            }
-            : entity
-      );
+      let startTransition = state.find(entity => entity.id == payload)
+      if (startTransition.type !== 'Event') {
+        return state.map(
+          entity =>
+            entity.id === canvas.connecting.from
+              ? {
+                ...entity,
+                linksTo: [
+                  ...(entity.linksTo ? entity.linksTo : []),
+                  ...(entity.linksTo &&
+                    entity.linksTo.some(link => link.target === payload)
+                    ? []
+                    : [
+                      {
+                        target: payload,
+                        uid: new Date().valueOf(),
+                        edited: false,
+                        points: calcLinkPoints(
+                          entity,
+                          state.find(ent => ent.id === payload),
+                          "rd/entity/LINK_TO"
+                        )
+                      }
+                    ])
+                ]
+              }
+              : entity
+        );
+      }
+      return state;
     }
 
     case "rd/entity/ADD_LINKED": {

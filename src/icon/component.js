@@ -68,7 +68,7 @@ type IconProps = {
   name: IconVariety,
   label?: string,
 };
-const Icon = ({ name, label }: IconProps) => (
+const Icon = ({ name, label }: IconProps) => label != `Add Starting status` ? (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox={`0 0 ${icons.get(name).size.toString()} ${icons
@@ -78,7 +78,7 @@ const Icon = ({ name, label }: IconProps) => (
     {label && <title>{label}</title>}
     {icons.get(name).path}
   </Svg>
-);
+) : null;
 
 export default Icon;
 export { icons };

@@ -10,12 +10,19 @@ import Canvas from "../canvas/component";
 import Task from "../task/component";
 import taskIcon from "../task/icon";
 
+import Event from "../event/component";
+import eventIcon from "../event/icon"
+
 export var store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 var customEntities = {
   Task: {
     component: Task,
     icon: taskIcon
+  },
+  Event: {
+    component: Event,
+    icon: eventIcon
   }
 };
 
