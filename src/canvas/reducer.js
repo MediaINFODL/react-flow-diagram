@@ -169,7 +169,7 @@ const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
       };
 
     case "rd/canvas/ANCHOR_ENTITY":
-      // console.log("rd/canvas/ANCHOR_ENTITY");
+    // console.log("rd/canvas/ANCHOR_ENTITY");
       return {
         ...state,
         anchoredEntity: action.payload
@@ -190,7 +190,7 @@ const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
       };
 
     case "rd/entity/LINK_TO":
-      // console.log("rd/entity/LINK_TO");
+    // console.log("rd/entity/LINK_TO");
       return {
         ...state,
         connecting: {

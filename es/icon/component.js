@@ -47,7 +47,7 @@ var icons = function () {
 var Icon = function Icon(_ref) {
   var name = _ref.name,
       label = _ref.label;
-  return label != `Add Starting status` ? React.createElement(
+  return label.includes(`Add Starting status`) ? null : React.createElement(
     Svg,
     {
       xmlns: 'http://www.w3.org/2000/svg',
@@ -59,7 +59,7 @@ var Icon = function Icon(_ref) {
       label
     ),
     icons.get(name).path
-  ) : null;
+  );
 };
 
 export default Icon;
