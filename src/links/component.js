@@ -49,11 +49,9 @@ const Plus = style.span`
 `;
 
 const Group = style.g`
-  &:hover {
     span {
-      display: inline-block;
+      display: initial;
     }
-  }
 `;
 
 type ArrowBodyProps = {
