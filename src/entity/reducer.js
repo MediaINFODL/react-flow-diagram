@@ -129,7 +129,7 @@ const entityReducer = (
       ];
 
     case "rd/entity/LINK_TO": {
-      // console.log("rd/entity/LINK_POINTS", action);
+      console.log("rd/entity/LINK_POINTS", action);
       const { payload } = action;
       let startTransition = state.find(entity => entity.id == payload)
       if (startTransition.type !== 'Event') {
@@ -145,6 +145,7 @@ const entityReducer = (
                     ? []
                     : [
                       {
+                        label: `${entity.name}` + `-` + `${startTransition.name}` ,
                         target: payload,
                         uid: new Date().valueOf(),
                         edited: false,

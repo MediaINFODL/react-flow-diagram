@@ -292,7 +292,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
                 key={link.target}
                 id={link.target}
                 uid={link.uid}
-                label={link.label === undefined ? 'new' : link.label}
+                label={link.label}
                 points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}
                 handleSidebarChange={this.props.handleSidebarChange}

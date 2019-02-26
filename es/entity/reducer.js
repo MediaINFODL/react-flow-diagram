@@ -61,6 +61,7 @@ var entityReducer = function entityReducer() {
                       ? []
                       : [
                         {
+                          label: `${entity.name}` + `-` + `${startTransition.name}` ,
                           target: payload,
                           uid: new Date().valueOf(),
                           edited: false,
