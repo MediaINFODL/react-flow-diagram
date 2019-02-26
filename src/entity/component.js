@@ -18,19 +18,19 @@ import ContextMenu from "../contextMenu/component";
 import type { ComponentType, Node } from "react";
 import type {
   EntityId,
-  EntityModel,
-  EntityType,
-  MetaEntityModel,
-  MovePayload,
-  AddLinkedEntityPayload,
-  EntityAction,
-  MetaEntityAction
+    EntityModel,
+    EntityType,
+    MetaEntityModel,
+    MovePayload,
+    AddLinkedEntityPayload,
+    EntityAction,
+    MetaEntityAction
 } from "./reducer";
 import type {
   CanvasState,
-  CanvasAction,
-  ConnectingPayload,
-  AnchorEntityPayload
+    CanvasAction,
+    ConnectingPayload,
+    AnchorEntityPayload
 } from "../canvas/reducer";
 import type { State } from "../diagram/reducer";
 import type { DefaultEntityProps } from "./defaultEntity";
@@ -57,32 +57,33 @@ type EntityProps = {
   connecting: ConnectingPayload => CanvasAction,
   defaultEntity: DefaultEntityProps => EntityModel & MetaEntityModel,
 };
-const contextMenuActions = (props: EntityProps): ContextMenuActions => {  
-  if(props.model.type == 'Event' && props.model.linksTo != undefined ){
+const contextMenuActions = (props: EntityProps): ContextMenuActions => {
+  if (props.model.type == 'Event' && props.model.linksTo != undefined) {
+    if (props.model.linksTo.length > 0) {
+      const remove = {
+        action: () => props.removeEntity(props.model.id),
+        iconVariety: "delete",
+        label: `Add Starting status1`
+      };
 
-    const remove = {
-      action: () => props.removeEntity(props.model.id),
-      iconVariety: "delete",
-      label: `Add Starting status1`
-    };
-  
-    const connectAction = {
-      action: () => props.connecting({ currently: true, from: props.model.id }),
-      iconVariety: "arrow",
-      label: `Add Starting status2`
-    };
-  
-    const addEntities = props.entityTypeNames.map(entityTypeName => ({
-      action: () =>
-        props.addLinkedEntity({
-          entity: props.defaultEntity({ entityType: entityTypeName }),
-          id: props.model.id
-        }),
-      iconVariety: entityTypeName,
-      label:entityTypeName == 'Task' ? `Add Starting status4` : `Add Starting status3`
-    }));
-  
-    return [...addEntities, connectAction];
+      const connectAction = {
+        action: () => props.connecting({ currently: true, from: props.model.id }),
+        iconVariety: "arrow",
+        label: `Add Starting status2`
+      };
+
+      const addEntities = props.entityTypeNames.map(entityTypeName => ({
+        action: () =>
+          props.addLinkedEntity({
+            entity: props.defaultEntity({ entityType: entityTypeName }),
+            id: props.model.id
+          }),
+        iconVariety: entityTypeName,
+        label: entityTypeName == 'Task' ? `Add Starting status4` : `Add Starting status3`
+      }));
+
+      return [...addEntities, connectAction];
+    }
 
   }
   const remove = {
@@ -107,7 +108,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
     label: entityTypeName == 'Task' ? `Add status` : `Add Starting status`
   }));
 
-  return [...addEntities, connectAction]; 
+  return [...addEntities, connectAction];
 
 };
 
@@ -138,7 +139,7 @@ const Entity = (props: EntityProps) => (
     >
       {props.children}
     </div>
-    {props.isSelected && <ContextMenu actions={contextMenuActions(props)}/>}
+    {props.isSelected && <ContextMenu actions={contextMenuActions(props)} />}
   </EntityStyle>
 );
 
@@ -205,14 +206,14 @@ const EntityContainerHOC = WrappedComponent =>
       if (this.props.canvas.connecting.currently) {
         // In this case we want to select an entity to be connected to a
         // previously selected entity to connect from
-        this.props.linkTo(this.props.model.id);        
+        this.props.linkTo(this.props.model.id);
         this.props.move({
           x:
-            this.props.model.x + 0.000001 ,
+            this.props.model.x + 0.000001,
           y:
-            this.props.model.y ,
+            this.props.model.y,
           id: this.props.model.id
-        });     
+        });
 
       } else {
         // Most common behavior is that when you click on an entity, your
@@ -303,7 +304,7 @@ const EntityContainerHOC = WrappedComponent =>
           onMouseLeave={this.onMouseLeave}
           onMouseUp={this.onMouseUp}
         >
-          <WrappedComponent model={this.props.model} meta={this.props.meta}/>
+          <WrappedComponent model={this.props.model} meta={this.props.meta} />
         </Entity>
       );
     }
