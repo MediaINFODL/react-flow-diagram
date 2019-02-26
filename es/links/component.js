@@ -294,7 +294,7 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
           key: link.target,
           id: link.target,
           uid: link.uid,
-          label: link.label,
+          label: link.label === undefined ? 'new' : link.label,
           points: positionStartOfPath(link.points, _this4.props.entity),
           rawPoints: link.points,
           handleSidebarChange: _this4.props.handleSidebarChange

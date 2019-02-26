@@ -26,29 +26,29 @@ import { assignStatusToStore } from "../history/reducer";
 
 var contextMenuActions = function contextMenuActions(props) {
 
-  if(props.model.type == 'Event' && props.model.linksTo != undefined ){
+  if (props.model.type == 'Event' && props.model.linksTo != undefined) {
+    if (props.model.linksTo.length > 0) {
+      const remove = {
+        action: () => props.removeEntity(props.model.id),
+        iconVariety: "delete",
+        label: `Add Starting status1`
+      };
 
-    const remove = {
-      action: () => props.removeEntity(props.model.id),
-      iconVariety: "delete",
-      label: `Add Starting status1`
-    };
-  
-    const connectAction = {
-      action: () => props.connecting({ currently: true, from: props.model.id }),
-      iconVariety: "arrow",
-      label: `Add Starting status2`
-    };
-  
-    const addEntities = props.entityTypeNames.map(entityTypeName => ({
-      action: () =>
-        props.addLinkedEntity({
-          entity: props.defaultEntity({ entityType: entityTypeName }),
-          id: props.model.id
-        }),
-      iconVariety: entityTypeName,
-      label:entityTypeName == 'Task' ? `Add Starting status4` : `Add Starting status3`
-    }));
+      const connectAction = {
+        action: () => props.connecting({ currently: true, from: props.model.id }),
+        iconVariety: "arrow",
+        label: `Add Starting status2`
+      };
+
+      const addEntities = props.entityTypeNames.map(entityTypeName => ({
+        action: () =>
+          props.addLinkedEntity({
+            entity: props.defaultEntity({ entityType: entityTypeName }),
+            id: props.model.id
+          }),
+        iconVariety: entityTypeName,
+        label: entityTypeName == 'Task' ? `Add Starting status4` : `Add Starting status3`
+      }));
 
     return [].concat(addEntities, [connectAction]);
   }
