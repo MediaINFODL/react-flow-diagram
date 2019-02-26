@@ -52,6 +52,7 @@ var contextMenuActions = function contextMenuActions(props) {
 
     return [].concat(addEntities, [connectAction]);
   }
+}
   
   var remove = {
     action: function action() {
