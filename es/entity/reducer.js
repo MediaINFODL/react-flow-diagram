@@ -61,7 +61,7 @@ var entityReducer = function entityReducer() {
                       ? []
                       : [
                         {
-                          label: `${entity.name}` + `-` + `${startTransition.name}` ,
+                          label: entity.type !== 'Event' ? `${entity.name}` + `-` + `${startTransition.name}` : `${startTransition.name}` ,
                           target: payload,
                           uid: new Date().valueOf(),
                           edited: false,
@@ -86,10 +86,10 @@ var entityReducer = function entityReducer() {
         var _action$payload = action.payload,
             _entity = _action$payload.entity,
             _id = _action$payload.id;
-
+       const _startTransition = state.find(entity => entity.id == _id)
         return [].concat(state.map(function (existingEntity) {
           return existingEntity.id === _id ? _extends({}, existingEntity, {
-            linksTo: [].concat(existingEntity.linksTo ? existingEntity.linksTo : [], [{ target: _entity.id, edited: false, uid: new Date().valueOf() }])
+            linksTo: [].concat(existingEntity.linksTo ? existingEntity.linksTo : [], [{ target: _entity.id, edited: false, uid: new Date().valueOf(), label: `${_entity.name}` + `-` + `${_startTransition.name}`}])
           }) : existingEntity;
         }), [{
           id: _entity.id,
