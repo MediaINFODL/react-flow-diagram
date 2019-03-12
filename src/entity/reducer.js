@@ -129,9 +129,8 @@ const entityReducer = (
       ];
 
     case "rd/entity/LINK_TO": {
-      console.log("rd/entity/LINK_POINTS", action);
       const { payload } = action;
-      let startTransition = state.find(entity => entity.id == payload)
+      const startTransition = state.find(entity => entity.id == payload)
       if (startTransition.type !== 'Event') {
         return state.map(
           entity =>
@@ -145,7 +144,7 @@ const entityReducer = (
                     ? []
                     : [
                       {
-                        label: `${entity.name}` + `-` + `${startTransition.name}` ,
+                        label: entity.type !== 'Event' ? `${entity.name}` + `-` + `${startTransition.name}` : `${startTransition.name}` ,
                         target: payload,
                         uid: new Date().valueOf(),
                         edited: false,
@@ -167,6 +166,7 @@ const entityReducer = (
     case "rd/entity/ADD_LINKED": {
       // console.log("rd/entity/LINK_POINTS", action);
       const { entity, id } = action.payload;
+      const startTransition = state.find(entity => entity.id == id)
       return [
         ...state.map(
           existingEntity =>
@@ -175,7 +175,7 @@ const entityReducer = (
                 ...existingEntity,
                 linksTo: [
                   ...(existingEntity.linksTo ? existingEntity.linksTo : []),
-                  { target: entity.id, edited: false, uid: new Date().valueOf() }
+                  { target: entity.id, edited: false, uid: new Date().valueOf(),  label: `${entity.name}` + `-` + `${startTransition.name}`  }
                 ]
               }
               : existingEntity
