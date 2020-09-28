@@ -1,8 +1,8 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _templateObject = _taggedTemplateLiteralLoose(["\n  background-color: #fff;\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n  width: ", "px;\n  height: ", "px;\n  border-radius: 77rem;\n  border: 2px solid #888;\n justify-content: center;\n font-size: .5rem\n"], ["\n  background-color: #fff;\n  display: flex;\n  flex-flow: row nowrap;\n  align-items: center;\n  width: ", "px;\n  height: ", "px;\n  border-radius: 77rem;\n  border: 2px solid #888;\n justify-content: center\n font-size: .5rem\n"]),
-    _templateObject2 = _taggedTemplateLiteralLoose(["\n  position: absolute;\n top: 100%;\n width: 200%;\n  padding: .5em;\n  font-size: .8rem;\n"], ["\n  position: absolute;\n top: 100%;\n width: 200%;\n  padding: .5em;\n  font-size: .8rem;\n"]),
-    _templateObject3 = _taggedTemplateLiteralLoose(["\n  position: absolute;\n top: 100%\n width: 200%;\n padding: .5em;\n  font-size: .8rem;\n  text-align: center;\n  resize: none;\n  border: none;\n  border-radius: .1rem;\n z-index: 10;\n background-color: rgba(255, 255, 255, 0.8);\n"], ["\n  position: absolute;\n top: 100%\n width: 200%;\n padding: .5em;\n  font-size: .8rem;\n  text-align: center;\n  resize: none;\n  border: none;\n  border-radius: .1rem;\n z-index: 10;\n background-color: rgba(255, 255, 255, 0.8);\n"]);
+var _templateObject = _taggedTemplateLiteralLoose(['\n  background-color: #fff;\n  display: flex;\n  position: relative;\n  flex-flow: row nowrap;\n  align-items: center;\n  width: ', 'px;\n  height: ', 'px;\n  border-radius: 77rem;\n  border: 2px solid #888;\n  justify-content: center;\n  font-size: .5rem;\n'], ['\n  background-color: #fff;\n  display: flex;\n  position: relative;\n  flex-flow: row nowrap;\n  align-items: center;\n  width: ', 'px;\n  height: ', 'px;\n  border-radius: 77rem;\n  border: 2px solid #888;\n  justify-content: center;\n  font-size: .5rem;\n']),
+    _templateObject2 = _taggedTemplateLiteralLoose(['\n  position: absolute;\n  top: 100%;\n  width: 200%;\n  padding: .5em;\n  font-size: .8rem;\n'], ['\n  position: absolute;\n  top: 100%;\n  width: 200%;\n  padding: .5em;\n  font-size: .8rem;\n']),
+    _templateObject3 = _taggedTemplateLiteralLoose(['\n  position: absolute;\n  top: 100%;\n  width: 200%;\n  padding: .5em;\n  border: none;\n  font-size: .8rem;\n  text-align: center;\n  border-radius: .1rem;\n  resize: none;\n  z-index: 10;\n  background-color: rgba(255, 255, 255, 0.8);\n'], ['\n  position: absolute;\n  top: 100%;\n  width: 200%;\n  padding: .5em;\n  border: none;\n  font-size: .8rem;\n  text-align: center;\n  border-radius: .1rem;\n  resize: none;\n  z-index: 10;\n  background-color: rgba(255, 255, 255, 0.8);\n']);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -11,6 +11,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw; return strings; }
+
 import React from 'react';
 import style from 'styled-components';
 
@@ -18,7 +19,7 @@ import style from 'styled-components';
  * Presentational
  * ==================================== */
 
-var EventStyle = style.div(_templateObject,  function (props) {
+var EventStyle = style.div(_templateObject, function (props) {
   return props.width;
 }, function (props) {
   return props.height;
@@ -31,11 +32,7 @@ var EditName = style.textarea(_templateObject3);
 var Event = function Event(props) {
   return React.createElement(
     EventStyle,
-    {
-      width: props.model.width,
-      height: props.model.height,
-      isEditing: props.isEditing
-    },
+    { width: props.model.width, height: props.model.height },
     React.createElement(EditName, {
       value: props.name,
       onChange: props.refreshName,
@@ -43,7 +40,7 @@ var Event = function Event(props) {
       innerRef: function innerRef(textarea) {
         return props.handleRef(textarea);
       },
-      style: { display: props.isEditing ? "block" : "none" }
+      style: { display: props.isEditing ? 'block' : 'none' }
     }),
     React.createElement(
       Name,
@@ -51,7 +48,7 @@ var Event = function Event(props) {
         onDoubleClick: function onDoubleClick() {
           return props.toggleEdit(true);
         },
-        style: { display: !props.isEditing ? "block" : "none" }
+        style: { display: !props.isEditing ? 'block' : 'none' }
       },
       props.model.name
     )
@@ -83,7 +80,7 @@ var EventComponent = function (_React$PureComponent) {
       }
     }, _this.toggleEdit = function (isEditing) {
       var _this2 = _this,
-        textarea = _this2.textarea;
+          textarea = _this2.textarea;
 
       if (isEditing && textarea) {
         setTimeout(function () {
@@ -95,11 +92,11 @@ var EventComponent = function (_React$PureComponent) {
       _this.setState({ name: ev.currentTarget.value });
     }, _this.handleKeyPress = function (ev) {
       switch (ev.key) {
-        case "Enter":
+        case 'Enter':
           _this.toggleEdit(false);
           _this.props.setName({ id: _this.props.model.id, name: _this.state.name });
           break;
-        case "Escape":
+        case 'Escape':
           _this.toggleEdit(false);
           _this.setState({ name: _this.props.model.name });
           break;

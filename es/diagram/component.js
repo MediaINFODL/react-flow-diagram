@@ -9,9 +9,8 @@ import Canvas from "../canvas/component";
 
 import Task from "../task/component";
 import taskIcon from "../task/icon";
-
 import Event from "../event/component";
-import eventIcon from "../event/icon"
+import eventIcon from "../event/icon";
 
 export var store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
@@ -26,11 +25,11 @@ var customEntities = {
   }
 };
 
-var Diagram = function Diagram() {
+var Diagram = function Diagram(props) {
   return React.createElement(
     Provider,
     { store: store },
-    React.createElement(Canvas, { customEntities: customEntities })
+    React.createElement(Canvas, { view: props.view, customEntities: customEntities })
   );
 };
 

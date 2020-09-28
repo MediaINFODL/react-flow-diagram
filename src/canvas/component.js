@@ -90,26 +90,25 @@ type CanvasProps = {
   onMouseDown: () => void,
   onMouseMove: (SyntheticMouseEvent<HTMLElement>) => void,
   onMouseUp: () => void,
-  handleSidebarChange?: () => void
+  handleSidebarChange?: () => void,
+  view?: boolean
 };
 
-class Canvas extends React.PureComponent<CanvasProps,
-  > {
-
-  state = {
-    sidebarOpened: false,
-    selectedLinkId: "",
-    selectedLabel: "",
-    editedLabel: "",
-    model: {},
-    statusSidebarOpen: true,
-    statusId: "",
-    currentStatus: "my",
-    newStatus: ""
-  };
+class Canvas extends React.PureComponent<CanvasProps,> {
 
   constructor(props) {
     super(props);
+    this.state = {
+      sidebarOpened: false,
+      selectedLinkId: "",
+      selectedLabel: "",
+      editedLabel: "",
+      model: {},
+      statusSidebarOpen: true,
+      statusId: "",
+      currentStatus: "my",
+      newStatus: ""
+    };
     this.handleSidebarChange = this.handleSidebarChange.bind(this);
     this.onSaveLabel = this.onSaveLabel.bind(this);
     this.onRemoveLabel = this.onRemoveLabel.bind(this);
@@ -118,6 +117,7 @@ class Canvas extends React.PureComponent<CanvasProps,
   }
 
   render() {
+    const { view } = this.props
     return (
       <CanvasViewport
         onMouseMove={this.props.onMouseMove}
@@ -136,17 +136,18 @@ class Canvas extends React.PureComponent<CanvasProps,
             height="100%"
             onMouseMove={this.props.onMouseMove}
           >
-            <CircleMarker/>
+            <CircleMarker />
             {this.props.entities
               .filter(entity => "linksTo" in entity)
               // $FlowFixMe
-              .map(entity => <Links key={entity.id}
-                                    links={entity.linksTo}
-                                    entity={entity}
-                                    handleSidebarChange={this.handleSidebarChange}/>)}
+              .map(entity => <Links
+                key={entity.id}
+                links={entity.linksTo}
+                entity={entity}
+                handleSidebarChange={this.handleSidebarChange} />)}
             {/* https://github.com/facebook/flow/issues/1414 */}
-            {this.props.isConnecting && <Links links={this.props.connectingLink}/>}
-            <ArrowMarker/>
+            {this.props.isConnecting && <Links links={this.props.connectingLink} />}
+            <ArrowMarker />
           </SvgLand>
 
           {this.props.entities
@@ -155,20 +156,20 @@ class Canvas extends React.PureComponent<CanvasProps,
               CustomEntity: this.props.wrappedCustomEntities[entity.type]
             }))
             .map(Combo => (
-              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity}/>
+              <Combo.CustomEntity key={Combo.entity.id} model={Combo.entity} />
             ))}
         </CanvasArtboard>
 
-        <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut}/>
+        {!view && <Panel zoomIn={this.props.zoomIn} zoomOut={this.props.zoomOut} />}
         {/*<StatusSidebar/>*/}
         {this.state.sidebarOpened &&
-        <EditSidebar
-          handleSidebarChange={this.handleSidebarChange}
-          opened={this.state.sidebarOpened}
-          selectedLabel={this.state.selectedLabel}
-          selectedLinkId={this.state.selectedLinkId}
-          // onSelectedLinkLabel={this.onSelectedLinkLabel}
-          onSaveLabel={this.onSaveLabel}/>
+          <EditSidebar
+            handleSidebarChange={this.handleSidebarChange}
+            opened={this.state.sidebarOpened}
+            selectedLabel={this.state.selectedLabel}
+            selectedLinkId={this.state.selectedLinkId}
+            // onSelectedLinkLabel={this.onSelectedLinkLabel}
+            onSaveLabel={this.onSaveLabel} />
         }
       </CanvasViewport>
     );
@@ -306,7 +307,6 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   onMouseDown = () => {
     this.props.anchorCanvas(false);
   };
-
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -361,6 +361,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
     return (
       <Canvas
         entities={this.props.entities}
+        view={this.props.view}
         wrappedCustomEntities={this.wrappedCustomEntities}
         handleRef={this.handleRef}
         onMouseDown={this.onMouseDown}

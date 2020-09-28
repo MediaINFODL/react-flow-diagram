@@ -2,7 +2,7 @@ var _templateObject = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-wi
     _templateObject2 = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"], ["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"]),
     _templateObject3 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"]),
     _templateObject4 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"]),
-    _templateObject5 = _taggedTemplateLiteralLoose(["\n     span {\n      display: initial;\n    }  \n"], ["\n  span {\n      display: initial;\n    }\n"]);
+    _templateObject5 = _taggedTemplateLiteralLoose(["\n    span {\n      display: initial;\n    }\n"], ["\n    span {\n      display: initial;\n    }\n"]);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -294,7 +294,7 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
           key: link.target,
           id: link.target,
           uid: link.uid,
-          label: link.label === undefined ? 'new' : link.label,
+          label: link.label,
           points: positionStartOfPath(link.points, _this4.props.entity),
           rawPoints: link.points,
           handleSidebarChange: _this4.props.handleSidebarChange

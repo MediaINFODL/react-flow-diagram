@@ -75,7 +75,6 @@ var Canvas = function (_React$PureComponent) {
       currentStatus: "my",
       newStatus: ""
     };
-
     _this.handleSidebarChange = _this.handleSidebarChange.bind(_this);
     _this.onSaveLabel = _this.onSaveLabel.bind(_this);
     _this.onRemoveLabel = _this.onRemoveLabel.bind(_this);
@@ -86,6 +85,8 @@ var Canvas = function (_React$PureComponent) {
 
   Canvas.prototype.render = function render() {
     var _this2 = this;
+
+    var view = this.props.view;
 
     return React.createElement(
       CanvasViewport,
@@ -117,7 +118,8 @@ var Canvas = function (_React$PureComponent) {
           })
           // $FlowFixMe
           .map(function (entity) {
-            return React.createElement(Links, { key: entity.id,
+            return React.createElement(Links, {
+              key: entity.id,
               links: entity.linksTo,
               entity: entity,
               handleSidebarChange: _this2.handleSidebarChange });
@@ -134,7 +136,7 @@ var Canvas = function (_React$PureComponent) {
           return React.createElement(Combo.CustomEntity, { key: Combo.entity.id, model: Combo.entity });
         })
       ),
-      React.createElement(Panel, { zoomIn: this.props.zoomIn, zoomOut: this.props.zoomOut }),
+      !view && React.createElement(Panel, { zoomIn: this.props.zoomIn, zoomOut: this.props.zoomOut }),
       this.state.sidebarOpened && React.createElement(EditSidebar, {
         handleSidebarChange: this.handleSidebarChange,
         opened: this.state.sidebarOpened,
@@ -307,6 +309,7 @@ var CanvasContainer = function (_React$PureComponent2) {
   CanvasContainer.prototype.render = function render() {
     return React.createElement(Canvas, {
       entities: this.props.entities,
+      view: this.props.view,
       wrappedCustomEntities: this.wrappedCustomEntities,
       handleRef: this.handleRef,
       onMouseDown: this.onMouseDown,

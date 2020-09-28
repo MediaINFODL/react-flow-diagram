@@ -41,9 +41,9 @@ const customEntities: CustomEntities = {
   }
 };
 
-const Diagram = () => (
+const Diagram = (props) => (
   <Provider store={store}>
-    <Canvas customEntities={customEntities}/>
+    <Canvas view={props.view} customEntities={customEntities} />
   </Provider>
 );
 

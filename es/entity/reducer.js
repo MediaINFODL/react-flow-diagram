@@ -44,38 +44,29 @@ var entityReducer = function entityReducer() {
         name: action.payload.name
       }]);
 
-      case "rd/entity/LINK_TO": {
-        // console.log("rd/entity/LINK_POINTS", action);
-        const { payload } = action;
-        let startTransition = state.find(entity => entity.id == payload)
+    case "rd/entity/LINK_TO":
+      {
+        var payload = action.payload;
+
+        var startTransition = state.find(function (entity) {
+          return entity.id == payload;
+        });
         if (startTransition.type !== 'Event') {
-          return state.map(
-            entity =>
-              entity.id === canvas.connecting.from
-                ? {
-                  ...entity,
-                  linksTo: [
-                    ...(entity.linksTo ? entity.linksTo : []),
-                    ...(entity.linksTo &&
-                      entity.linksTo.some(link => link.target === payload)
-                      ? []
-                      : [
-                        {
-                          label: entity.type !== 'Event' ? `${entity.name}` + `-` + `${startTransition.name}` : `${startTransition.name}` ,
-                          target: payload,
-                          uid: new Date().valueOf(),
-                          edited: false,
-                          points: calcLinkPoints(
-                            entity,
-                            state.find(ent => ent.id === payload),
-                            "rd/entity/LINK_TO"
-                          )
-                        }
-                      ])
-                  ]
-                }
-                : entity
-          );
+          return state.map(function (entity) {
+            return entity.id === canvas.connecting.from ? _extends({}, entity, {
+              linksTo: [].concat(entity.linksTo ? entity.linksTo : [], entity.linksTo && entity.linksTo.some(function (link) {
+                return link.target === payload;
+              }) ? [] : [{
+                label: entity.type !== 'Event' ? "" + entity.name + "-" + ("" + startTransition.name) : "" + startTransition.name,
+                target: payload,
+                uid: new Date().valueOf(),
+                edited: false,
+                points: calcLinkPoints(entity, state.find(function (ent) {
+                  return ent.id === payload;
+                }), "rd/entity/LINK_TO")
+              }])
+            }) : entity;
+          });
         }
         return state;
       }
@@ -86,10 +77,13 @@ var entityReducer = function entityReducer() {
         var _action$payload = action.payload,
             _entity = _action$payload.entity,
             _id = _action$payload.id;
-       const _startTransition = state.find(entity => entity.id == _id)
+
+        var _startTransition = state.find(function (entity) {
+          return entity.id == _id;
+        });
         return [].concat(state.map(function (existingEntity) {
           return existingEntity.id === _id ? _extends({}, existingEntity, {
-            linksTo: [].concat(existingEntity.linksTo ? existingEntity.linksTo : [], [{ target: _entity.id, edited: false, uid: new Date().valueOf(), label: `${_entity.name}` + `-` + `${_startTransition.name}`}])
+            linksTo: [].concat(existingEntity.linksTo ? existingEntity.linksTo : [], [{ target: _entity.id, edited: false, uid: new Date().valueOf(), label: "" + _entity.name + "-" + ("" + _startTransition.name) }])
           }) : existingEntity;
         }), [{
           id: _entity.id,

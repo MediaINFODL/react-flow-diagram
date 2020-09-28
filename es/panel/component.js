@@ -50,7 +50,7 @@ var Panel = function Panel(props) {
               return props.addEntityHelper(entityTypeName);
             }
           },
-          React.createElement(Icon, { name: entityTypeName, label: entityTypeName == 'Task' ? `Add status`: 'Add starting Transition' })
+          React.createElement(Icon, { name: entityTypeName, label: entityTypeName == 'Task' ? "Add status" : 'Add starting Transition' })
         );
       }),
       React.createElement(

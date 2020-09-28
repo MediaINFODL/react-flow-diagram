@@ -18,19 +18,19 @@ import ContextMenu from "../contextMenu/component";
 import type { ComponentType, Node } from "react";
 import type {
   EntityId,
-    EntityModel,
-    EntityType,
-    MetaEntityModel,
-    MovePayload,
-    AddLinkedEntityPayload,
-    EntityAction,
-    MetaEntityAction
+  EntityModel,
+  EntityType,
+  MetaEntityModel,
+  MovePayload,
+  AddLinkedEntityPayload,
+  EntityAction,
+  MetaEntityAction
 } from "./reducer";
 import type {
   CanvasState,
-    CanvasAction,
-    ConnectingPayload,
-    AnchorEntityPayload
+  CanvasAction,
+  ConnectingPayload,
+  AnchorEntityPayload
 } from "../canvas/reducer";
 import type { State } from "../diagram/reducer";
 import type { DefaultEntityProps } from "./defaultEntity";
@@ -82,7 +82,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
         label: entityTypeName == 'Task' ? `Add Starting status4` : `Add Starting status3`
       }));
 
-      return [...addEntities, connectAction];
+      return [...addEntities, connectAction, remove];
     }
 
   }
@@ -108,7 +108,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
     label: entityTypeName == 'Task' ? `Add status` : `Add Starting status`
   }));
 
-  return [...addEntities, connectAction];
+  return [...addEntities, connectAction, remove];
 
 };
 
