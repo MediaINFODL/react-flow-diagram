@@ -108,7 +108,7 @@ const contextMenuActions = (props: EntityProps): ContextMenuActions => {
     label: entityTypeName == 'Task' ? `Add status` : `Add Starting status`
   }));
 
-  return [...addEntities, connectAction, remove];
+  return [...addEntities, connectAction];
 
 };
 

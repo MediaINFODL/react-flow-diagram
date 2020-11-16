@@ -9,123 +9,121 @@ import { Diagram, store, setEntities, setConfig, diagramOn } from '../';
 import { Sidebar, Menu, Form, Button, Input } from 'semantic-ui-react';
 
 var EditSidebar = function (_React$Component) {
-    _inherits(EditSidebar, _React$Component);
+  _inherits(EditSidebar, _React$Component);
 
-    function EditSidebar(props) {
-        _classCallCheck(this, EditSidebar);
+  function EditSidebar(props) {
+    _classCallCheck(this, EditSidebar);
 
-        var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-        _this.state = {
-            selectedLabel: _this.props.selectedLabel,
-            initLabel: _this.props.selectedLabel,
-            selectedLinkId: _this.props.selectedLinkId,
-            model: {}
-        };
-        return _this;
+    _this.state = {
+      selectedLabel: _this.props.selectedLabel,
+      initLabel: _this.props.selectedLabel,
+      selectedLinkId: _this.props.selectedLinkId,
+      model: {}
+    };
+    return _this;
+  }
+
+  EditSidebar.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+    if (this.props.selectedLinkId != nextProps.selectedLinkId) {
+      // console.log('to rerender false')
+      return false;
+    } else {
+      // console.log('to rerender true')
+      return true;
     }
+  };
 
-    EditSidebar.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-        if (this.props.selectedLinkId != nextProps.selectedLinkId) {
-            // console.log('to rerender false')
-            return false;
-        } else {
-            // console.log('to rerender true')
-            return true;
-        }
-    };
+  EditSidebar.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    if (this.props == nextProps) {
+      this.setState({
+        initLabel: nextProps.selectedLabel,
+        selectedLabel: nextProps.selectedLabel,
+        selectedLinkId: nextProps.selectedLinkId
+      });
+    }
+  };
 
-    EditSidebar.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-        if (this.props == nextProps) {
-            this.setState({
-                initLabel: nextProps.selectedLabel,
-                selectedLabel: nextProps.selectedLabel,
-                selectedLinkId: nextProps.selectedLinkId
-            });
-        }
-    };
+  EditSidebar.prototype.componentWillMount = function componentWillMount() {
+    this.setState({
+      model: store.getState()
+    });
+  };
 
-    EditSidebar.prototype.componentWillMount = function componentWillMount() {
-        this.setState({
-            model: store.getState()
-        });
-        console.log(this.state.model);
-    };
+  EditSidebar.prototype.render = function render() {
+    var _this2 = this;
 
-    EditSidebar.prototype.render = function render() {
-        var _this2 = this;
+    return React.createElement(
+      Sidebar,
+      {
+        as: Menu,
+        animation: 'overlay',
+        icon: 'labeled',
+        vertical: true,
+        visible: this.props.opened,
+        direction: 'right',
+        style: { width: 412 }
+      },
+      this.props.selectedLabel && React.createElement(
+        'div',
+        null,
+        React.createElement(
+          Form.Field,
+          null,
+          React.createElement(
+            'label',
+            null,
+            'Selected link label:'
+          )
+        ),
+        React.createElement(
+          Form.Group,
+          { inline: true },
+          React.createElement(Input, { style: { width: '85%' }, action: { color: 'red', icon: 'trash alternate', onClick: function onClick(e) {
+                _this2.onRemoveLabel(e, selectedEditLink);
+              } }, value: this.state.selectedLabel, onChange: function onChange(e) {
+              _this2.onSelectedLinkLabel(e);
+            } })
+        )
+      ),
+      React.createElement(
+        Form,
+        null,
+        React.createElement(
+          Form.Field,
+          null,
+          React.createElement(
+            Button,
+            { type: 'button', onClick: function onClick(e) {
+                _this2.props.handleSidebarChange(false, '');
+              }, negative: true },
+            'Cancel'
+          ),
+          React.createElement(
+            Button,
+            { type: 'button', onClick: function onClick(e) {
+                _this2.props.onSaveLabel(_this2.state.selectedLinkId, _this2.state.initLabel, _this2.state.selectedLabel);
+              }, positive: true },
+            'Save'
+          )
+        )
+      )
+    );
+  };
 
-        return React.createElement(
-            Sidebar,
-            {
-                as: Menu,
-                animation: 'overlay',
-                icon: 'labeled',
-                vertical: true,
-                visible: this.props.opened,
-                direction: 'right',
-                style: { width: 412 }
-            },
-            this.props.selectedLabel && React.createElement(
-                'div',
-                null,
-                React.createElement(
-                    Form.Field,
-                    null,
-                    React.createElement(
-                        'label',
-                        null,
-                        'Selected link label:'
-                    )
-                ),
-                React.createElement(
-                    Form.Group,
-                    { inline: true },
-                    React.createElement(Input, { style: { width: '85%' }, action: { color: 'red', icon: 'trash alternate', onClick: function onClick(e) {
-                                _this2.onRemoveLabel(e, selectedEditLink);
-                            } }, value: this.state.selectedLabel, onChange: function onChange(e) {
-                            _this2.onSelectedLinkLabel(e);
-                        } })
-                )
-            ),
-            React.createElement(
-                Form,
-                null,
-                React.createElement(
-                    Form.Field,
-                    null,
-                    React.createElement(
-                        Button,
-                        { type: 'button', onClick: function onClick(e) {
-                                _this2.props.handleSidebarChange(false, '');
-                            }, negative: true },
-                        'Cancel'
-                    ),
-                    React.createElement(
-                        Button,
-                        { type: 'button', onClick: function onClick(e) {
-                                _this2.props.onSaveLabel(_this2.state.selectedLinkId, _this2.state.initLabel, _this2.state.selectedLabel);
-                            }, positive: true },
-                        'Save'
-                    )
-                )
-            )
-        );
-    };
+  EditSidebar.prototype.onSelectedLinkLabel = function onSelectedLinkLabel(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({ selectedLabel: e.target.value });
+  };
 
-    EditSidebar.prototype.onSelectedLinkLabel = function onSelectedLinkLabel(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState({ selectedLabel: e.target.value });
-    };
+  EditSidebar.prototype.onRemoveLabel = function onRemoveLabel(e) {
+    this.setState({ selectedLabel: '' });
+    var state = store.getState();
+  };
 
-    EditSidebar.prototype.onRemoveLabel = function onRemoveLabel(e) {
-        this.setState({ selectedLabel: '' });
-        var state = store.getState();
-        console.log(state);
-    };
-
-    return EditSidebar;
+  return EditSidebar;
 }(React.Component);
 
 export default EditSidebar;

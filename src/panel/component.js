@@ -5,6 +5,7 @@ import style from "styled-components";
 import { connect } from "react-redux";
 import Icon from "../icon/component";
 import { addEntity } from "../entity/reducer";
+import { undo, redo } from "../history/reducer";
 import defaultEntity from "../entity/defaultEntity";
 
 import type {
@@ -35,7 +36,7 @@ const PanelTool = style.li`
   height: ${props => props.width}px;
   padding: .6em;
   ${props =>
-  props.separator ? "border-top: 1px solid rgba(0, 0, 0, .05);" : ""}
+    props.separator ? "border-top: 1px solid rgba(0, 0, 0, .05);" : ""}
   background-color: white;
   transition: background-color ease-in 80ms;
   cursor: pointer;
@@ -59,6 +60,7 @@ type PanelProps = {
   zoomIn: () => void,
   zoomOut: () => void,
 };
+
 const Panel = (props: PanelProps) => (
   <PanelStyle>
     <PanelTools>
@@ -68,7 +70,7 @@ const Panel = (props: PanelProps) => (
           key={entityTypeName}
           onMouseDown={() => props.addEntityHelper(entityTypeName)}
         >
-          <Icon name={entityTypeName} label={entityTypeName == 'Task' ? `Add status`: 'Add starting Transition'}/>
+          <Icon name={entityTypeName} label={entityTypeName == 'Task' ? `Add status` : 'Add starting Transition'} />
         </PanelTool>
       ))}
       <PanelTool
@@ -76,10 +78,16 @@ const Panel = (props: PanelProps) => (
         width={props.toolWidth()}
         onMouseDown={() => props.zoomIn()}
       >
-        <Icon name="zoomIn" label="Zoom in"/>
+        <Icon name="zoomIn" label="Zoom in" />
       </PanelTool>
       <PanelTool width={props.toolWidth()} onMouseDown={() => props.zoomOut()}>
-        <Icon name="zoomOut" label="Zoom out"/>
+        <Icon name="zoomOut" label="Zoom out" />
+      </PanelTool>
+      <PanelTool width={props.toolWidth()} onMouseDown={() => props.undo()}>
+        <Icon name="undo" label="Undo" />
+      </PanelTool>
+      <PanelTool width={props.toolWidth()} onMouseDown={() => props.redo()}>
+        <Icon name="redo" label="Redo" />
       </PanelTool>
     </PanelTools>
   </PanelStyle>
@@ -93,9 +101,9 @@ type PanelContainerProps = {
   entityTypes: ConfigEntityTypes,
   addEntity: (EntityModel & MetaEntityModel) => EntityAction,
   defaultEntity: DefaultEntityProps => EntityModel & MetaEntityModel,
-  zoomIn: () => void,
-  zoomOut: () => void,
-  gridSize: ?number,
+    zoomIn: () => void,
+      zoomOut: () => void,
+        gridSize: ?number,
 };
 
 class PanelContainer extends React.PureComponent<PanelContainerProps> {
@@ -127,6 +135,8 @@ class PanelContainer extends React.PureComponent<PanelContainerProps> {
         entityTypeNames={this.entityTypeNames}
         toolWidth={this.toolWidth}
         zoomIn={this.props.zoomIn}
+        undo={this.props.undo}
+        redo={this.props.redo}
         zoomOut={this.props.zoomOut}
       />
     );
@@ -139,4 +149,4 @@ const mapStateToProps = (state: State) => ({
   gridSize: state.canvas.gridSize
 });
 
-export default connect(mapStateToProps, { addEntity })(PanelContainer);
+export default connect(mapStateToProps, { addEntity, undo, redo })(PanelContainer);

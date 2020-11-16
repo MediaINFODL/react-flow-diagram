@@ -88,7 +88,7 @@ var contextMenuActions = function contextMenuActions(props) {
     };
   });
 
-  return [].concat(addEntities, [connectAction, remove]);
+  return [].concat(addEntities, [connectAction]);
 };
 
 var EntityStyle = style.div(_templateObject);

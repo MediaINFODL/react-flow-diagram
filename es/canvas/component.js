@@ -15,7 +15,7 @@ function _taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw; return s
 import React from "react";
 import style from "styled-components";
 import { connect } from "react-redux";
-import { configViewport, trackMovement, anchorCanvas, zoom } from "./reducer";
+import { configViewport, trackMovement, anchorCanvas, zoom, connecting } from "./reducer";
 import { store, setEntities } from "../";
 import { undo, redo } from "../history/reducer";
 import { setName, setLabel } from "../entity/reducer";
@@ -148,7 +148,6 @@ var Canvas = function (_React$PureComponent) {
   };
 
   Canvas.prototype.handleSidebarChange = function handleSidebarChange(sidebarOpened, selectedLink) {
-    console.log("the sel", selectedLink);
     // Sidebar can be opened by selecting a link entity
     // Sidebar can be closed by cancel button from the sidebar component 
     this.setState({
@@ -207,11 +206,26 @@ var CanvasContainer = function (_React$PureComponent2) {
 
     return _ret = (_temp = (_this3 = _possibleConstructorReturn(this, _React$PureComponent2.call.apply(_React$PureComponent2, [this].concat(args))), _this3), _this3.zoomSteps = [0.25, 0.5, 0.75, 1, 1.5, 2, 4], _this3.state = {
       zoomStep: 3
+    }, _this3.handleRightClick = function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      _this3.props.connecting({
+        currently: false,
+        from: ''
+      });
     }, _this3.wrappedCustomEntities = Object.assign.apply(Object, [{}].concat(Object.keys(_this3.props.customEntities).map(function (type) {
       var _ref;
 
       return _ref = {}, _ref[type] = EntityHOC(connect(null, { setName: setName })(_this3.props.customEntities[type].component)), _ref;
     }))), _this3.handleKey = function (ev) {
+      if (ev.key === 'Escape') {
+        ev.preventDefault();
+        ev.stopPropagation();
+        _this3.props.connecting({
+          currently: false,
+          from: ''
+        });
+      }
       if (ev.getModifierState("Meta") || ev.getModifierState("Control")) {
         switch (ev.key) {
           case "z":
@@ -225,7 +239,7 @@ var CanvasContainer = function (_React$PureComponent2) {
           // no default
         }
       }
-    }, _this3.onMouseDown = function () {
+    }, _this3.onMouseDown = function (ev) {
       _this3.props.anchorCanvas(false);
     }, _this3.onMouseMove = function (ev) {
       ev.preventDefault();
@@ -254,7 +268,7 @@ var CanvasContainer = function (_React$PureComponent2) {
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-
+    window.document.addEventListener('contextmenu', this.handleRightClick);
     window.document.addEventListener("keydown", this.handleKey);
 
     Object.keys(this.props.customEntities).forEach(function (entityType) {
@@ -266,6 +280,8 @@ var CanvasContainer = function (_React$PureComponent2) {
 
   CanvasContainer.prototype.componentWillUnmount = function componentWillUnmount() {
     window.document.removeEventListener("keydown", this.handleKey);
+    window.document.removeEventListener('contextmenu', this.handleRightClick);
+
     this.canvasDOM = undefined;
     elemLayout.gc();
   };
@@ -310,6 +326,7 @@ var CanvasContainer = function (_React$PureComponent2) {
     return React.createElement(Canvas, {
       entities: this.props.entities,
       view: this.props.view,
+      connecting: this.props.connecting,
       wrappedCustomEntities: this.wrappedCustomEntities,
       handleRef: this.handleRef,
       onMouseDown: this.onMouseDown,
@@ -363,6 +380,7 @@ export default connect(mapStateToProps, {
   configViewport: configViewport,
   trackMovement: trackMovement,
   anchorCanvas: anchorCanvas,
+  connecting: connecting,
   zoom: zoom,
   undo: undo,
   redo: redo

@@ -3,7 +3,7 @@
 import React from "react";
 import style from "styled-components";
 import { connect } from "react-redux";
-import { configViewport, trackMovement, anchorCanvas, zoom } from "./reducer";
+import { configViewport, trackMovement, anchorCanvas, zoom, connecting } from "./reducer";
 import { store, setEntities } from "../";
 import { undo, redo } from "../history/reducer";
 import { setName, setLabel } from "../entity/reducer";
@@ -87,7 +87,7 @@ type CanvasProps = {
   zoomIn: () => void,
   zoomOut: () => void,
   artboard: { x: number, y: number, width: number, height: number },
-  onMouseDown: () => void,
+  onMouseDown: (SyntheticMouseEvent<HTMLElement>) => void,
   onMouseMove: (SyntheticMouseEvent<HTMLElement>) => void,
   onMouseUp: () => void,
   handleSidebarChange?: () => void,
@@ -176,7 +176,6 @@ class Canvas extends React.PureComponent<CanvasProps,> {
   }
 
   handleSidebarChange(sidebarOpened, selectedLink) {
-    console.log("the sel", selectedLink);
     // Sidebar can be opened by selecting a link entity
     // Sidebar can be closed by cancel button from the sidebar component 
     this.setState({
@@ -229,6 +228,7 @@ type CanvasContainerProps = {
   artboard?: { x: number, y: number, width: number, height: number },
   zoomLevel?: number,
   configViewport?: () => CanvasAction,
+  connecting: () => void,
   trackMovement?: Coords => CanvasAction,
   anchorCanvas?: boolean => CanvasAction,
   zoom?: number => CanvasAction,
@@ -252,7 +252,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-
+    window.document.addEventListener('contextmenu', this.handleRightClick)
     window.document.addEventListener("keydown", this.handleKey);
 
     Object.keys(this.props.customEntities).forEach(entityType => {
@@ -264,8 +264,19 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
 
   componentWillUnmount() {
     window.document.removeEventListener("keydown", this.handleKey);
+    window.document.removeEventListener('contextmenu', this.handleRightClick)
+
     this.canvasDOM = undefined;
     elemLayout.gc();
+  }
+
+  handleRightClick = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.props.connecting({
+      currently: false,
+      from: ''
+    });
   }
 
   wrappedCustomEntities = Object.assign(
@@ -289,6 +300,14 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   }
 
   handleKey = (ev: SyntheticKeyboardEvent<HTMLElement>) => {
+    if (ev.key === 'Escape') {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.props.connecting({
+        currently: false,
+        from: ''
+      });
+    }
     if (ev.getModifierState("Meta") || ev.getModifierState("Control")) {
       switch (ev.key) {
         case "z":
@@ -304,7 +323,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
     }
   };
 
-  onMouseDown = () => {
+  onMouseDown = (ev: SyntheticKeyboardEvent<HTMLElement>) => {
     this.props.anchorCanvas(false);
   };
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
@@ -362,6 +381,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
       <Canvas
         entities={this.props.entities}
         view={this.props.view}
+        connecting={this.props.connecting}
         wrappedCustomEntities={this.wrappedCustomEntities}
         handleRef={this.handleRef}
         onMouseDown={this.onMouseDown}
@@ -416,6 +436,7 @@ export default connect(mapStateToProps, {
   configViewport,
   trackMovement,
   anchorCanvas,
+  connecting,
   zoom,
   undo,
   redo

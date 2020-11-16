@@ -15,6 +15,7 @@ import style from "styled-components";
 import { connect } from "react-redux";
 import Icon from "../icon/component";
 import { addEntity } from "../entity/reducer";
+import { undo, redo } from "../history/reducer";
 import defaultEntity from "../entity/defaultEntity";
 
 /*
@@ -70,6 +71,20 @@ var Panel = function Panel(props) {
             return props.zoomOut();
           } },
         React.createElement(Icon, { name: "zoomOut", label: "Zoom out" })
+      ),
+      React.createElement(
+        PanelTool,
+        { width: props.toolWidth(), onMouseDown: function onMouseDown() {
+            return props.undo();
+          } },
+        React.createElement(Icon, { name: "undo", label: "Undo" })
+      ),
+      React.createElement(
+        PanelTool,
+        { width: props.toolWidth(), onMouseDown: function onMouseDown() {
+            return props.redo();
+          } },
+        React.createElement(Icon, { name: "redo", label: "Redo" })
       )
     )
   );
@@ -114,6 +129,8 @@ var PanelContainer = function (_React$PureComponent) {
       entityTypeNames: this.entityTypeNames,
       toolWidth: this.toolWidth,
       zoomIn: this.props.zoomIn,
+      undo: this.props.undo,
+      redo: this.props.redo,
       zoomOut: this.props.zoomOut
     });
   };
@@ -129,4 +146,4 @@ var mapStateToProps = function mapStateToProps(state) {
   };
 };
 
-export default connect(mapStateToProps, { addEntity: addEntity })(PanelContainer);
+export default connect(mapStateToProps, { addEntity: addEntity, undo: undo, redo: redo })(PanelContainer);
