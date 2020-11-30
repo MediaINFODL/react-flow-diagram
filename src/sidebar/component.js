@@ -57,7 +57,13 @@ class EditSidebar extends React.Component {
             <Form.Group inline>
               {/* <input type='text' name='title' value={this.state.selectedLabel} 
                                 onChange={this.handleChange}/> */}
-              <Input style={{ width: '85%' }} action={{ color: 'red', icon: 'trash alternate', onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} value={this.state.selectedLabel} onChange={(e) => { this.onSelectedLinkLabel(e) }} />
+              <Input 
+              style={{ width: '85%' }} 
+              action={{ color: 'red', icon: 'trash alternate', 
+              onClick: (e) => { this.onRemoveLabel(e, selectedEditLink) } }} 
+              value={this.state.selectedLabel} 
+              onChange={(e) => { this.onSelectedLinkLabel(e) }} 
+              />
             </Form.Group>
           </div>
         }

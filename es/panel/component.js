@@ -1,6 +1,6 @@
 var _templateObject = _taggedTemplateLiteralLoose(["\n  position: absolute;\n  left: 0;\n  top: 0;\n"], ["\n  position: absolute;\n  left: 0;\n  top: 0;\n"]),
     _templateObject2 = _taggedTemplateLiteralLoose(["\n"], ["\n"]),
-    _templateObject3 = _taggedTemplateLiteralLoose(["\n  width: ", "px;\n  height: ", "px;\n  padding: .6em;\n  ", "\n  background-color: white;\n  transition: background-color ease-in 80ms;\n  cursor: pointer;\n  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\nbox-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);  \n  &:hover {\n    background-color: #ccc;\n  }\n\n  & > svg {\n    display: block;\n    width: 100%;\n  }\n"], ["\n  width: ", "px;\n  height: ", "px;\n  padding: .6em;\n  ", "\n  background-color: white;\n  transition: background-color ease-in 80ms;\n  cursor: pointer;\n  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\nbox-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);  \n  &:hover {\n    background-color: #ccc;\n  }\n\n  & > svg {\n    display: block;\n    width: 100%;\n  }\n"]);
+    _templateObject3 = _taggedTemplateLiteralLoose(["\n  width: ", "px;\n  height: ", "px;\n  padding: .6em;\n  display: flex;\n  ", "\n  background-color: white;\n  transition: background-color ease-in 80ms;\n  cursor: pointer;\n  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\nbox-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n&:hover {\n  background-color: #ccc;\n}\n\n.tooltiptext {\n  visibility: hidden;\n  width: 120px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  border-radius: 6px;\n  padding: 5px 0;\n  \n  /* Position the tooltip */\n  position: absolute;\n  z-index: 1;\n  left: 105%;\n}\n\n&:hover .tooltiptext { \n  visibility: visible;\n  padding: 3px;\n}\n\n  & > svg {\n    display: block;\n    width: 100%;\n\n  }\n"], ["\n  width: ", "px;\n  height: ", "px;\n  padding: .6em;\n  display: flex;\n  ", "\n  background-color: white;\n  transition: background-color ease-in 80ms;\n  cursor: pointer;\n  -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n-moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\nbox-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);\n&:hover {\n  background-color: #ccc;\n}\n\n.tooltiptext {\n  visibility: hidden;\n  width: 120px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  border-radius: 6px;\n  padding: 5px 0;\n  \n  /* Position the tooltip */\n  position: absolute;\n  z-index: 1;\n  left: 105%;\n}\n\n&:hover .tooltiptext { \n  visibility: visible;\n  padding: 3px;\n}\n\n  & > svg {\n    display: block;\n    width: 100%;\n\n  }\n"]);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -45,13 +45,19 @@ var Panel = function Panel(props) {
         return React.createElement(
           PanelTool,
           {
+            className: "tooltip",
             width: props.toolWidth(),
             key: entityTypeName,
             onMouseDown: function onMouseDown() {
               return props.addEntityHelper(entityTypeName);
             }
           },
-          React.createElement(Icon, { name: entityTypeName, label: entityTypeName == 'Task' ? "Add status" : 'Add starting Transition' })
+          React.createElement(Icon, { name: entityTypeName, label: entityTypeName == 'Task' ? "Add status" : 'Add starting status' }),
+          React.createElement(
+            "span",
+            { key: entityTypeName, className: "tooltiptext" },
+            entityTypeName == 'Task' ? "Add status" : 'Add starting status'
+          )
         );
       }),
       React.createElement(
@@ -63,28 +69,48 @@ var Panel = function Panel(props) {
             return props.zoomIn();
           }
         },
-        React.createElement(Icon, { name: "zoomIn", label: "Zoom in" })
+        React.createElement(Icon, { name: "zoomIn", label: "Zoom in" }),
+        React.createElement(
+          "span",
+          { key: "zoomIn", className: "tooltiptext" },
+          'Zoom in'
+        )
       ),
       React.createElement(
         PanelTool,
         { width: props.toolWidth(), onMouseDown: function onMouseDown() {
             return props.zoomOut();
           } },
-        React.createElement(Icon, { name: "zoomOut", label: "Zoom out" })
+        React.createElement(Icon, { name: "zoomOut", label: "Zoom out" }),
+        React.createElement(
+          "span",
+          { key: "zoomIn", className: "tooltiptext" },
+          'Zoom out'
+        )
       ),
       React.createElement(
         PanelTool,
         { width: props.toolWidth(), onMouseDown: function onMouseDown() {
             return props.undo();
           } },
-        React.createElement(Icon, { name: "undo", label: "Undo" })
+        React.createElement(Icon, { name: "undo", label: "Undo" }),
+        React.createElement(
+          "span",
+          { key: "zoomIn", className: "tooltiptext" },
+          'Undo'
+        )
       ),
       React.createElement(
         PanelTool,
         { width: props.toolWidth(), onMouseDown: function onMouseDown() {
             return props.redo();
           } },
-        React.createElement(Icon, { name: "redo", label: "Redo" })
+        React.createElement(Icon, { name: "redo", label: "Redo" }),
+        React.createElement(
+          "span",
+          { key: "zoomIn", className: "tooltiptext" },
+          'Redo'
+        )
       )
     )
   );

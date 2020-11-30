@@ -35,6 +35,7 @@ const PanelTool = style.li`
   width: ${props => props.width}px;
   height: ${props => props.width}px;
   padding: .6em;
+  display: flex;
   ${props =>
     props.separator ? "border-top: 1px solid rgba(0, 0, 0, .05);" : ""}
   background-color: white;
@@ -42,14 +43,35 @@ const PanelTool = style.li`
   cursor: pointer;
   -webkit-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
 -moz-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
-box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);  
-  &:hover {
-    background-color: #ccc;
-  }
+box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.15);
+&:hover {
+  background-color: #ccc;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  left: 105%;
+}
+
+&:hover .tooltiptext { 
+  visibility: visible;
+  padding: 3px;
+}
 
   & > svg {
     display: block;
     width: 100%;
+
   }
 `;
 
@@ -66,11 +88,13 @@ const Panel = (props: PanelProps) => (
     <PanelTools>
       {props.entityTypeNames.map(entityTypeName => (
         <PanelTool
+          className="tooltip"
           width={props.toolWidth()}
           key={entityTypeName}
           onMouseDown={() => props.addEntityHelper(entityTypeName)}
         >
-          <Icon name={entityTypeName} label={entityTypeName == 'Task' ? `Add status` : 'Add starting Transition'} />
+          <Icon name={entityTypeName} label={entityTypeName == 'Task' ? `Add status` : 'Add starting status'} />
+          <span key={entityTypeName} className="tooltiptext">{entityTypeName == 'Task' ? `Add status` : 'Add starting status'}</span>
         </PanelTool>
       ))}
       <PanelTool
@@ -79,15 +103,19 @@ const Panel = (props: PanelProps) => (
         onMouseDown={() => props.zoomIn()}
       >
         <Icon name="zoomIn" label="Zoom in" />
+        <span key={"zoomIn"} className="tooltiptext">{'Zoom in'}</span>
       </PanelTool>
       <PanelTool width={props.toolWidth()} onMouseDown={() => props.zoomOut()}>
         <Icon name="zoomOut" label="Zoom out" />
+        <span key={"zoomIn"} className="tooltiptext">{'Zoom out'}</span>
       </PanelTool>
       <PanelTool width={props.toolWidth()} onMouseDown={() => props.undo()}>
         <Icon name="undo" label="Undo" />
+        <span key={"zoomIn"} className="tooltiptext">{'Undo'}</span>
       </PanelTool>
       <PanelTool width={props.toolWidth()} onMouseDown={() => props.redo()}>
         <Icon name="redo" label="Redo" />
+        <span key={"zoomIn"} className="tooltiptext">{'Redo'}</span>
       </PanelTool>
     </PanelTools>
   </PanelStyle>
@@ -127,7 +155,6 @@ class PanelContainer extends React.PureComponent<PanelContainerProps> {
       return this.niceToolSize;
     }
   };
-
   render() {
     return (
       <Panel

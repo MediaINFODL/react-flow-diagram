@@ -80,11 +80,17 @@ var EditSidebar = function (_React$Component) {
         React.createElement(
           Form.Group,
           { inline: true },
-          React.createElement(Input, { style: { width: '85%' }, action: { color: 'red', icon: 'trash alternate', onClick: function onClick(e) {
+          React.createElement(Input, {
+            style: { width: '85%' },
+            action: { color: 'red', icon: 'trash alternate',
+              onClick: function onClick(e) {
                 _this2.onRemoveLabel(e, selectedEditLink);
-              } }, value: this.state.selectedLabel, onChange: function onChange(e) {
+              } },
+            value: this.state.selectedLabel,
+            onChange: function onChange(e) {
               _this2.onSelectedLinkLabel(e);
-            } })
+            }
+          })
         )
       ),
       React.createElement(

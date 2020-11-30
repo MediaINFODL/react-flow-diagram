@@ -324,7 +324,7 @@ class CanvasContainer extends React.PureComponent<CanvasContainerProps,
   };
 
   onMouseDown = (ev: SyntheticKeyboardEvent<HTMLElement>) => {
-    this.props.anchorCanvas(false);
+    this.props.anchorCanvas(true);
   };
   onMouseMove = (ev: SyntheticMouseEvent<HTMLElement>) => {
     ev.preventDefault();
