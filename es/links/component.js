@@ -1,4 +1,4 @@
-var _templateObject = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: .1em;\n  stroke: black;\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"], ["\n  fill: none;\n  stroke-width: .1em;\n  stroke: black;\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"]),
+var _templateObject = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: ", ";\n  stroke: ", ";\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"], ["\n  fill: none;\n  stroke-width: ", ";\n  stroke: ", ";\n  stroke-linejoin: round;\n  marker-start: url(\"#circle-start\");\n  marker-end: url(\"#arrow-end\");\n"]),
     _templateObject2 = _taggedTemplateLiteralLoose(["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"], ["\n  fill: none;\n  stroke-width: 1em;\n  stroke: transparent;\n  stroke-linejoin: round;\n"]),
     _templateObject3 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: inline-block;\n  font-size: 11px;\n  padding: 2px 5px;\n  cursor: pointer;\n"]),
     _templateObject4 = _taggedTemplateLiteralLoose(["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"], ["\n  background: #444;\n  border-radius: 3px;\n  color: #fff;\n  display: none;\n  font-size: 11px;\n  line-height: 15px;\n  padding: 2px 5px;\n  cursor: pointer;\n  transform: translate(-50%, -50%);\n"]),
@@ -17,12 +17,16 @@ import style from "styled-components";
 import { store } from "../";
 
 import { assignLabelToStore } from "../history/reducer";
-
+import { connect } from "react-redux";
 /*
  * Presentational
  * ==================================== */
 
-var Line = style.path(_templateObject);
+var Line = style.path(_templateObject, function (props) {
+  return props.strokeWidth;
+}, function (props) {
+  return props.strokeColor;
+});
 
 var InteractionLine = style.path(_templateObject2);
 
@@ -112,6 +116,31 @@ var ArrowBody = function (_React$PureComponent) {
       store.dispatch(assignLabelToStore(data));
     };
 
+    _this.handleLineLabelClick = function (id) {
+      var _this$props = _this.props,
+          links = _this$props.links,
+          isEntitySelected = _this$props.isEntitySelected;
+
+      if (isEntitySelected) {
+        links.map(function (link) {
+          var lineElement = document.getElementById("line" + link.uid);
+          lineElement.style.stroke = 'black';
+          lineElement.style.strokeWidth = '.1em';
+        });
+      } else {
+        links.map(function (link) {
+          var lineElement = document.getElementById("line" + link.uid);
+          if (id === link.uid) {
+            lineElement.style.stroke = lineElement.style.stroke === 'black' || lineElement.style.stroke === '' ? 'rgb(219, 40, 40)' : 'black';
+            lineElement.style.strokeWidth = lineElement.style.stroke === 'black' ? '.1em' : '.2em';
+          } else {
+            lineElement.style.stroke = 'black';
+            lineElement.style.strokeWidth = '.1em';
+          }
+        });
+      }
+    };
+
     _this.state = {
       label: _this.props.label,
       width: 150,
@@ -130,7 +159,10 @@ var ArrowBody = function (_React$PureComponent) {
     }
   };
 
-  ArrowBody.prototype.componentDidUpdate = function componentDidUpdate() {
+  ArrowBody.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected) {
+      this.handleLineLabelClick();
+    }
     if (this.el) {
       var _el$getBoundingClient2 = this.el.getBoundingClientRect(),
           height = _el$getBoundingClient2.height,
@@ -146,7 +178,12 @@ var ArrowBody = function (_React$PureComponent) {
     return React.createElement(
       Group,
       null,
-      React.createElement(Line, { d: this.props.points, id: "line" + this.props.id }),
+      React.createElement(Line, {
+        strokeWidth: this.props.id === 'will_connect' ? '.2em' : '.1em',
+        strokeColor: this.props.id === 'will_connect' ? '#db2828' : 'black',
+        d: this.props.points,
+        id: "line" + this.props.uid
+      }),
       React.createElement(InteractionLine, { d: this.props.points }),
       this.props.label && React.createElement(
         "foreignObject",
@@ -164,6 +201,7 @@ var ArrowBody = function (_React$PureComponent) {
             },
             xlinkHref: "#line" + this.props.id,
             onClick: function onClick() {
+              _this2.handleLineLabelClick(_this2.props.uid, _this2.props);
               _this2.emitLabelData(_this2.props);
             }
           },
@@ -293,7 +331,9 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
         return link.points && React.createElement(ArrowBody, {
           key: link.target,
           id: link.target,
+          isEntitySelected: _this4.props.isSelected,
           uid: link.uid,
+          links: _this4.props.connectinLinks,
           label: link.label,
           points: positionStartOfPath(link.points, _this4.props.entity),
           rawPoints: link.points,
@@ -306,4 +346,18 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
   return ArrowBodyContainer;
 }(React.PureComponent);
 
-export default ArrowBodyContainer;
+var mapStateToProps = function mapStateToProps(state) {
+  return {
+    entities: state.entity,
+    connectinLinks: state.entity.reduce(function (prev, next) {
+      return prev.concat(next.linksTo);
+    }, []).filter(function (link) {
+      return link !== undefined;
+    }),
+    isSelected: state.metaEntity.find(function (entity) {
+      return entity.isSelected === true;
+    }) !== undefined
+  };
+};
+
+export default connect(mapStateToProps, {})(ArrowBodyContainer);

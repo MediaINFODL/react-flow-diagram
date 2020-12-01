@@ -94,6 +94,17 @@ var contextMenuActions = function contextMenuActions(props) {
 var EntityStyle = style.div(_templateObject);
 
 var Entity = function Entity(props) {
+
+  var setBorderEntityColor = function setBorderEntityColor(id) {
+    var selected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    var ele = document.getElementById(id);
+    if (ele && ele.children.length > 0) {
+      var entityNode = ele.children[0];
+      entityNode.style.borderColor = selected ? '#db2828' : '#888';
+    }
+  };
+
   return React.createElement(
     EntityStyle,
     {
@@ -106,11 +117,13 @@ var Entity = function Entity(props) {
     React.createElement(
       "div",
       {
+        id: "wrapperEntity" + props.model.id,
         onMouseDown: props.onMouseDown,
         onMouseLeave: props.onMouseLeave,
         onMouseUp: props.onMouseUp,
         role: "presentation"
       },
+      setBorderEntityColor("wrapperEntity" + props.model.id, props.isSelected),
       props.children
     ),
     props.isSelected && React.createElement(ContextMenu, { actions: contextMenuActions(props) })

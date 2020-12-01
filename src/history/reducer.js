@@ -90,7 +90,6 @@ const history = (reducer: Reducer<State, Action>) => (
     }
     case "STATUS/UPDATE": {
       if (state.status.name !== action.payload) {
-        console.log("update");
         const new_status = Object.assign({}, state.status, { name: action.payload });
         return Object.assign({}, state, { status: new_status });
       }

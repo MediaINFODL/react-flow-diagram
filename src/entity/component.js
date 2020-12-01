@@ -123,25 +123,36 @@ const EntityStyle = style.div`
   user-select: none;
 `;
 
-const Entity = (props: EntityProps) => (
-  <EntityStyle
+const Entity = (props: EntityProps) => {
+
+  const setBorderEntityColor = (id, selected = false) => {
+    const ele = document.getElementById(id)
+    if (ele && ele.children.length > 0) {
+      const entityNode = ele.children[0]
+      entityNode.style.borderColor = selected ? '#db2828' : '#888'
+    }
+  }
+
+  return <EntityStyle
     style={{
       transform: `translate(${props.model.x}px, ${props.model.y}px)`,
       zIndex: props.isAnchored || props.isSelected ? "100" : "10",
-      cursor: props.toBeConnected ? "pointer" : "move"
+      cursor: props.toBeConnected ? "pointer" : "move",
     }}
   >
     <div
+      id={`wrapperEntity${props.model.id}`}
       onMouseDown={props.onMouseDown}
       onMouseLeave={props.onMouseLeave}
       onMouseUp={props.onMouseUp}
       role="presentation"
     >
+      {setBorderEntityColor(`wrapperEntity${props.model.id}`, props.isSelected)}
       {props.children}
     </div>
     {props.isSelected && <ContextMenu actions={contextMenuActions(props)} />}
-  </EntityStyle>
-);
+  </EntityStyle >
+};
 
 /*
  * Container

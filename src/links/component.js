@@ -5,15 +5,15 @@ import style from "styled-components";
 import { store } from "../";
 import type { EntityId, Links, Point } from "../entity/reducer";
 import { assignLabelToStore } from "../history/reducer";
-
+import { connect } from "react-redux";
 /*
  * Presentational
  * ==================================== */
 
 const Line = style.path`
   fill: none;
-  stroke-width: .1em;
-  stroke: black;
+  stroke-width: ${props => props.strokeWidth};
+  stroke: ${props => props.strokeColor};
   stroke-linejoin: round;
   marker-start: url("#circle-start");
   marker-end: url("#arrow-end");
@@ -79,7 +79,10 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected) {
+      this.handleLineLabelClick()
+    }
     if (this.el) {
       const { height, width } = this.el.getBoundingClientRect();
       this.setState({ width, height });
@@ -154,11 +157,40 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     store.dispatch(assignLabelToStore(data));
   };
 
+  handleLineLabelClick = (id) => {
+    const { links, isEntitySelected } = this.props
+    if (isEntitySelected) {
+      links.map(link => {
+        const lineElement = document.getElementById(`line${link.uid}`)
+        lineElement.style.stroke = 'black'
+        lineElement.style.strokeWidth = '.1em'
+      })
+    }
+    else {
+      links.map(link => {
+        const lineElement = document.getElementById(`line${link.uid}`)
+        if (id === link.uid) {
+          lineElement.style.stroke = lineElement.style.stroke === 'black' || lineElement.style.stroke === '' ? 'rgb(219, 40, 40)' : 'black'
+          lineElement.style.strokeWidth = lineElement.style.stroke === 'black' ? '.1em' : '.2em'
+        }
+        else {
+          lineElement.style.stroke = 'black'
+          lineElement.style.strokeWidth = '.1em'
+        }
+      })
+    }
+  }
+
   render() {
     return (
       <Group>
-        <Line d={this.props.points} id={`line${this.props.id}`}/>
-        <InteractionLine d={this.props.points}/>
+        <Line
+          strokeWidth={this.props.id === 'will_connect' ? '.2em' : '.1em'}
+          strokeColor={this.props.id === 'will_connect' ? '#db2828' : 'black'}
+          d={this.props.points}
+          id={`line${this.props.uid}`}
+        />
+        <InteractionLine d={this.props.points} />
         {this.props.label && (
           <foreignObject
             x={this.getLabelX()}
@@ -170,6 +202,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
               innerRef={(el) => this.el = el}
               xlinkHref={`#line${this.props.id}`}
               onClick={() => {
+                this.handleLineLabelClick(this.props.uid, this.props)
                 this.emitLabelData(this.props);
               }}
             >
@@ -278,10 +311,14 @@ const getBoxPoints = (points: Array<Point>) => {
 type ArrowBodyContainerProps = {
   links: Links,
   entity?: any,
-  handleSidebarChange?: () => void
+  handleSidebarChange?: () => void,
+  connectinLinks: Array<Links>,
+  isSelected: Boolean
 };
 
 class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
+
+
   render() {
     return (
       <g>
@@ -291,7 +328,9 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
               <ArrowBody
                 key={link.target}
                 id={link.target}
+                isEntitySelected={this.props.isSelected}
                 uid={link.uid}
+                links={this.props.connectinLinks}
                 label={link.label}
                 points={positionStartOfPath(link.points, this.props.entity)}
                 rawPoints={link.points}
@@ -303,5 +342,13 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
     );
   }
 }
+const mapStateToProps = (state: State) => {
+  return {
+    entities: state.entity,
+    connectinLinks: state.entity.reduce((prev, next) => prev.concat(next.linksTo), []).filter(link => link !== undefined),
+    isSelected: state.metaEntity.find(entity => entity.isSelected === true) !== undefined
+  }
+};
 
-export default ArrowBodyContainer;
+export default connect(mapStateToProps, {
+})(ArrowBodyContainer);

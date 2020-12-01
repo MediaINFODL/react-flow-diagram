@@ -53,7 +53,6 @@ var history = function history(reducer) {
       case "STATUS/UPDATE":
         {
           if (state.status.name !== action.payload) {
-            console.log("update");
             var new_status = Object.assign({}, state.status, { name: action.payload });
             return Object.assign({}, state, { status: new_status });
           }
