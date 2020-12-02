@@ -177,8 +177,10 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
           lineElement.style.strokeWidth = '.2em'
         }
         else {
-          lineElement.style.stroke = 'black'
-          lineElement.style.strokeWidth = '.1em'
+          if (lineElement) {
+            lineElement.style.stroke = 'black'
+            lineElement.style.strokeWidth = '.1em'
+          }
         }
       })
     }
