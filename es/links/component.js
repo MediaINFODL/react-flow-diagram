@@ -119,7 +119,8 @@ var ArrowBody = function (_React$PureComponent) {
     _this.handleLineLabelClick = function (id) {
       var _this$props = _this.props,
           links = _this$props.links,
-          isEntitySelected = _this$props.isEntitySelected;
+          isEntitySelected = _this$props.isEntitySelected,
+          labelSelected = _this$props.labelSelected;
 
       if (isEntitySelected) {
         links.map(function (link) {
@@ -129,10 +130,11 @@ var ArrowBody = function (_React$PureComponent) {
         });
       } else {
         links.map(function (link) {
+          var labelId = id ? id : labelSelected.uid;
           var lineElement = document.getElementById("line" + link.uid);
-          if (id === link.uid) {
-            lineElement.style.stroke = lineElement.style.stroke === 'black' || lineElement.style.stroke === '' ? 'rgb(219, 40, 40)' : 'black';
-            lineElement.style.strokeWidth = lineElement.style.stroke === 'black' ? '.1em' : '.2em';
+          if (labelId === link.uid) {
+            lineElement.style.stroke = 'rgb(219, 40, 40)';
+            lineElement.style.strokeWidth = '.2em';
           } else {
             lineElement.style.stroke = 'black';
             lineElement.style.strokeWidth = '.1em';
@@ -160,7 +162,7 @@ var ArrowBody = function (_React$PureComponent) {
   };
 
   ArrowBody.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-    if (prevProps.isEntitySelected !== this.props.isEntitySelected) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected || prevProps.labelSelected.uid !== this.props.labelSelected.uid) {
       this.handleLineLabelClick();
     }
     if (this.el) {
@@ -333,6 +335,7 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
           id: link.target,
           isEntitySelected: _this4.props.isSelected,
           uid: link.uid,
+          labelSelected: _this4.props.labelSelected,
           links: _this4.props.connectinLinks,
           label: link.label,
           points: positionStartOfPath(link.points, _this4.props.entity),
@@ -348,7 +351,6 @@ var ArrowBodyContainer = function (_React$PureComponent2) {
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    entities: state.entity,
     connectinLinks: state.entity.reduce(function (prev, next) {
       return prev.concat(next.linksTo);
     }, []).filter(function (link) {
@@ -356,8 +358,11 @@ var mapStateToProps = function mapStateToProps(state) {
     }),
     isSelected: state.metaEntity.find(function (entity) {
       return entity.isSelected === true;
-    }) !== undefined
+    }) !== undefined,
+    labelSelected: state.label
   };
 };
 
-export default connect(mapStateToProps, {})(ArrowBodyContainer);
+export default connect(mapStateToProps, {
+  assignLabelToStore: assignLabelToStore
+})(ArrowBodyContainer);

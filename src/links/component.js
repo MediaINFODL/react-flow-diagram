@@ -80,7 +80,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.isEntitySelected !== this.props.isEntitySelected) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected || (prevProps.labelSelected.uid !== this.props.labelSelected.uid)) {
       this.handleLineLabelClick()
     }
     if (this.el) {
@@ -158,7 +158,7 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
   };
 
   handleLineLabelClick = (id) => {
-    const { links, isEntitySelected } = this.props
+    const { links, isEntitySelected, labelSelected } = this.props
     if (isEntitySelected) {
       links.map(link => {
         const lineElement = document.getElementById(`line${link.uid}`)
@@ -168,10 +168,11 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     }
     else {
       links.map(link => {
+        const labelId = id ? id : labelSelected.uid
         const lineElement = document.getElementById(`line${link.uid}`)
-        if (id === link.uid) {
-          lineElement.style.stroke = lineElement.style.stroke === 'black' || lineElement.style.stroke === '' ? 'rgb(219, 40, 40)' : 'black'
-          lineElement.style.strokeWidth = lineElement.style.stroke === 'black' ? '.1em' : '.2em'
+        if (labelId === link.uid) {
+          lineElement.style.stroke = 'rgb(219, 40, 40)'
+          lineElement.style.strokeWidth = '.2em'
         }
         else {
           lineElement.style.stroke = 'black'
@@ -330,6 +331,7 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
                 id={link.target}
                 isEntitySelected={this.props.isSelected}
                 uid={link.uid}
+                labelSelected={this.props.labelSelected}
                 links={this.props.connectinLinks}
                 label={link.label}
                 points={positionStartOfPath(link.points, this.props.entity)}
@@ -344,11 +346,12 @@ class ArrowBodyContainer extends React.PureComponent<ArrowBodyContainerProps> {
 }
 const mapStateToProps = (state: State) => {
   return {
-    entities: state.entity,
     connectinLinks: state.entity.reduce((prev, next) => prev.concat(next.linksTo), []).filter(link => link !== undefined),
-    isSelected: state.metaEntity.find(entity => entity.isSelected === true) !== undefined
+    isSelected: state.metaEntity.find(entity => entity.isSelected === true) !== undefined,
+    labelSelected: state.label
   }
 };
 
 export default connect(mapStateToProps, {
+  assignLabelToStore
 })(ArrowBodyContainer);
