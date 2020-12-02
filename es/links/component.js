@@ -44,6 +44,10 @@ var ArrowBody = function (_React$PureComponent) {
 
     var _this = _possibleConstructorReturn(this, _React$PureComponent.call(this, props));
 
+    _this.shouldUpdateLabel = function (prevProps) {
+      return prevProps.labelSelected.uid !== _this.props.labelSelected.uid;
+    };
+
     _this.checkIfZigZagLine = function (points) {
       var start = points[0];
       var startJoint = points[1];
@@ -162,7 +166,7 @@ var ArrowBody = function (_React$PureComponent) {
   };
 
   ArrowBody.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-    if (prevProps.isEntitySelected !== this.props.isEntitySelected || prevProps.labelSelected.uid !== this.props.labelSelected.uid) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected || this.shouldUpdateLabel(prevProps)) {
       this.handleLineLabelClick();
     }
     if (this.el) {

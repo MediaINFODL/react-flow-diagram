@@ -8,6 +8,7 @@ import { Diagram, store, setEntities, setConfig, diagramOn } from "../../src";
 import { config } from "./config-example";
 import "./demo.css";
 import { addLabel, removeEntity, removeLabel, setLabel, setName } from "../../src/entity/reducer";
+import { assignEmptyLabelToStore } from '../../es/history/reducer'
 
 injectGlobal`
   * {
@@ -146,7 +147,8 @@ class Demo extends React.PureComponent<{}> {
   deleteLabel = () => {
     const data = store.getState();
     // console.log(data.label);
-    store.dispatch(removeLabel(data.label));
+    store.dispatch(assignEmptyLabelToStore())
+    //store.dispatch(removeLabel(data.label));
   };
 
   updateLabel = () => {
@@ -195,10 +197,10 @@ class Demo extends React.PureComponent<{}> {
           <Button negative onClick={this.deleteEntity}>Delete entity</Button>
           <Button positive onClick={this.updateEntity}>Update entity</Button>
         </div>
-        <Diagram/>
+        <Diagram />
       </Main>
     );
   }
 }
 
-render(<Demo/>, document.querySelector("#demo"));
+render(<Demo />, document.querySelector("#demo"));

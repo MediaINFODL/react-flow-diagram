@@ -79,8 +79,10 @@ class ArrowBody extends React.PureComponent<ArrowBodyProps> {
     }
   }
 
+  shouldUpdateLabel = (prevProps) => prevProps.labelSelected.uid !== this.props.labelSelected.uid
+
   componentDidUpdate(prevProps) {
-    if (prevProps.isEntitySelected !== this.props.isEntitySelected || (prevProps.labelSelected.uid !== this.props.labelSelected.uid)) {
+    if (prevProps.isEntitySelected !== this.props.isEntitySelected || this.shouldUpdateLabel(prevProps)) {
       this.handleLineLabelClick()
     }
     if (this.el) {
