@@ -3,7 +3,7 @@
 import React from "react";
 import style from "styled-components";
 import { connect } from "react-redux";
-import { configViewport, trackMovement, anchorCanvas, zoom, connecting } from "./reducer";
+import { configViewport, trackMovement, anchorCanvas, zoom, connecting, resetCanvas } from "./reducer";
 import { store, setEntities } from "../";
 import { undo, redo } from "../history/reducer";
 import { setName, setLabel } from "../entity/reducer";
@@ -437,6 +437,7 @@ export default connect(mapStateToProps, {
   trackMovement,
   anchorCanvas,
   connecting,
+  resetCanvas,
   zoom,
   undo,
   redo

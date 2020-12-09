@@ -4,6 +4,7 @@ import elemLayout from "./elemLayout";
 
 import type { ActionShape, Action } from "../diagram/reducer";
 import type { EntityId } from "../entity/reducer";
+import appReducer from '../diagram/reducer'
 
 export type Coords = { x: number, y: number };
 type Dimensions = { width: number, height: number };
@@ -85,7 +86,7 @@ const configViewportHelper = state => {
 const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
   switch (action.type) {
     case "rd/canvas/CONFIG_VIEWPORT":
-      return configViewportHelper(state);
+      return configViewportHelper(state)
 
     case "rd/config/SET":
       return {
@@ -169,11 +170,24 @@ const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
       };
 
     case "rd/canvas/ANCHOR_ENTITY":
-    // console.log("rd/canvas/ANCHOR_ENTITY");
+      // console.log("rd/canvas/ANCHOR_ENTITY");
       return {
         ...state,
         anchoredEntity: action.payload
       };
+
+    case "rd/canvas/RESET":
+      return {
+        ...state,
+        zoom: 1,
+        gridSize: 1,
+        canvasArtboard: {
+          x: 0,
+          y: 0,
+          width: state.canvasViewport.width,
+          height: state.canvasViewport.height
+        }
+      }
 
     case "rd/entity/ADD":
       // console.log("rd/entity/ADD");
@@ -190,7 +204,7 @@ const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
       };
 
     case "rd/entity/LINK_TO":
-    // console.log("rd/entity/LINK_TO");
+      // console.log("rd/entity/LINK_TO");
       return {
         ...state,
         connecting: {
@@ -203,6 +217,11 @@ const canvasReducer = (state: CanvasState, action: Action): CanvasState => {
       return state;
   }
 };
+
+export const resetCanvas = (payload) => ({
+  type: "rd/canvas/RESET",
+  payload
+})
 
 export const configViewport = (payload: void): CanvasAction => ({
   type: "rd/canvas/CONFIG_VIEWPORT",
@@ -225,9 +244,9 @@ export const connecting = (payload: ConnectingPayload): CanvasAction => ({
 });
 
 export const anchorEntity = ({
-                               isAnchored = true,
-                               id = ""
-                             }: AnchorEntityPayload): CanvasAction => ({
+  isAnchored = true,
+  id = ""
+}: AnchorEntityPayload): CanvasAction => ({
   type: "rd/canvas/ANCHOR_ENTITY",
   payload: { isAnchored, id }
 });

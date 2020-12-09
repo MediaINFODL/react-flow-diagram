@@ -2,6 +2,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import elemLayout from "./elemLayout";
 
+import appReducer from '../diagram/reducer';
+
 var addEntityHelper = function addEntityHelper(id) {
   return {
     anchoredEntity: { isAnchored: true, id: id }
@@ -75,6 +77,18 @@ var canvasReducer = function canvasReducer(state, action) {
         anchoredEntity: action.payload
       });
 
+    case "rd/canvas/RESET":
+      return _extends({}, state, {
+        zoom: 1,
+        gridSize: 1,
+        canvasArtboard: {
+          x: 0,
+          y: 0,
+          width: state.canvasViewport.width,
+          height: state.canvasViewport.height
+        }
+      });
+
     case "rd/entity/ADD":
       // console.log("rd/entity/ADD");
       return _extends({}, configViewportHelper(state), addEntityHelper(action.payload.id));
@@ -95,6 +109,13 @@ var canvasReducer = function canvasReducer(state, action) {
     default:
       return state;
   }
+};
+
+export var resetCanvas = function resetCanvas(payload) {
+  return {
+    type: "rd/canvas/RESET",
+    payload: payload
+  };
 };
 
 export var configViewport = function configViewport(payload) {

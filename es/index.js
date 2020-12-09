@@ -4,5 +4,6 @@ import { setEntities, setCustom, setEntityCross, addLabel, removeEntity, removeL
 import { setConfig } from "./config/reducer";
 import diagramOn from "./diagramOn/";
 import { assignEmptyLabelToStore, assignEmptyStatusToStore } from "./history/reducer";
+import { resetCanvas } from './canvas/reducer';
 
-export { Diagram, diagramOn, store, setEntities, setEntityCross, setConfig, setCustom, assignEmptyLabelToStore, assignEmptyStatusToStore, addLabel, removeEntity, removeLabel, setLabel, setName };
+export { Diagram, diagramOn, resetCanvas, store, setEntities, setEntityCross, setConfig, setCustom, assignEmptyLabelToStore, assignEmptyStatusToStore, addLabel, removeEntity, removeLabel, setLabel, setName };

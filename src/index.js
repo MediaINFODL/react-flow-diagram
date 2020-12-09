@@ -14,10 +14,12 @@ import {
 import { setConfig } from "./config/reducer";
 import diagramOn from "./diagramOn/";
 import { assignEmptyLabelToStore, assignEmptyStatusToStore } from "./history/reducer";
+import { resetCanvas } from './canvas/reducer'
 
 export {
   Diagram,
   diagramOn,
+  resetCanvas,
   store,
   setEntities,
   setEntityCross,
