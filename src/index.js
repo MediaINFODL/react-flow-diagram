@@ -1,5 +1,4 @@
 // @flow
-import "semantic-ui-css/semantic.min.css";
 import Diagram, { store } from "./diagram/component";
 import {
   setEntities,

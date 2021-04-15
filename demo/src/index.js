@@ -2,6 +2,8 @@
 
 import React from "react";
 import { render } from "react-dom";
+import "semantic-ui-css/semantic.min.css";
+
 import styled, { injectGlobal } from "styled-components";
 import { Button } from "semantic-ui-react";
 import { Diagram, store, setEntities, setConfig, diagramOn } from "../../src";
